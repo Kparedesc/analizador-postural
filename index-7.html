@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="author" content="Karen Vanessa Paredes Castro">
+<meta name="description" content="Herramienta de análisis postural con MediaPipe para Terapia Ocupacional. Universidad Nacional de Colombia.">
+<title>Analizador Postural — Karen Paredes · UNAL</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:#0e0f11;--surface:#16181c;--surface2:#1e2026;--border:#2a2d35;
+  --accent:#4ade80;--accent2:#60a5fa;--accent3:#f59e0b;--accent4:#f87171;
+  --text:#e8eaf0;--text2:#8b8fa8;--text3:#555869;
+  --mono:'DM Mono',monospace;--sans:'DM Sans',sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--bg);color:var(--text);font-family:var(--sans);min-height:100vh;overflow-x:hidden;}
+
+/* ── HEADER ── */
+header{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 32px;height:64px;
+  border-bottom:1px solid var(--border);
+  background:var(--surface);
+  position:sticky;top:0;z-index:100;
+}
+.logo{display:flex;align-items:center;gap:14px;}
+.logo-icon{
+  width:36px;height:36px;border-radius:9px;
+  background:linear-gradient(135deg,var(--accent) 0%,var(--accent2) 100%);
+  display:flex;align-items:center;justify-content:center;font-size:18px;
+  flex-shrink:0;
+}
+.logo-text{font-size:15px;font-weight:600;letter-spacing:-0.2px;}
+.logo-sub{font-size:11px;color:var(--text2);font-family:var(--mono);margin-top:1px;}
+.header-right{display:flex;align-items:center;gap:12px;}
+.author-chip{
+  display:flex;align-items:center;gap:8px;
+  background:var(--surface2);border:1px solid var(--border);
+  border-radius:20px;padding:5px 12px 5px 8px;
+}
+.author-avatar{
+  width:24px;height:24px;border-radius:50%;
+  background:linear-gradient(135deg,#534AB7,#1D9E75);
+  display:flex;align-items:center;justify-content:center;
+  font-size:10px;font-weight:600;color:#fff;flex-shrink:0;
+}
+.author-name{font-size:11px;font-weight:500;color:var(--text2);}
+.badge-h{
+  font-family:var(--mono);font-size:10px;color:var(--accent);
+  border:1px solid var(--accent);border-radius:4px;padding:3px 8px;
+}
+
+/* ── HERO BANNER (visible solo al inicio) ── */
+#hero{
+  background:var(--surface);border-bottom:1px solid var(--border);
+  padding:20px 32px;
+  display:flex;align-items:flex-start;justify-content:space-between;gap:24px;
+}
+.hero-left{flex:1;}
+.hero-title{font-size:22px;font-weight:600;letter-spacing:-0.4px;margin-bottom:6px;}
+.hero-title span{color:var(--accent);}
+.hero-desc{font-size:13px;color:var(--text2);line-height:1.7;max-width:560px;}
+.hero-tags{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px;}
+.tag{
+  font-family:var(--mono);font-size:10px;
+  background:var(--surface2);border:1px solid var(--border);
+  border-radius:4px;padding:3px 8px;color:var(--text3);
+}
+.tag.g{border-color:rgba(74,222,128,.4);color:var(--accent);}
+.tag.b{border-color:rgba(96,165,250,.4);color:var(--accent2);}
+.hero-right{flex-shrink:0;}
+.author-card{
+  background:var(--surface2);border:1px solid var(--border);
+  border-radius:12px;padding:14px 16px;min-width:220px;
+}
+.ac-top{display:flex;align-items:center;gap:10px;margin-bottom:10px;}
+.ac-avatar{
+  width:40px;height:40px;border-radius:50%;
+  background:linear-gradient(135deg,#534AB7 0%,#1D9E75 100%);
+  display:flex;align-items:center;justify-content:center;
+  font-size:14px;font-weight:700;color:#fff;flex-shrink:0;
+  border:2px solid var(--border);
+}
+.ac-name{font-size:13px;font-weight:600;line-height:1.3;}
+.ac-role{font-size:11px;color:var(--accent2);margin-top:1px;}
+.ac-divider{height:1px;background:var(--border);margin:10px 0;}
+.ac-inst{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--text2);}
+.ac-dot{width:6px;height:6px;border-radius:50%;background:var(--accent);flex-shrink:0;}
+.ac-year{font-family:var(--mono);font-size:10px;color:var(--text3);margin-top:6px;}
+.hero-close{
+  background:none;border:none;color:var(--text3);cursor:pointer;
+  font-size:18px;padding:4px;line-height:1;transition:color .2s;
+}
+.hero-close:hover{color:var(--text);}
+
+/* ── LAYOUT ── */
+.app{display:grid;grid-template-columns:360px 1fr;min-height:calc(100vh - 64px);}
+
+/* ── PANEL IZQUIERDO ── */
+.panel-l{border-right:1px solid var(--border);background:var(--surface);display:flex;flex-direction:column;overflow-y:auto;}
+.sec{padding:16px 18px;border-bottom:1px solid var(--border);}
+.sec-lbl{font-family:var(--mono);font-size:10px;color:var(--text3);letter-spacing:1px;text-transform:uppercase;margin-bottom:10px;display:flex;align-items:center;gap:6px;}
+.sec-lbl::before{content:'//';color:var(--accent);}
+
+.upload-area{border:1.5px dashed var(--border);border-radius:12px;padding:22px 16px;text-align:center;cursor:pointer;transition:all .2s;background:var(--surface2);}
+.upload-area:hover,.upload-area.drag{border-color:var(--accent);background:rgba(74,222,128,.04);}
+.upload-icon{font-size:24px;margin-bottom:7px;}
+.upload-title{font-size:13px;font-weight:500;margin-bottom:3px;}
+.upload-sub{font-size:11px;color:var(--text2);}
+.upload-types{display:flex;gap:5px;justify-content:center;margin-top:9px;flex-wrap:wrap;}
+.type-badge{font-family:var(--mono);font-size:10px;background:var(--surface);border:1px solid var(--border);border-radius:3px;padding:2px 6px;color:var(--text2);}
+#file-input{display:none;}
+
+.status-bar{display:none;align-items:center;gap:8px;padding:9px 12px;border-radius:8px;font-size:12px;margin-top:9px;background:var(--surface2);border:1px solid var(--border);}
+.sdot{width:7px;height:7px;border-radius:50%;flex-shrink:0;}
+.sdot.loading{background:var(--accent3);animation:pulse 1s infinite;}
+.sdot.done{background:var(--accent);}
+.sdot.error{background:var(--accent4);}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+
+.ctrl-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;}
+.ctrl-lbl{font-size:12px;color:var(--text2);}
+.toggle{position:relative;width:32px;height:17px;background:var(--border);border-radius:9px;cursor:pointer;transition:background .2s;}
+.toggle.on{background:var(--accent);}
+.toggle::after{content:'';position:absolute;top:2px;left:2px;width:13px;height:13px;border-radius:50%;background:#fff;transition:transform .2s;}
+.toggle.on::after{transform:translateX(15px);}
+
+.angles-table{width:100%;border-collapse:collapse;font-size:12px;}
+.angles-table th{font-family:var(--mono);font-size:9px;color:var(--text3);letter-spacing:.8px;text-align:left;padding:0 0 7px;border-bottom:1px solid var(--border);}
+.angles-table td{padding:6px 0;border-bottom:1px solid var(--border);color:var(--text2);}
+.adot{display:inline-block;width:6px;height:6px;border-radius:50%;margin-right:5px;vertical-align:middle;}
+
+.metric-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px;}
+.mc{background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:9px 11px;}
+.mc.full{grid-column:1/-1;}
+.mc-name{font-size:9px;color:var(--text3);font-family:var(--mono);margin-bottom:3px;}
+.mc-val{font-size:18px;font-weight:600;font-family:var(--mono);color:var(--text);line-height:1;}
+.mc-val.g{color:var(--accent)}.mc-val.b{color:var(--accent2)}.mc-val.a{color:var(--accent3)}.mc-val.r{color:var(--accent4)}
+.mc-unit{font-size:10px;color:var(--text3);margin-top:2px;}
+
+.sym-bar{margin-bottom:9px;}
+.sym-lbl{font-size:10px;color:var(--text3);font-family:var(--mono);margin-bottom:3px;display:flex;justify-content:space-between;}
+.sym-track{height:4px;background:var(--border);border-radius:2px;position:relative;}
+.sym-fill{height:100%;border-radius:2px;background:var(--accent2);transition:width .5s;}
+.sym-center{position:absolute;top:-2px;left:50%;width:1px;height:8px;background:var(--text3);}
+
+.btn{width:100%;padding:10px;border-radius:8px;border:1px solid var(--accent);background:rgba(74,222,128,.07);color:var(--accent);font-family:var(--mono);font-size:11px;cursor:pointer;transition:all .2s;margin-top:6px;letter-spacing:.3px;}
+.btn:hover{background:rgba(74,222,128,.15);}
+.btn:disabled{opacity:.3;cursor:not-allowed;}
+.btn.sec2{border-color:var(--accent2);color:var(--accent2);background:rgba(96,165,250,.05);}
+.btn.sec2:hover{background:rgba(96,165,250,.13);}
+
+/* ── PANEL DERECHO ── */
+.panel-r{display:flex;flex-direction:column;background:var(--bg);overflow:hidden;}
+.canvas-wrapper{flex:1;display:flex;align-items:center;justify-content:center;padding:20px;min-height:380px;}
+.canvas-inner{position:relative;display:inline-block;}
+#output-canvas{border-radius:12px;max-width:100%;max-height:60vh;display:block;}
+.placeholder{display:flex;flex-direction:column;align-items:center;gap:10px;color:var(--text3);text-align:center;}
+.ph-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;width:64px;height:64px;opacity:.2;margin-bottom:6px;}
+.ph-grid div{background:var(--border);border-radius:2px;}
+
+.video-bar{padding:12px 20px;border-top:1px solid var(--border);background:var(--surface);display:none;flex-direction:column;gap:6px;}
+.video-bar.vis{display:flex;}
+#seek-bar{width:100%;height:3px;appearance:none;background:var(--border);border-radius:2px;cursor:pointer;outline:none;}
+#seek-bar::-webkit-slider-thumb{appearance:none;width:11px;height:11px;border-radius:50%;background:var(--accent);cursor:pointer;}
+.vc{display:flex;align-items:center;gap:9px;}
+.vc-btn{background:none;border:1px solid var(--border);color:var(--text2);border-radius:5px;padding:5px 11px;font-family:var(--mono);font-size:11px;cursor:pointer;transition:all .15s;}
+.vc-btn:hover{border-color:var(--accent2);color:var(--accent2);}
+.time-d{font-family:var(--mono);font-size:11px;color:var(--text3);margin-left:auto;}
+
+.chart-area{padding:13px 20px;border-top:1px solid var(--border);background:var(--surface);display:none;}
+.chart-area.vis{display:block;}
+#vel-canvas{width:100%;height:60px;}
+
+/* ── FOOTER ── */
+footer{
+  border-top:1px solid var(--border);background:var(--surface);
+  padding:12px 32px;
+  display:flex;align-items:center;justify-content:space-between;
+  font-size:11px;color:var(--text3);
+}
+.footer-left{display:flex;align-items:center;gap:8px;}
+.footer-dot{width:5px;height:5px;border-radius:50%;background:var(--accent);}
+.footer-right{font-family:var(--mono);font-size:10px;}
+
+::-webkit-scrollbar{width:4px;}
+::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px;}
+@media(max-width:860px){.app{grid-template-columns:1fr;}.panel-l{border-right:none;border-bottom:1px solid var(--border);max-height:55vh;}#hero{flex-direction:column;}.hero-right{width:100%;}}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">
+    <div class="logo-icon">🦴</div>
+    <div>
+      <div class="logo-text">Analizador Postural · TO</div>
+      <div class="logo-sub">MediaPipe Pose · Análisis biomecánico</div>
+    </div>
+  </div>
+  <div class="header-right">
+    <div class="author-chip">
+      <div class="author-avatar">KP</div>
+      <span class="author-name">Karen Paredes · UNAL</span>
+    </div>
+    <div class="badge-h">v2.1 · 2026</div>
+  </div>
+</header>
+
+<!-- HERO -->
+<div id="hero">
+  <div class="hero-left">
+    <div class="hero-title">Análisis postural <span>asistido por IA</span></div>
+    <div class="hero-desc">
+      Herramienta educativa para estudiantes de Terapia Ocupacional. Permite extraer ángulos articulares,
+      distancias de segmentos y análisis de simetría corporal a partir de imágenes o videos cortos,
+      orientada a la valoración de necesidades para ayudas técnicas.
+    </div>
+    <div class="hero-tags">
+      <span class="tag g">MediaPipe Pose</span>
+      <span class="tag b">33 puntos clave</span>
+      <span class="tag">Ángulos articulares</span>
+      <span class="tag">Simetría corporal</span>
+      <span class="tag">Velocidad de segmentos</span>
+      <span class="tag">Exportar CSV</span>
+    </div>
+  </div>
+  <div class="hero-right">
+    <div class="author-card">
+      <div class="ac-top">
+        <div class="ac-avatar">KP</div>
+        <div>
+          <div class="ac-name">Karen Vanessa<br>Paredes Castro</div>
+          <div class="ac-role">Docente de Terapia Ocupacional</div>
+        </div>
+      </div>
+      <div class="ac-divider"></div>
+      <div class="ac-inst">
+        <div class="ac-dot"></div>
+        Universidad Nacional de Colombia
+      </div>
+      <div class="ac-year">Facultad de Medicina · 2026</div>
+    </div>
+    <button class="hero-close" onclick="document.getElementById('hero').style.display='none'" title="Cerrar presentación">✕</button>
+  </div>
+</div>
+
+<div class="app">
+  <!-- PANEL IZQUIERDO -->
+  <div class="panel-l">
+
+    <div class="sec">
+      <div class="sec-lbl">Cargar archivo</div>
+      <div class="upload-area" id="upload-area" onclick="document.getElementById('file-input').click()">
+        <div class="upload-icon">📁</div>
+        <div class="upload-title">Arrastra o haz clic aquí</div>
+        <div class="upload-sub">Imagen o video (máx. 10 seg recomendado)</div>
+        <div class="upload-types">
+          <span class="type-badge">JPG</span><span class="type-badge">PNG</span>
+          <span class="type-badge">MP4</span><span class="type-badge">WEBM</span>
+        </div>
+      </div>
+      <input type="file" id="file-input" accept="image/*,video/*">
+      <div class="status-bar" id="status-bar">
+        <div class="sdot" id="sdot"></div>
+        <span id="stxt">—</span>
+      </div>
+    </div>
+
+    <div class="sec">
+      <div class="sec-lbl">Visualización</div>
+      <div class="ctrl-row"><span class="ctrl-lbl">Mostrar esqueleto</span><div class="toggle on" id="tog-sk" onclick="togOpt('sk',this)"></div></div>
+      <div class="ctrl-row"><span class="ctrl-lbl">Ángulos en imagen</span><div class="toggle on" id="tog-an" onclick="togOpt('an',this)"></div></div>
+      <div class="ctrl-row"><span class="ctrl-lbl">Distancias en imagen</span><div class="toggle" id="tog-di" onclick="togOpt('di',this)"></div></div>
+      <div class="ctrl-row" style="margin-bottom:0"><span class="ctrl-lbl">Colores Izq(verde) / Der(azul)</span><div class="toggle on" id="tog-col" onclick="togOpt('col',this)"></div></div>
+    </div>
+
+    <div class="sec">
+      <div class="sec-lbl">Ángulos articulares</div>
+      <table class="angles-table">
+        <thead><tr><th>Articulación</th><th style="text-align:right">Izq &nbsp; Der</th></tr></thead>
+        <tbody id="angles-tbody">
+          <tr><td colspan="2" style="color:var(--text3);font-size:11px;text-align:center;padding:14px 0">Carga un archivo para analizar</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="sec">
+      <div class="sec-lbl">Distancias de segmentos</div>
+      <div class="metric-grid" id="dist-grid">
+        <div class="mc full"><div class="mc-unit" style="padding:8px 0;text-align:center">Sin datos aún</div></div>
+      </div>
+    </div>
+
+    <div class="sec">
+      <div class="sec-lbl">Simetría corporal</div>
+      <div id="sym-cont"><div style="color:var(--text3);font-size:11px;text-align:center;padding:8px 0">Sin datos aún</div></div>
+    </div>
+
+    <div class="sec" id="vel-sec" style="display:none">
+      <div class="sec-lbl">Velocidad de segmentos</div>
+      <div class="metric-grid" id="vel-grid"></div>
+    </div>
+
+    <div class="sec">
+      <div class="sec-lbl">Exportar resultados</div>
+      <button class="btn" id="btn-csv" disabled onclick="exportCSV()">↓ Exportar CSV</button>
+      <button class="btn sec2" id="btn-img" disabled onclick="exportImg()">↓ Guardar imagen anotada</button>
+    </div>
+
+  </div>
+
+  <!-- PANEL DERECHO -->
+  <div class="panel-r">
+    <div class="canvas-wrapper">
+      <div class="placeholder" id="placeholder">
+        <div class="ph-grid"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>
+        <div style="font-size:14px;font-weight:500;color:var(--text2)">Sin archivo cargado</div>
+        <div style="font-size:12px">Sube una imagen o video para comenzar el análisis</div>
+      </div>
+      <div class="canvas-inner" id="canvas-inner" style="display:none">
+        <canvas id="output-canvas"></canvas>
+      </div>
+    </div>
+    <div class="video-bar" id="video-bar">
+      <input type="range" id="seek-bar" min="0" max="100" value="0" step="0.1">
+      <div class="vc">
+        <button class="vc-btn" id="btn-play" onclick="togglePlay()">▶ Play</button>
+        <button class="vc-btn" onclick="stepFrame(-1)">◀ Frame</button>
+        <button class="vc-btn" onclick="stepFrame(1)">Frame ▶</button>
+        <span class="time-d" id="time-d">0.00s / 0.00s</span>
+      </div>
+    </div>
+    <div class="chart-area" id="chart-area">
+      <div class="sec-lbl" style="margin-bottom:7px">Velocidad articular — línea de tiempo</div>
+      <canvas id="vel-canvas"></canvas>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <div class="footer-left">
+    <div class="footer-dot"></div>
+    <span>Desarrollado por <strong style="color:var(--text2)">Karen Vanessa Paredes Castro</strong> · Docente de Terapia Ocupacional · Universidad Nacional de Colombia · 2026</span>
+  </div>
+  <div class="footer-right">MediaPipe Pose v0.5 · Uso educativo</div>
+</footer>
+
+<script src="https://unpkg.com/@mediapipe/pose@0.5.1675469404/pose.js" crossorigin="anonymous"></script>
+<script>
+const CONN=[[11,12],[11,13],[13,15],[12,14],[14,16],[11,23],[12,24],[23,24],[23,25],[24,26],[25,27],[26,28],[27,29],[28,30],[27,31],[28,32],[0,1],[1,2],[2,3],[3,7],[0,4],[4,5],[5,6],[6,8],[9,10],[15,17],[15,19],[15,21],[16,18],[16,20],[16,22]];
+const LI=new Set([1,3,7,11,13,15,17,19,21,23,25,27,29,31]);
+const JD=[{n:'Codo',L:[11,13,15],R:[12,14,16]},{n:'Hombro',L:[13,11,23],R:[14,12,24]},{n:'Cadera',L:[11,23,25],R:[12,24,26]},{n:'Rodilla',L:[23,25,27],R:[24,26,28]},{n:'Tobillo',L:[25,27,31],R:[26,28,32]}];
+const DD=[{n:'Ancho hombros',p:[11,12]},{n:'Ancho caderas',p:[23,24]},{n:'Brazo izq',p:[11,15]},{n:'Brazo der',p:[12,16]},{n:'Pierna izq',p:[23,27]},{n:'Pierna der',p:[24,28]},{n:'Tronco',p:[11,23]}];
+const VJ=[{id:11,n:'Hombro I'},{id:12,n:'Hombro D'},{id:13,n:'Codo I'},{id:14,n:'Codo D'},{id:23,n:'Cadera I'},{id:25,n:'Rodilla I'}];
+
+let opts={sk:true,an:true,di:false,col:true};
+let pose=null,ready=false,mode=null,imgEl=null,videoEl=null;
+let frames=[],velH=[],playing=false,raf=null;
+let lLms=null,lAng=null,lDist=null;
+const canvas=document.getElementById('output-canvas');
+const ctx=canvas.getContext('2d');
+
+function initPose(){
+  setSt('loading','Cargando modelo MediaPipe Pose… (primera vez ~15 seg)');
+  pose=new Pose({locateFile:f=>`https://unpkg.com/@mediapipe/pose@0.5.1675469404/${f}`});
+  pose.setOptions({modelComplexity:1,smoothLandmarks:true,enableSegmentation:false,minDetectionConfidence:0.5,minTrackingConfidence:0.5});
+  pose.onResults(onRes);
+  const wc=document.createElement('canvas');wc.width=64;wc.height=64;
+  pose.send({image:wc}).then(()=>{ready=true;setSt('done','Modelo listo — sube una imagen o video');}).catch(()=>{ready=true;setSt('done','Modelo listo');});
+}
+window.addEventListener('load',initPose);
+
+const ua=document.getElementById('upload-area'),fi=document.getElementById('file-input');
+ua.addEventListener('dragover',e=>{e.preventDefault();ua.classList.add('drag');});
+ua.addEventListener('dragleave',()=>ua.classList.remove('drag'));
+ua.addEventListener('drop',e=>{e.preventDefault();ua.classList.remove('drag');hf(e.dataTransfer.files[0]);});
+fi.addEventListener('change',e=>hf(e.target.files[0]));
+
+function hf(f){
+  if(!f)return;
+  if(!ready){setSt('loading','El modelo aún carga, espera unos segundos.');return;}
+  frames=[];velH=[];
+  const url=URL.createObjectURL(f);
+  if(f.type.startsWith('image/'))liImg(url);
+  else if(f.type.startsWith('video/'))liVid(url);
+  else setSt('error','Formato no soportado. Usa JPG, PNG o MP4.');
+}
+function liImg(url){
+  mode='image';hideVid();setSt('loading','Detectando pose en la imagen…');
+  imgEl=new Image();
+  imgEl.onload=async()=>{
+    canvas.width=imgEl.naturalWidth;canvas.height=imgEl.naturalHeight;
+    ctx.drawImage(imgEl,0,0);showCv();
+    try{await pose.send({image:imgEl});}catch(e){setSt('error','Error: '+e.message);}
+  };
+  imgEl.src=url;
+}
+function liVid(url){
+  mode='video';
+  if(videoEl){videoEl.pause();videoEl.src='';}
+  videoEl=document.createElement('video');
+  videoEl.src=url;videoEl.muted=true;videoEl.playsInline=true;
+  setSt('loading','Cargando video…');
+  videoEl.onloadedmetadata=()=>{
+    canvas.width=videoEl.videoWidth||640;canvas.height=videoEl.videoHeight||480;
+    document.getElementById('seek-bar').max=videoEl.duration;
+    document.getElementById('video-bar').classList.add('vis');
+    showCv();exFrames();
+  };
+  videoEl.onerror=()=>setSt('error','No se pudo cargar el video.');
+}
+async function exFrames(){
+  const fps=10,step=1/fps,dur=videoEl.duration,tot=Math.ceil(dur*fps);
+  for(let i=0;i<tot;i++){
+    await new Promise(r=>{videoEl.currentTime=i*step;videoEl.onseeked=r;});
+    const oc=new OffscreenCanvas(canvas.width,canvas.height);
+    oc.getContext('2d').drawImage(videoEl,0,0);
+    try{await pose.send({image:oc});}catch(_){}
+    if(i%3===0)setSt('loading',`Analizando frames… ${i}/${tot}`);
+  }
+  setSt('done',`Listo — ${frames.length} frames analizados ✓`);
+  document.getElementById('vel-sec').style.display='block';
+  document.getElementById('chart-area').classList.add('vis');
+  if(frames.length)df(0);
+  renderVelChart();enExp();
+}
+function onRes(r){
+  const lms=r.poseLandmarks;
+  if(mode==='image'){
+    if(!lms){setSt('error','No se detectó persona. Intenta con foto más clara con cuerpo completo visible.');return;}
+    lLms=lms;lAng=cAng(lms);lDist=cDist(lms);
+    rdImg();updP(lAng,lDist);
+    setSt('done',`Pose detectada ✓ — ${lms.length} puntos clave`);enExp();
+  }else{
+    if(!lms)return;
+    frames.push({time:videoEl?videoEl.currentTime:0,landmarks:lms,angles:cAng(lms),dists:cDist(lms)});
+    cVel();
+  }
+}
+function a3(a,b,c){
+  const v1=[a.x-b.x,a.y-b.y,(a.z||0)-(b.z||0)],v2=[c.x-b.x,c.y-b.y,(c.z||0)-(b.z||0)];
+  const dot=v1[0]*v2[0]+v1[1]*v2[1]+v1[2]*v2[2],m=Math.hypot(...v1)*Math.hypot(...v2);
+  if(!m)return null;
+  return Math.round(Math.acos(Math.min(1,Math.max(-1,dot/m)))*180/Math.PI);
+}
+function d2(a,b){return Math.round(Math.hypot((a.x-b.x)*canvas.width,(a.y-b.y)*canvas.height));}
+function cAng(l){return JD.map(j=>({n:j.n,L:a3(l[j.L[0]],l[j.L[1]],l[j.L[2]]),R:a3(l[j.R[0]],l[j.R[1]],l[j.R[2]])}));}
+function cDist(l){return DD.map(d=>({n:d.n,v:d2(l[d.p[0]],l[d.p[1]])}));}
+function cVel(){
+  if(frames.length<2)return;
+  const a=frames[frames.length-2],b=frames[frames.length-1],dt=(b.time-a.time)||0.001;
+  velH.push({time:b.time,vels:VJ.map(j=>{const p1=a.landmarks[j.id],p2=b.landmarks[j.id];return{id:j.id,n:j.n,v:Math.round(Math.hypot((p2.x-p1.x)*canvas.width,(p2.y-p1.y)*canvas.height)/dt)};})});
+}
+function rp(c,lms,ang,dist){
+  const W=canvas.width,H=canvas.height;
+  if(opts.sk){
+    CONN.forEach(([a,b])=>{
+      const pa=lms[a],pb=lms[b];if(pa.visibility<0.35||pb.visibility<0.35)return;
+      c.beginPath();c.moveTo(pa.x*W,pa.y*H);c.lineTo(pb.x*W,pb.y*H);
+      c.strokeStyle=opts.col?(LI.has(a)?'rgba(74,222,128,.8)':'rgba(96,165,250,.8)'):'rgba(255,255,255,.6)';
+      c.lineWidth=Math.max(2,W*0.003);c.stroke();
+    });
+    lms.forEach((lm,i)=>{
+      if(lm.visibility<0.35)return;
+      c.beginPath();c.arc(lm.x*W,lm.y*H,Math.max(3,W*0.006),0,2*Math.PI);
+      c.fillStyle=opts.col?(LI.has(i)?'#4ade80':'#60a5fa'):'#fff';
+      c.fill();c.strokeStyle='rgba(0,0,0,.5)';c.lineWidth=1.5;c.stroke();
+    });
+  }
+  if(opts.an&&ang){
+    JD.forEach((j,i)=>{
+      [['L',j.L[1],'#4ade80'],['R',j.R[1],'#60a5fa']].forEach(([s,pi,col])=>{
+        const v=ang[i][s];if(!v)return;
+        const lm=lms[pi];if(lm.visibility<0.35)return;
+        const x=lm.x*W,y=lm.y*H,t=`${v}°`,tw=t.length*7+8;
+        c.save();c.fillStyle='rgba(0,0,0,.72)';c.beginPath();c.roundRect(x+6,y-16,tw,17,3);c.fill();
+        c.fillStyle=col;c.font=`bold ${Math.max(10,W*0.013)}px DM Mono,monospace`;c.fillText(t,x+10,y-3);c.restore();
+      });
+    });
+  }
+  if(opts.di&&dist){
+    DD.forEach((d,i)=>{
+      const pa=lms[d.p[0]],pb=lms[d.p[1]],mx=(pa.x+pb.x)/2*W,my=(pa.y+pb.y)/2*H,t=`${dist[i].v}px`;
+      c.save();c.fillStyle='rgba(0,0,0,.72)';c.beginPath();c.roundRect(mx-22,my-12,44,14,3);c.fill();
+      c.fillStyle='#f59e0b';c.font='10px DM Mono,monospace';c.fillText(t,mx-18,my-1);c.restore();
+    });
+  }
+}
+function rdImg(){if(!imgEl||!lLms)return;ctx.clearRect(0,0,canvas.width,canvas.height);ctx.drawImage(imgEl,0,0);rp(ctx,lLms,lAng,lDist);}
+function df(idx){
+  if(!frames.length)return;
+  const f=frames[Math.min(idx,frames.length-1)];
+  ctx.clearRect(0,0,canvas.width,canvas.height);ctx.drawImage(videoEl,0,0,canvas.width,canvas.height);
+  rp(ctx,f.landmarks,f.angles,f.dists);updP(f.angles,f.dists);
+  const vel=velH.find(v=>Math.abs(v.time-f.time)<0.12);
+  if(vel)document.getElementById('vel-grid').innerHTML=vel.vels.map(v=>{const c=v.v<50?'g':v.v<150?'a':'r';return`<div class="mc"><div class="mc-name">${v.n}</div><div class="mc-val ${c}">${v.v}</div><div class="mc-unit">px/seg</div></div>`;}).join('');
+}
+function updP(ang,dist){
+  const ac=v=>!v?'var(--text3)':v<70?'var(--accent4)':v<120?'var(--accent3)':'var(--accent)';
+  document.getElementById('angles-tbody').innerHTML=ang.map(a=>`<tr><td><span class="adot" style="background:var(--accent)"></span>${a.n}</td><td style="text-align:right;font-family:var(--mono)"><span style="color:${ac(a.L)}">${a.L??'—'}°</span>&nbsp;<span style="color:${ac(a.R)}">${a.R??'—'}°</span></td></tr>`).join('');
+  document.getElementById('dist-grid').innerHTML=dist.map(d=>`<div class="mc"><div class="mc-name">${d.n.toUpperCase()}</div><div class="mc-val b">${d.v}</div><div class="mc-unit">píxeles</div></div>`).join('');
+  document.getElementById('sym-cont').innerHTML=ang.map(a=>{
+    if(!a.L||!a.R)return'';
+    const diff=Math.abs(a.L-a.R),pct=Math.min(a.L,a.R)/Math.max(a.L,a.R)*100,col=pct>90?'var(--accent)':pct>75?'var(--accent3)':'var(--accent4)';
+    return`<div class="sym-bar"><div class="sym-lbl"><span>${a.n}</span><span style="color:${col}">${diff?`Δ${diff}° ${Math.round(pct)}%`:'Simétrico'}</span></div><div class="sym-track"><div class="sym-fill" style="width:${pct}%;background:${col}"></div><div class="sym-center"></div></div></div>`;
+  }).join('');
+}
+function renderVelChart(){
+  const c=document.getElementById('vel-canvas');c.width=c.parentElement.offsetWidth-40;c.height=60;
+  const cx=c.getContext('2d');if(velH.length<2)return;
+  const maxV=Math.max(...velH.flatMap(f=>f.vels.map(v=>v.v)),1),W=c.width,H=c.height;
+  const cols=['#4ade80','#60a5fa','#f59e0b','#f87171','#a78bfa','#34d399'];
+  VJ.forEach((j,ci)=>{
+    cx.beginPath();velH.forEach((fr,i)=>{const x=i/(velH.length-1)*(W-10)+5,val=fr.vels.find(v=>v.id===j.id)?.v||0,y=H-4-(val/maxV)*(H-10);i===0?cx.moveTo(x,y):cx.lineTo(x,y);});
+    cx.strokeStyle=cols[ci];cx.lineWidth=1.5;cx.stroke();
+    cx.fillStyle=cols[ci];cx.font='9px DM Mono,monospace';cx.fillText(j.n,5+ci*78,H-2);
+  });
+}
+document.getElementById('seek-bar').addEventListener('input',function(){
+  if(!frames.length)return;
+  const t=parseFloat(this.value),idx=frames.reduce((b,f,i)=>Math.abs(f.time-t)<Math.abs(frames[b].time-t)?i:b,0);
+  df(idx);document.getElementById('time-d').textContent=`${t.toFixed(2)}s / ${(videoEl?.duration||0).toFixed(2)}s`;
+});
+function togglePlay(){playing=!playing;document.getElementById('btn-play').textContent=playing?'⏸ Pause':'▶ Play';if(playing)pl();else cancelAnimationFrame(raf);}
+function pl(){
+  if(!playing||!frames.length)return;
+  const sk=document.getElementById('seek-bar'),t=parseFloat(sk.value)+0.1;
+  if(t>frames[frames.length-1].time){sk.value=0;playing=false;document.getElementById('btn-play').textContent='▶ Play';return;}
+  sk.value=t;sk.dispatchEvent(new Event('input'));raf=requestAnimationFrame(pl);
+}
+function stepFrame(d){
+  if(!frames.length)return;
+  const t=parseFloat(document.getElementById('seek-bar').value),cur=frames.reduce((b,f,i)=>Math.abs(f.time-t)<Math.abs(frames[b].time-t)?i:b,0);
+  const ni=Math.max(0,Math.min(frames.length-1,cur+d));document.getElementById('seek-bar').value=frames[ni].time;document.getElementById('seek-bar').dispatchEvent(new Event('input'));
+}
+function togOpt(k,el){opts[k]=!opts[k];el.classList.toggle('on',opts[k]);if(mode==='image')rdImg();else if(frames.length){const t=parseFloat(document.getElementById('seek-bar').value),idx=frames.reduce((b,f,i)=>Math.abs(f.time-t)<Math.abs(frames[b].time-t)?i:b,0);df(idx);}}
+function setSt(type,msg){const b=document.getElementById('status-bar');b.style.display='flex';document.getElementById('sdot').className='sdot '+type;document.getElementById('stxt').textContent=msg;}
+function showCv(){document.getElementById('placeholder').style.display='none';document.getElementById('canvas-inner').style.display='inline-block';}
+function hideVid(){document.getElementById('video-bar').classList.remove('vis');document.getElementById('chart-area').classList.remove('vis');document.getElementById('vel-sec').style.display='none';}
+function enExp(){document.getElementById('btn-csv').disabled=false;document.getElementById('btn-img').disabled=false;}
+function exportCSV(){
+  const rows=['Articulacion,Lado,Angulo (grados),Tiempo (s)'];
+  const src=frames.length?frames:(lAng?[{time:0,angles:lAng,dists:lDist}]:[]);
+  src.forEach(f=>{f.angles.forEach(a=>{rows.push(`${a.n},Izquierdo,${a.L??''},${f.time.toFixed(3)}`);rows.push(`${a.n},Derecho,${a.R??''},${f.time.toFixed(3)}`);});});
+  rows.push('','Segmento,Distancia (px)');const f0=src[0];if(f0)f0.dists.forEach(d=>rows.push(`${d.n},${d.v}`));
+  const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([rows.join('\n')],{type:'text/csv'}));a.download='analisis_postural_UNAL.csv';a.click();
+}
+function exportImg(){const a=document.createElement('a');a.href=canvas.toDataURL('image/png');a.download='postura_anotada.png';a.click();}
+</script>
+</body>
+</html>
