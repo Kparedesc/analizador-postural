@@ -4,113 +4,133 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="author" content="Karen Vanessa Paredes Castro">
-<meta name="description" content="Analizador postural con MediaPipe para Terapia Ocupacional. Universidad Nacional de Colombia.">
-<title>Analizador Postural — Karen Paredes · UNAL</title>
+<meta name="description" content="Analizador postural y de mano con MediaPipe para Terapia Ocupacional. Universidad Nacional de Colombia.">
+<title>Analizador Postural · TO — Karen Paredes · UNAL</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
 :root{
   --bg:#0e0f11;--sur:#16181c;--sur2:#1e2026;--brd:#2a2d35;
-  --acc:#4ade80;--acc2:#60a5fa;--acc3:#f59e0b;--acc4:#f87171;
+  --acc:#4ade80;--acc2:#60a5fa;--acc3:#f59e0b;--acc4:#f87171;--acc5:#c084fc;
   --text:#e8eaf0;--text2:#8b8fa8;--text3:#555869;
   --mono:'DM Mono',monospace;--sans:'DM Sans',sans-serif;
 }
 *{box-sizing:border-box;margin:0;padding:0;}
 body{background:var(--bg);color:var(--text);font-family:var(--sans);min-height:100vh;overflow-x:hidden;}
 
-header{display:flex;align-items:center;justify-content:space-between;padding:0 28px;height:60px;border-bottom:1px solid var(--brd);background:var(--sur);position:sticky;top:0;z-index:100;}
-.logo{display:flex;align-items:center;gap:12px;}
-.logo-icon{width:34px;height:34px;border-radius:8px;background:linear-gradient(135deg,var(--acc),var(--acc2));display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0;}
+header{display:flex;align-items:center;justify-content:space-between;padding:0 28px;height:58px;border-bottom:1px solid var(--brd);background:var(--sur);position:sticky;top:0;z-index:100;}
+.logo{display:flex;align-items:center;gap:11px;}
+.logo-icon{width:32px;height:32px;border-radius:8px;background:linear-gradient(135deg,var(--acc),var(--acc2));display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;}
 .logo-text{font-size:14px;font-weight:600;}
 .logo-sub{font-size:10px;color:var(--text2);font-family:var(--mono);}
-.hdr-r{display:flex;align-items:center;gap:10px;}
-.author-chip{display:flex;align-items:center;gap:7px;background:var(--sur2);border:1px solid var(--brd);border-radius:20px;padding:4px 10px 4px 7px;}
-.av{width:22px;height:22px;border-radius:50%;background:linear-gradient(135deg,#534AB7,#1D9E75);display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;color:#fff;flex-shrink:0;}
+.hdr-r{display:flex;align-items:center;gap:9px;}
+.author-chip{display:flex;align-items:center;gap:6px;background:var(--sur2);border:1px solid var(--brd);border-radius:20px;padding:3px 10px 3px 6px;}
+.av{width:20px;height:20px;border-radius:50%;background:linear-gradient(135deg,#534AB7,#1D9E75);display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;color:#fff;flex-shrink:0;}
 .author-name{font-size:11px;color:var(--text2);}
 .badge-h{font-family:var(--mono);font-size:10px;color:var(--acc);border:1px solid var(--acc);border-radius:4px;padding:2px 7px;}
 
 /* HERO */
-#hero{background:var(--sur);border-bottom:1px solid var(--brd);padding:16px 28px;display:flex;align-items:flex-start;justify-content:space-between;gap:20px;}
+#hero{background:var(--sur);border-bottom:1px solid var(--brd);padding:14px 28px;display:flex;align-items:flex-start;justify-content:space-between;gap:18px;}
 .hero-l{flex:1;}
-.hero-title{font-size:20px;font-weight:600;letter-spacing:-0.3px;margin-bottom:5px;}
+.hero-title{font-size:18px;font-weight:600;margin-bottom:4px;}
 .hero-title span{color:var(--acc);}
-.hero-desc{font-size:12px;color:var(--text2);line-height:1.7;max-width:520px;}
-.hero-tags{display:flex;gap:5px;flex-wrap:wrap;margin-top:8px;}
-.tag{font-family:var(--mono);font-size:10px;background:var(--sur2);border:1px solid var(--brd);border-radius:3px;padding:2px 7px;color:var(--text3);}
+.hero-desc{font-size:12px;color:var(--text2);line-height:1.65;max-width:500px;}
+.hero-tags{display:flex;gap:5px;flex-wrap:wrap;margin-top:7px;}
+.tag{font-family:var(--mono);font-size:10px;background:var(--sur2);border:1px solid var(--brd);border-radius:3px;padding:2px 6px;color:var(--text3);}
 .tag.g{border-color:rgba(74,222,128,.4);color:var(--acc);}
 .tag.b{border-color:rgba(96,165,250,.4);color:var(--acc2);}
-.hero-r{flex-shrink:0;}
-.author-card{background:var(--sur2);border:1px solid var(--brd);border-radius:10px;padding:12px 14px;min-width:200px;}
-.ac-top{display:flex;align-items:center;gap:9px;margin-bottom:9px;}
-.ac-av{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,#534AB7,#1D9E75);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#fff;flex-shrink:0;border:2px solid var(--brd);}
-.ac-name{font-size:12px;font-weight:600;line-height:1.3;}
-.ac-role{font-size:10px;color:var(--acc2);margin-top:1px;}
-.ac-div{height:1px;background:var(--brd);margin:8px 0;}
+.tag.p{border-color:rgba(192,132,252,.4);color:var(--acc5);}
+.author-card{background:var(--sur2);border:1px solid var(--brd);border-radius:10px;padding:11px 13px;min-width:195px;flex-shrink:0;}
+.ac-top{display:flex;align-items:center;gap:8px;margin-bottom:8px;}
+.ac-av{width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,#534AB7,#1D9E75);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#fff;flex-shrink:0;border:2px solid var(--brd);}
+.ac-name{font-size:11px;font-weight:600;line-height:1.3;}
+.ac-role{font-size:10px;color:var(--acc2);}
+.ac-div{height:1px;background:var(--brd);margin:7px 0;}
 .ac-inst{display:flex;align-items:center;gap:5px;font-size:10px;color:var(--text2);}
 .ac-dot{width:5px;height:5px;border-radius:50%;background:var(--acc);flex-shrink:0;}
-.ac-year{font-family:var(--mono);font-size:9px;color:var(--text3);margin-top:5px;}
-.hero-close{background:none;border:none;color:var(--text3);cursor:pointer;font-size:16px;padding:3px;line-height:1;transition:color .2s;align-self:flex-start;}
+.ac-year{font-family:var(--mono);font-size:9px;color:var(--text3);margin-top:4px;}
+.hero-close{background:none;border:none;color:var(--text3);cursor:pointer;font-size:15px;padding:2px;align-self:flex-start;transition:color .2s;}
 .hero-close:hover{color:var(--text);}
 
-/* VIEW SWITCHER */
-.view-bar{display:flex;align-items:center;gap:0;background:var(--sur);border-bottom:1px solid var(--brd);padding:10px 28px;}
-.view-lbl{font-family:var(--mono);font-size:10px;color:var(--text3);letter-spacing:.8px;margin-right:12px;}
-.view-btn{padding:7px 20px;font-family:var(--mono);font-size:11px;cursor:pointer;border:1px solid var(--brd);background:var(--sur2);color:var(--text2);transition:all .2s;letter-spacing:.3px;}
-.view-btn:first-of-type{border-radius:6px 0 0 6px;}
-.view-btn:last-of-type{border-radius:0 6px 6px 0;border-left:none;}
-.view-btn.active-f{background:rgba(74,222,128,.12);border-color:var(--acc);color:var(--acc);}
-.view-btn.active-s{background:rgba(96,165,250,.12);border-color:var(--acc2);color:var(--acc2);}
-.view-desc{margin-left:14px;font-size:11px;color:var(--text3);font-style:italic;}
+/* MODE BAR */
+.mode-bar{display:flex;align-items:center;gap:0;background:var(--sur);border-bottom:1px solid var(--brd);padding:8px 28px;gap:8px;flex-wrap:wrap;}
+.mode-lbl{font-family:var(--mono);font-size:10px;color:var(--text3);letter-spacing:.8px;margin-right:4px;}
+.mode-btn{padding:6px 16px;font-family:var(--mono);font-size:11px;cursor:pointer;border:1px solid var(--brd);background:var(--sur2);color:var(--text2);transition:all .2s;letter-spacing:.3px;border-radius:0;}
+.mode-btn:first-of-type{border-radius:6px 0 0 6px;}
+.mode-btn:nth-of-type(2){border-left:none;}
+.mode-btn:nth-of-type(3){border-left:none;border-radius:0 6px 6px 0;}
+.mode-btn.am{background:rgba(74,222,128,.1);border-color:var(--acc);color:var(--acc);}
+.mode-btn.bm{background:rgba(192,132,252,.1);border-color:var(--acc5);color:var(--acc5);}
+.mode-btn.cm{background:rgba(96,165,250,.1);border-color:var(--acc2);color:var(--acc2);}
+.view-sub{display:flex;gap:0;margin-left:8px;}
+.view-btn{padding:5px 12px;font-family:var(--mono);font-size:10px;cursor:pointer;border:1px solid var(--brd);background:var(--sur2);color:var(--text3);transition:all .2s;}
+.view-btn:first-child{border-radius:5px 0 0 5px;}
+.view-btn:last-child{border-radius:0 5px 5px 0;border-left:none;}
+.view-btn.vf{background:rgba(74,222,128,.08);border-color:var(--acc);color:var(--acc);}
+.view-btn.vs{background:rgba(96,165,250,.08);border-color:var(--acc2);color:var(--acc2);}
+.hand-sub{display:flex;gap:0;margin-left:8px;}
+.hand-btn{padding:5px 12px;font-family:var(--mono);font-size:10px;cursor:pointer;border:1px solid var(--brd);background:var(--sur2);color:var(--text3);transition:all .2s;}
+.hand-btn:first-child{border-radius:5px 0 0 5px;}
+.hand-btn:last-child{border-radius:0 5px 5px 0;border-left:none;}
+.hand-btn.hb{background:rgba(192,132,252,.08);border-color:var(--acc5);color:var(--acc5);}
+.mode-desc{font-size:11px;color:var(--text3);font-style:italic;margin-left:8px;}
 
 /* APP */
-.app{display:grid;grid-template-columns:360px 1fr;min-height:calc(100vh - 60px);}
+.app{display:grid;grid-template-columns:360px 1fr;min-height:calc(100vh - 58px);}
 .panel-l{border-right:1px solid var(--brd);background:var(--sur);display:flex;flex-direction:column;overflow-y:auto;}
-.sec{padding:15px 17px;border-bottom:1px solid var(--brd);}
-.sec-lbl{font-family:var(--mono);font-size:10px;color:var(--text3);letter-spacing:1px;text-transform:uppercase;margin-bottom:9px;display:flex;align-items:center;gap:5px;}
+.sec{padding:14px 16px;border-bottom:1px solid var(--brd);}
+.sec-lbl{font-family:var(--mono);font-size:10px;color:var(--text3);letter-spacing:1px;text-transform:uppercase;margin-bottom:8px;display:flex;align-items:center;gap:5px;}
 .sec-lbl::before{content:'//';color:var(--acc);}
 
-/* CALIBRATION */
-.calib-row{display:flex;align-items:center;gap:8px;margin-bottom:6px;}
-.calib-input{flex:1;background:var(--sur2);border:1px solid var(--brd);border-radius:6px;padding:7px 10px;color:var(--text);font-family:var(--mono);font-size:13px;outline:none;transition:border-color .2s;}
+.calib-row{display:flex;align-items:center;gap:7px;margin-bottom:5px;}
+.calib-input{flex:1;background:var(--sur2);border:1px solid var(--brd);border-radius:6px;padding:7px 9px;color:var(--text);font-family:var(--mono);font-size:13px;outline:none;transition:border-color .2s;}
 .calib-input:focus{border-color:var(--acc2);}
-.calib-unit{font-family:var(--mono);font-size:12px;color:var(--text3);white-space:nowrap;}
-.calib-status{font-size:11px;color:var(--text3);font-family:var(--mono);}
-.calib-status.ok{color:var(--acc);}
+.calib-unit{font-family:var(--mono);font-size:12px;color:var(--text3);}
+.calib-st{font-size:11px;color:var(--text3);font-family:var(--mono);}
+.calib-st.ok{color:var(--acc);}
 
-.upload-area{border:1.5px dashed var(--brd);border-radius:10px;padding:20px 14px;text-align:center;cursor:pointer;transition:all .2s;background:var(--sur2);}
+.upload-area{border:1.5px dashed var(--brd);border-radius:10px;padding:18px 14px;text-align:center;cursor:pointer;transition:all .2s;background:var(--sur2);}
 .upload-area:hover,.upload-area.drag{border-color:var(--acc);background:rgba(74,222,128,.04);}
-.upload-icon{font-size:22px;margin-bottom:6px;}
-.upload-title{font-size:13px;font-weight:500;margin-bottom:2px;}
+.upload-icon{font-size:20px;margin-bottom:5px;}
+.upload-title{font-size:12px;font-weight:500;margin-bottom:2px;}
 .upload-sub{font-size:11px;color:var(--text2);}
-.upload-types{display:flex;gap:4px;justify-content:center;margin-top:8px;flex-wrap:wrap;}
+.upload-types{display:flex;gap:4px;justify-content:center;margin-top:7px;flex-wrap:wrap;}
 .tb{font-family:var(--mono);font-size:10px;background:var(--sur);border:1px solid var(--brd);border-radius:3px;padding:1px 5px;color:var(--text2);}
 #fi{display:none;}
-.sbar{display:none;align-items:center;gap:7px;padding:8px 10px;border-radius:7px;font-size:12px;margin-top:8px;background:var(--sur2);border:1px solid var(--brd);}
+.sbar{display:none;align-items:center;gap:7px;padding:7px 10px;border-radius:7px;font-size:11px;margin-top:7px;background:var(--sur2);border:1px solid var(--brd);}
 .sdot{width:6px;height:6px;border-radius:50%;flex-shrink:0;}
 .sdot.loading{background:var(--acc3);animation:pulse 1s infinite;}
 .sdot.done{background:var(--acc);}
 .sdot.error{background:var(--acc4);}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
 
-.ctrl{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;}
+.ctrl{display:flex;align-items:center;justify-content:space-between;margin-bottom:7px;}
 .ctrl-lbl{font-size:12px;color:var(--text2);}
-.tog{position:relative;width:30px;height:16px;background:var(--brd);border-radius:8px;cursor:pointer;transition:background .2s;flex-shrink:0;}
+.tog{position:relative;width:28px;height:15px;background:var(--brd);border-radius:8px;cursor:pointer;transition:background .2s;flex-shrink:0;}
 .tog.on{background:var(--acc);}
-.tog::after{content:'';position:absolute;top:2px;left:2px;width:12px;height:12px;border-radius:50%;background:#fff;transition:transform .2s;}
-.tog.on::after{transform:translateX(14px);}
+.tog::after{content:'';position:absolute;top:2px;left:2px;width:11px;height:11px;border-radius:50%;background:#fff;transition:transform .2s;}
+.tog.on::after{transform:translateX(13px);}
 
-.atbl{width:100%;border-collapse:collapse;font-size:12px;}
-.atbl th{font-family:var(--mono);font-size:9px;color:var(--text3);letter-spacing:.7px;padding:0 0 6px;border-bottom:1px solid var(--brd);text-align:left;}
-.atbl td{padding:6px 0;border-bottom:1px solid var(--brd);color:var(--text2);}
+/* Tabs para resultados */
+.tab-bar{display:flex;border-bottom:1px solid var(--brd);margin-bottom:10px;}
+.tab{padding:6px 12px;font-family:var(--mono);font-size:10px;cursor:pointer;color:var(--text3);border-bottom:2px solid transparent;transition:all .15s;letter-spacing:.5px;}
+.tab.active-g{color:var(--acc);border-bottom-color:var(--acc);}
+.tab.active-p{color:var(--acc5);border-bottom-color:var(--acc5);}
+.tab-content{display:none;}
+.tab-content.show{display:block;}
+
+.atbl{width:100%;border-collapse:collapse;font-size:11px;}
+.atbl th{font-family:var(--mono);font-size:9px;color:var(--text3);letter-spacing:.7px;padding:0 0 5px;border-bottom:1px solid var(--brd);text-align:left;}
+.atbl td{padding:5px 0;border-bottom:1px solid var(--brd);color:var(--text2);}
 .adot{display:inline-block;width:6px;height:6px;border-radius:50%;margin-right:4px;vertical-align:middle;}
 .ref-range{font-family:var(--mono);font-size:9px;color:var(--text3);}
 
-.mgrid{display:grid;grid-template-columns:1fr 1fr;gap:6px;}
-.mc{background:var(--sur2);border:1px solid var(--brd);border-radius:7px;padding:9px 10px;}
+.mgrid{display:grid;grid-template-columns:1fr 1fr;gap:5px;}
+.mc{background:var(--sur2);border:1px solid var(--brd);border-radius:7px;padding:8px 10px;}
 .mc.full{grid-column:1/-1;}
 .mn{font-size:9px;color:var(--text3);font-family:var(--mono);margin-bottom:2px;}
-.mv{font-size:17px;font-weight:600;font-family:var(--mono);color:var(--text);line-height:1;}
-.mv.g{color:var(--acc)}.mv.b{color:var(--acc2)}.mv.a{color:var(--acc3)}.mv.r{color:var(--acc4)}
-.mu{font-size:10px;color:var(--text3);margin-top:2px;}
+.mv{font-size:16px;font-weight:600;font-family:var(--mono);color:var(--text);line-height:1;}
+.mv.g{color:var(--acc)}.mv.b{color:var(--acc2)}.mv.a{color:var(--acc3)}.mv.r{color:var(--acc4)}.mv.p{color:var(--acc5)}
+.mu{font-size:9px;color:var(--text3);margin-top:2px;}
 
 .sb{margin-bottom:8px;}
 .sl{font-size:10px;color:var(--text3);font-family:var(--mono);margin-bottom:3px;display:flex;justify-content:space-between;}
@@ -118,32 +138,41 @@ header{display:flex;align-items:center;justify-content:space-between;padding:0 2
 .sf{height:100%;border-radius:2px;transition:width .5s;}
 .sc{position:absolute;top:-2px;left:50%;width:1px;height:8px;background:var(--text3);}
 
-.btn{width:100%;padding:9px;border-radius:7px;border:1px solid var(--acc);background:rgba(74,222,128,.07);color:var(--acc);font-family:var(--mono);font-size:11px;cursor:pointer;transition:all .2s;margin-top:6px;}
+/* Hand panel */
+.hand-diagram{display:flex;justify-content:center;gap:20px;margin-bottom:10px;}
+.hand-svg-wrap{text-align:center;}
+.hand-svg-wrap canvas{border-radius:8px;background:var(--sur2);border:1px solid var(--brd);}
+.hand-label{font-family:var(--mono);font-size:10px;color:var(--text3);margin-top:4px;text-align:center;}
+
+.finger-grid{display:grid;grid-template-columns:1fr 1fr;gap:5px;}
+.fc{background:var(--sur2);border:1px solid var(--brd);border-radius:7px;padding:7px 9px;}
+.fn{font-size:9px;color:var(--text3);font-family:var(--mono);margin-bottom:2px;}
+.fv{font-size:14px;font-weight:600;font-family:var(--mono);line-height:1;}
+.fu{font-size:9px;color:var(--text3);margin-top:1px;}
+
+.btn{width:100%;padding:8px;border-radius:7px;border:1px solid var(--acc);background:rgba(74,222,128,.07);color:var(--acc);font-family:var(--mono);font-size:11px;cursor:pointer;transition:all .2s;margin-top:5px;}
 .btn:hover{background:rgba(74,222,128,.15);}
 .btn:disabled{opacity:.3;cursor:not-allowed;}
 .btn.b2{border-color:var(--acc2);color:var(--acc2);background:rgba(96,165,250,.05);}
 .btn.b2:hover{background:rgba(96,165,250,.13);}
 
 .panel-r{display:flex;flex-direction:column;background:var(--bg);overflow:hidden;}
-.cvwrap{flex:1;display:flex;align-items:center;justify-content:center;padding:18px;min-height:380px;}
+.cvwrap{flex:1;display:flex;align-items:center;justify-content:center;padding:16px;min-height:360px;position:relative;}
 #cv{border-radius:10px;max-width:100%;max-height:58vh;display:block;}
-.ph{display:flex;flex-direction:column;align-items:center;gap:10px;color:var(--text3);text-align:center;}
-.phg{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;width:60px;height:60px;opacity:.2;margin-bottom:4px;}
+.ph{display:flex;flex-direction:column;align-items:center;gap:9px;color:var(--text3);text-align:center;}
+.phg{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;width:56px;height:56px;opacity:.18;margin-bottom:4px;}
 .phg div{background:var(--brd);border-radius:2px;}
 
-.vbar{padding:10px 18px;border-top:1px solid var(--brd);background:var(--sur);display:none;flex-direction:column;gap:6px;}
+.vbar{padding:10px 16px;border-top:1px solid var(--brd);background:var(--sur);display:none;flex-direction:column;gap:5px;}
 .vbar.vis{display:flex;}
 #sk{width:100%;height:3px;appearance:none;background:var(--brd);border-radius:2px;cursor:pointer;outline:none;}
-#sk::-webkit-slider-thumb{appearance:none;width:11px;height:11px;border-radius:50%;background:var(--acc);cursor:pointer;}
-.vc{display:flex;align-items:center;gap:8px;}
-.vcb{background:none;border:1px solid var(--brd);color:var(--text2);border-radius:5px;padding:4px 10px;font-family:var(--mono);font-size:10px;cursor:pointer;transition:all .15s;}
+#sk::-webkit-slider-thumb{appearance:none;width:10px;height:10px;border-radius:50%;background:var(--acc);cursor:pointer;}
+.vc{display:flex;align-items:center;gap:7px;}
+.vcb{background:none;border:1px solid var(--brd);color:var(--text2);border-radius:5px;padding:4px 9px;font-family:var(--mono);font-size:10px;cursor:pointer;transition:all .15s;}
 .vcb:hover{border-color:var(--acc2);color:var(--acc2);}
 .td{font-family:var(--mono);font-size:10px;color:var(--text3);margin-left:auto;}
-.chart-area{padding:12px 18px;border-top:1px solid var(--brd);background:var(--sur);display:none;}
-.chart-area.vis{display:block;}
-#vel-canvas{width:100%;height:58px;}
 
-footer{border-top:1px solid var(--brd);background:var(--sur);padding:10px 28px;display:flex;align-items:center;justify-content:space-between;font-size:11px;color:var(--text3);}
+footer{border-top:1px solid var(--brd);background:var(--sur);padding:9px 28px;display:flex;align-items:center;justify-content:space-between;font-size:11px;color:var(--text3);}
 .fdot{width:5px;height:5px;border-radius:50%;background:var(--acc);flex-shrink:0;margin-right:6px;}
 
 ::-webkit-scrollbar{width:3px;}
@@ -158,122 +187,127 @@ footer{border-top:1px solid var(--brd);background:var(--sur);padding:10px 28px;d
     <div class="logo-icon">🦴</div>
     <div>
       <div class="logo-text">Analizador Postural · TO</div>
-      <div class="logo-sub">MediaPipe Pose · Análisis biomecánico</div>
+      <div class="logo-sub">MediaPipe Pose + Hands · Análisis biomecánico</div>
     </div>
   </div>
   <div class="hdr-r">
-    <div class="author-chip">
-      <div class="av">KP</div>
-      <span class="author-name">Karen Paredes · UNAL</span>
-    </div>
-    <div class="badge-h">v3.0 · 2026</div>
+    <div class="author-chip"><div class="av">KP</div><span class="author-name">Karen Paredes · UNAL</span></div>
+    <div class="badge-h">v4.0 · 2026</div>
   </div>
 </header>
 
 <div id="hero">
   <div class="hero-l">
-    <div class="hero-title">Análisis postural <span>asistido por IA</span></div>
-    <div class="hero-desc">Herramienta educativa para valoración de ayudas técnicas en Terapia Ocupacional. Extrae ángulos articulares, distancias en centímetros y simetría corporal desde imágenes o videos.</div>
+    <div class="hero-title">Análisis postural y de mano <span>asistido por IA</span></div>
+    <div class="hero-desc">Herramienta para valoración de ayudas técnicas en Terapia Ocupacional. Analiza postura corporal, mano y combinado desde imágenes o videos.</div>
     <div class="hero-tags">
-      <span class="tag g">MediaPipe Pose</span>
-      <span class="tag b">Vista frontal / sagital</span>
+      <span class="tag g">Pose corporal</span>
+      <span class="tag p">Análisis de mano</span>
+      <span class="tag b">Modo combinado</span>
+      <span class="tag">Vista frontal / sagital</span>
       <span class="tag">Calibración en cm</span>
-      <span class="tag">Simetría corporal</span>
       <span class="tag">Exportar CSV</span>
     </div>
   </div>
-  <div class="hero-r">
-    <div class="author-card">
-      <div class="ac-top">
-        <div class="ac-av">KP</div>
-        <div>
-          <div class="ac-name">Karen Vanessa<br>Paredes Castro</div>
-          <div class="ac-role">Docente de Terapia Ocupacional</div>
-        </div>
-      </div>
-      <div class="ac-div"></div>
-      <div class="ac-inst"><div class="ac-dot"></div>Universidad Nacional de Colombia</div>
-      <div class="ac-year">Facultad de Medicina · 2026</div>
+  <div class="author-card">
+    <div class="ac-top">
+      <div class="ac-av">KP</div>
+      <div><div class="ac-name">Karen Vanessa<br>Paredes Castro</div><div class="ac-role">Docente de Terapia Ocupacional</div></div>
     </div>
+    <div class="ac-div"></div>
+    <div class="ac-inst"><div class="ac-dot"></div>Universidad Nacional de Colombia</div>
+    <div class="ac-year">Facultad de Medicina · 2026</div>
   </div>
   <button class="hero-close" onclick="document.getElementById('hero').style.display='none'">✕</button>
 </div>
 
-<!-- VIEW SWITCHER -->
-<div class="view-bar">
-  <span class="view-lbl">VISTA //</span>
-  <button class="view-btn active-f" id="btn-frontal" onclick="setView('frontal')">Frontal</button>
-  <button class="view-btn" id="btn-sagital" onclick="setView('sagital')">Sagital</button>
-  <span class="view-desc" id="view-desc">Valgo/varo · Simetría de hombros y caderas · Inclinación de tronco</span>
+<!-- MODE BAR -->
+<div class="mode-bar">
+  <span class="mode-lbl">MODO //</span>
+  <button class="mode-btn am" id="btn-pose" onclick="setMode('pose')">Pose corporal</button>
+  <button class="mode-btn" id="btn-hand" onclick="setMode('hand')">Análisis de mano</button>
+  <button class="mode-btn" id="btn-combo" onclick="setMode('combo')">Combinado</button>
+
+  <div class="view-sub" id="view-sub">
+    <button class="view-btn vf" id="btn-frontal" onclick="setView('frontal')">Frontal</button>
+    <button class="view-btn" id="btn-sagital" onclick="setView('sagital')">Sagital</button>
+  </div>
+  <div class="hand-sub" id="hand-sub" style="display:none">
+    <button class="hand-btn hb" id="btn-ambas" onclick="setHand('ambas')">Ambas manos</button>
+    <button class="hand-btn" id="btn-izq" onclick="setHand('izq')">Izquierda</button>
+    <button class="hand-btn" id="btn-der" onclick="setHand('der')">Derecha</button>
+  </div>
+  <span class="mode-desc" id="mode-desc">Valgo/varo · Simetría · Alcance funcional</span>
 </div>
 
 <div class="app">
   <div class="panel-l">
 
-    <!-- CALIBRACIÓN -->
     <div class="sec">
       <div class="sec-lbl">Calibración</div>
       <div class="calib-row">
         <input class="calib-input" type="number" id="height-input" placeholder="Altura del paciente" min="50" max="250" step="1">
         <span class="calib-unit">cm</span>
       </div>
-      <div class="calib-status" id="calib-status">Sin calibrar — distancias en píxeles</div>
+      <div class="calib-st" id="calib-st">Sin calibrar — distancias en píxeles</div>
     </div>
 
-    <!-- CARGAR -->
     <div class="sec">
       <div class="sec-lbl">Cargar archivo</div>
       <div class="upload-area" id="ua" onclick="document.getElementById('fi').click()">
         <div class="upload-icon">📁</div>
         <div class="upload-title">Arrastra o haz clic aquí</div>
         <div class="upload-sub">Imagen o video (máx. 10 seg recomendado)</div>
-        <div class="upload-types">
-          <span class="tb">JPG</span><span class="tb">PNG</span><span class="tb">MP4</span><span class="tb">WEBM</span>
-        </div>
+        <div class="upload-types"><span class="tb">JPG</span><span class="tb">PNG</span><span class="tb">MP4</span><span class="tb">WEBM</span></div>
       </div>
       <input type="file" id="fi" accept="image/*,video/*">
       <div class="sbar" id="sbar"><div class="sdot" id="sdot"></div><span id="stxt">—</span></div>
     </div>
 
-    <!-- VISUALIZACIÓN -->
     <div class="sec">
       <div class="sec-lbl">Visualización</div>
-      <div class="ctrl"><span class="ctrl-lbl">Mostrar esqueleto</span><div class="tog on" id="tsk" onclick="to('sk',this)"></div></div>
+      <div class="ctrl"><span class="ctrl-lbl">Mostrar esqueleto / mano</span><div class="tog on" id="tsk" onclick="to('sk',this)"></div></div>
       <div class="ctrl"><span class="ctrl-lbl">Ángulos en imagen</span><div class="tog on" id="tan" onclick="to('an',this)"></div></div>
       <div class="ctrl"><span class="ctrl-lbl">Distancias en imagen</span><div class="tog" id="tdi" onclick="to('di',this)"></div></div>
       <div class="ctrl" style="margin-bottom:0"><span class="ctrl-lbl">Colores Izq(verde)/Der(azul)</span><div class="tog on" id="tcol" onclick="to('col',this)"></div></div>
     </div>
 
-    <!-- ÁNGULOS -->
-    <div class="sec">
-      <div class="sec-lbl">Ángulos articulares</div>
-      <table class="atbl">
-        <thead><tr><th>Articulación</th><th style="text-align:center">Izq</th><th style="text-align:center">Der</th><th style="text-align:right">Rango normal</th></tr></thead>
-        <tbody id="atb"><tr><td colspan="4" style="color:var(--text3);font-size:11px;text-align:center;padding:14px 0">Carga un archivo para analizar</td></tr></tbody>
-      </table>
-    </div>
+    <!-- RESULTADOS CON TABS -->
+    <div class="sec" id="results-sec">
+      <div class="tab-bar" id="tab-bar">
+        <div class="tab active-g" id="tab-pose-btn" onclick="showTab('pose-tab')">Pose</div>
+        <div class="tab" id="tab-hand-btn" onclick="showTab('hand-tab')" style="display:none">Mano</div>
+      </div>
 
-    <!-- DISTANCIAS -->
-    <div class="sec">
-      <div class="sec-lbl">Distancias de segmentos</div>
-      <div class="mgrid" id="dg">
-        <div class="mc full"><div class="mu" style="padding:6px 0;text-align:center">Sin datos aún</div></div>
+      <!-- TAB POSE -->
+      <div class="tab-content show" id="pose-tab">
+        <div style="font-size:10px;color:var(--text3);font-family:var(--mono);margin-bottom:7px;letter-spacing:.5px;">ÁNGULOS ARTICULARES</div>
+        <table class="atbl">
+          <thead><tr><th>Articulación</th><th style="text-align:center">Izq</th><th style="text-align:center">Der</th><th style="text-align:right">Ref.</th></tr></thead>
+          <tbody id="atb"><tr><td colspan="4" style="color:var(--text3);font-size:11px;text-align:center;padding:12px 0">Carga un archivo</td></tr></tbody>
+        </table>
+        <div style="font-size:10px;color:var(--text3);font-family:var(--mono);margin:10px 0 7px;letter-spacing:.5px;">DISTANCIAS</div>
+        <div class="mgrid" id="dg"><div class="mc full"><div class="mu" style="padding:5px 0;text-align:center">Sin datos</div></div></div>
+        <div style="font-size:10px;color:var(--text3);font-family:var(--mono);margin:10px 0 7px;letter-spacing:.5px;">SIMETRÍA</div>
+        <div id="symc"><div style="color:var(--text3);font-size:11px;text-align:center;padding:6px 0">Sin datos</div></div>
+      </div>
+
+      <!-- TAB MANO -->
+      <div class="tab-content" id="hand-tab">
+        <div style="font-size:10px;color:var(--text3);font-family:var(--mono);margin-bottom:7px;letter-spacing:.5px;">ÁNGULOS POR DEDO</div>
+        <div id="hand-results"><div style="color:var(--text3);font-size:11px;text-align:center;padding:12px 0">Carga un archivo con mano visible</div></div>
+        <div style="font-size:10px;color:var(--text3);font-family:var(--mono);margin:10px 0 7px;letter-spacing:.5px;">APERTURA ENTRE DEDOS</div>
+        <div class="mgrid" id="spread-grid"><div class="mc full"><div class="mu" style="padding:5px 0;text-align:center">Sin datos</div></div></div>
+        <div style="font-size:10px;color:var(--text3);font-family:var(--mono);margin:10px 0 7px;letter-spacing:.5px;">TIPO DE AGARRE DETECTADO</div>
+        <div id="grasp-type"><div style="color:var(--text3);font-size:11px;text-align:center;padding:6px 0">Sin datos</div></div>
       </div>
     </div>
 
-    <!-- SIMETRÍA -->
-    <div class="sec">
-      <div class="sec-lbl">Simetría corporal</div>
-      <div id="symc"><div style="color:var(--text3);font-size:11px;text-align:center;padding:8px 0">Sin datos aún</div></div>
-    </div>
-
-    <!-- VELOCIDAD (video) -->
     <div class="sec" id="vsec" style="display:none">
-      <div class="sec-lbl">Velocidad de segmentos</div>
+      <div class="sec-lbl">Velocidad (video)</div>
       <div class="mgrid" id="vg"></div>
     </div>
 
-    <!-- EXPORTAR -->
     <div class="sec">
       <div class="sec-lbl">Exportar</div>
       <button class="btn" id="bcsv" disabled onclick="xcsv()">↓ Exportar CSV</button>
@@ -287,11 +321,9 @@ footer{border-top:1px solid var(--brd);background:var(--sur);padding:10px 28px;d
       <div class="ph" id="ph">
         <div class="phg"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>
         <div style="font-size:13px;font-weight:500;color:var(--text2)">Sin archivo cargado</div>
-        <div style="font-size:11px">Selecciona la vista, ingresa la altura y sube un archivo</div>
+        <div style="font-size:11px">Selecciona el modo, ingresa la altura y sube un archivo</div>
       </div>
-      <div id="ci" style="display:none">
-        <canvas id="cv"></canvas>
-      </div>
+      <div id="ci" style="display:none"><canvas id="cv"></canvas></div>
     </div>
     <div class="vbar" id="vbar">
       <input type="range" id="sk" min="0" max="100" value="0" step="0.1">
@@ -302,149 +334,184 @@ footer{border-top:1px solid var(--brd);background:var(--sur);padding:10px 28px;d
         <span class="td" id="tdisp">0.00s / 0.00s</span>
       </div>
     </div>
-    <div class="chart-area" id="chart-area">
-      <div class="sec-lbl" style="margin-bottom:7px">Velocidad articular — línea de tiempo</div>
-      <canvas id="vel-canvas"></canvas>
-    </div>
   </div>
 </div>
 
 <footer>
-  <div style="display:flex;align-items:center">
-    <div class="fdot"></div>
+  <div style="display:flex;align-items:center"><div class="fdot"></div>
     <span>Desarrollado por <strong style="color:var(--text2)">Karen Vanessa Paredes Castro</strong> · Docente de Terapia Ocupacional · Universidad Nacional de Colombia · 2026</span>
   </div>
-  <span style="font-family:var(--mono);font-size:10px">MediaPipe Pose v0.5 · Uso educativo</span>
+  <span style="font-family:var(--mono);font-size:10px">MediaPipe Pose + Hands · Uso educativo</span>
 </footer>
 
+<!-- MediaPipe -->
 <script src="https://unpkg.com/@mediapipe/pose@0.5.1675469404/pose.js" crossorigin="anonymous"></script>
-<script>
-// ── DEFINICIONES POR VISTA ───────────────────────────────────────────────────
+<script src="https://unpkg.com/@mediapipe/hands@0.4.1646424915/hands.js" crossorigin="anonymous"></script>
 
-// Conexiones del esqueleto (comunes a ambas vistas)
+<script>
+// ── DEFINICIONES ─────────────────────────────────────────────────────────────
 const CONN=[[11,12],[11,13],[13,15],[12,14],[14,16],[11,23],[12,24],[23,24],[23,25],[24,26],[25,27],[26,28],[27,29],[28,30],[27,31],[28,32],[0,1],[1,2],[2,3],[3,7],[0,4],[4,5],[5,6],[6,8],[9,10],[15,17],[15,19],[15,21],[16,18],[16,20],[16,22]];
 const LI=new Set([1,3,7,11,13,15,17,19,21,23,25,27,29,31]);
 
-// Ángulos por vista
-const JOINTS_FRONTAL = [
-  { n:'Hombros (simetría)',  L:[12,11,23], R:[11,12,24], ref:'170–180°', desc:'Alineación horizontal de hombros' },
-  { n:'Caderas (simetría)',  L:[11,23,25], R:[12,24,26], ref:'170–180°', desc:'Oblicuidad pélvica' },
-  { n:'Rodilla valgo/varo',  L:[23,25,27], R:[24,26,28], ref:'170–180°', desc:'<165° valgo, >185° varo' },
-  { n:'Tronco lateral',      L:[23,11,12], R:[24,12,11], ref:'85–95°',   desc:'Inclinación lateral del tronco' },
+const JOINTS_FRONTAL=[
+  {n:'Hombros',L:[12,11,23],R:[11,12,24],ref:'170-180'},
+  {n:'Caderas', L:[11,23,25],R:[12,24,26],ref:'170-180'},
+  {n:'Rodilla', L:[23,25,27],R:[24,26,28],ref:'170-180'},
+  {n:'Tronco',  L:[23,11,12],R:[24,12,11],ref:'85-95'},
 ];
-
-const JOINTS_SAGITAL = [
-  { n:'Codo',     L:[11,13,15], R:[12,14,16], ref:'0–145°',   desc:'Flexión/extensión de codo' },
-  { n:'Hombro',   L:[13,11,23], R:[14,12,24], ref:'0–180°',   desc:'Flexión de hombro' },
-  { n:'Cadera',   L:[11,23,25], R:[12,24,26], ref:'80–100°',  desc:'Flexión de cadera en sedestación' },
-  { n:'Rodilla',  L:[23,25,27], R:[24,26,28], ref:'0–135°',   desc:'Flexión/extensión de rodilla' },
-  { n:'Tobillo',  L:[25,27,31], R:[26,28,32], ref:'90–110°',  desc:'Dorsiflexión/plantiflexión' },
-  { n:'Cabeza',   L:[11,0,7],   R:[12,0,8],   ref:'160–175°', desc:'Anteropulsión cervical' },
+const JOINTS_SAGITAL=[
+  {n:'Codo',   L:[11,13,15],R:[12,14,16],ref:'0-145'},
+  {n:'Hombro', L:[13,11,23],R:[14,12,24],ref:'0-180'},
+  {n:'Cadera', L:[11,23,25],R:[12,24,26],ref:'80-100'},
+  {n:'Rodilla',L:[23,25,27],R:[24,26,28],ref:'0-135'},
+  {n:'Tobillo',L:[25,27,31],R:[26,28,32],ref:'90-110'},
+  {n:'Cabeza', L:[11,0,7],  R:[12,0,8],  ref:'160-175'},
 ];
-
-// Distancias por vista
-const DISTS_FRONTAL = [
-  { n:'Ancho hombros', p:[11,12] },
-  { n:'Ancho caderas',  p:[23,24] },
-  { n:'Alto tronco',    p:[11,23] },
-  { n:'Brazo izq',      p:[11,15] },
-  { n:'Brazo der',      p:[12,16] },
-  { n:'Pierna izq',     p:[23,27] },
-  { n:'Pierna der',     p:[24,28] },
-];
-const DISTS_SAGITAL = [
-  { n:'Alto tronco',    p:[11,23] },
-  { n:'Fémur izq',      p:[23,25] },
-  { n:'Fémur der',      p:[24,26] },
-  { n:'Tibia izq',      p:[25,27] },
-  { n:'Tibia der',      p:[26,28] },
-  { n:'Brazo izq',      p:[11,15] },
-  { n:'Antebrazo izq',  p:[13,15] },
-];
-
+const DISTS_FRONTAL=[{n:'Ancho hombros',p:[11,12]},{n:'Ancho caderas',p:[23,24]},{n:'Brazo izq',p:[11,15]},{n:'Brazo der',p:[12,16]},{n:'Pierna izq',p:[23,27]},{n:'Pierna der',p:[24,28]},{n:'Tronco',p:[11,23]}];
+const DISTS_SAGITAL=[{n:'Tronco',p:[11,23]},{n:'Femur izq',p:[23,25]},{n:'Femur der',p:[24,26]},{n:'Tibia izq',p:[25,27]},{n:'Tibia der',p:[26,28]},{n:'Brazo izq',p:[11,15]},{n:'Antebrazo izq',p:[13,15]}];
 const VJ=[{id:11,n:'Hombro I'},{id:12,n:'Hombro D'},{id:13,n:'Codo I'},{id:14,n:'Codo D'},{id:23,n:'Cadera I'},{id:25,n:'Rodilla I'}];
 
-// ── ESTADO ───────────────────────────────────────────────────────────────────
-let view     = 'frontal';  // 'frontal' | 'sagital'
-let pxPerCm  = null;       // píxeles por cm (null = sin calibrar)
-let heightCm = null;
-let opts     = { sk:true, an:true, di:false, col:true };
-let pose     = null, ready = false;
-let mode     = null, imgEl = null, videoEl = null;
-let frames   = [], velH  = [], playing = false, raf = null;
-let lLms     = null, lAng = null, lDist = null;
+// Hand landmark connections
+const HAND_CONN=[[0,1],[1,2],[2,3],[3,4],[0,5],[5,6],[6,7],[7,8],[5,9],[9,10],[10,11],[11,12],[9,13],[13,14],[14,15],[15,16],[13,17],[17,18],[18,19],[19,20],[0,17]];
+// Finger joint triplets for angle calculation [base, mid, tip]
+const FINGER_ANGLES=[
+  {n:'Pulgar MCP',   pts:[1,2,3]},
+  {n:'Pulgar IP',    pts:[2,3,4]},
+  {n:'Indice MCP',   pts:[5,6,7]},
+  {n:'Indice PIP',   pts:[6,7,8]},
+  {n:'Medio MCP',    pts:[9,10,11]},
+  {n:'Medio PIP',    pts:[10,11,12]},
+  {n:'Anular MCP',   pts:[13,14,15]},
+  {n:'Anular PIP',   pts:[14,15,16]},
+  {n:'Menique MCP',  pts:[17,18,19]},
+  {n:'Menique PIP',  pts:[18,19,20]},
+];
+const SPREAD_PAIRS=[
+  {n:'Pulgar-Indice', pts:[4,8]},
+  {n:'Indice-Medio',  pts:[8,12]},
+  {n:'Medio-Anular',  pts:[12,16]},
+  {n:'Anular-Menique',pts:[16,20]},
+];
 
-const canvas = document.getElementById('cv');
-const ctx    = canvas.getContext('2d');
+// ── ESTADO ────────────────────────────────────────────────────────────────────
+let mode='pose', view='frontal', handSide='ambas';
+let pxPerCm=null, heightCm=null;
+let opts={sk:true,an:true,di:false,col:true};
+let pose=null, hands=null, poseReady=false, handsReady=false;
+let mediaMode=null, imgEl=null, videoEl=null;
+let frames=[], velH=[], playing=false, raf=null;
+let lLms=null, lAng=null, lDist=null;
+let lHandResults=null;
 
-function curJoints(){ return view==='frontal' ? JOINTS_FRONTAL : JOINTS_SAGITAL; }
-function curDists() { return view==='frontal' ? DISTS_FRONTAL  : DISTS_SAGITAL;  }
+const canvas=document.getElementById('cv');
+const ctx=canvas.getContext('2d');
 
-// ── VISTA ────────────────────────────────────────────────────────────────────
-function setView(v){
-  view = v;
-  document.getElementById('btn-frontal').className = 'view-btn' + (v==='frontal'?' active-f':'');
-  document.getElementById('btn-sagital').className = 'view-btn' + (v==='sagital'?' active-s':'');
-  document.getElementById('view-desc').textContent = v==='frontal'
-    ? 'Valgo/varo · Simetría de hombros y caderas · Inclinación de tronco'
-    : 'Flexión/extensión · Cifosis/lordosis · Anteropulsión cervical';
-  if(lLms){ lAng=cAng(lLms); lDist=cDist(lLms); rdImg(); updP(lAng,lDist); }
-  else if(frames.length){ const t=parseFloat(document.getElementById('sk').value); df(frames.reduce((b,f,i)=>Math.abs(f.time-t)<Math.abs(frames[b].time-t)?i:b,0)); }
+function curJoints(){ return view==='frontal'?JOINTS_FRONTAL:JOINTS_SAGITAL; }
+function curDists(){  return view==='frontal'?DISTS_FRONTAL:DISTS_SAGITAL; }
+
+// ── TABS ──────────────────────────────────────────────────────────────────────
+function showTab(id){
+  document.querySelectorAll('.tab-content').forEach(t=>t.classList.remove('show'));
+  document.getElementById(id).classList.add('show');
+  document.getElementById('tab-pose-btn').className='tab'+(id==='pose-tab'?' active-g':'');
+  document.getElementById('tab-hand-btn').className='tab'+(id==='hand-tab'?' active-p':'');
 }
 
-// ── CALIBRACIÓN ──────────────────────────────────────────────────────────────
-document.getElementById('height-input').addEventListener('input', function(){
-  heightCm = parseFloat(this.value);
-  if(!isNaN(heightCm) && heightCm > 0){
-    document.getElementById('calib-status').textContent = `Altura: ${heightCm} cm — calibración activa`;
-    document.getElementById('calib-status').className = 'calib-status ok';
-    // Recalcular pxPerCm si ya hay landmarks
-    if(lLms) recalibrate(lLms);
-    else if(frames.length) recalibrate(frames[0].landmarks);
+// ── MODO / VISTA ──────────────────────────────────────────────────────────────
+const modeDescs={
+  pose:'Valgo/varo · Simetría · Alcance funcional',
+  hand:'Ángulos de dedos · Apertura · Tipo de agarre',
+  combo:'Postura corporal + análisis de mano simultáneo'
+};
+function setMode(m){
+  mode=m;
+  ['pose','hand','combo'].forEach(x=>{
+    const b=document.getElementById('btn-'+x);
+    b.className='mode-btn'+(m===x?' '+(x==='pose'?'am':x==='hand'?'bm':'cm'):'');
+  });
+  document.getElementById('view-sub').style.display=(m==='hand')?'none':'flex';
+  document.getElementById('hand-sub').style.display=(m==='pose')?'none':'flex';
+  document.getElementById('mode-desc').textContent=modeDescs[m];
+  document.getElementById('tab-hand-btn').style.display=(m==='pose')?'none':'';
+  if(m==='hand') showTab('hand-tab'); else showTab('pose-tab');
+  if(lLms||lHandResults) reprocess();
+}
+function setView(v){
+  view=v;
+  document.getElementById('btn-frontal').className='view-btn'+(v==='frontal'?' vf':'');
+  document.getElementById('btn-sagital').className='view-btn'+(v==='sagital'?' vs':'');
+  if(lLms){ lAng=cAng(lLms); lDist=cDist(lLms); rdImg(); updPose(lAng,lDist); }
+}
+function setHand(h){
+  handSide=h;
+  ['ambas','izq','der'].forEach(x=>{ document.getElementById('btn-'+x).className='hand-btn'+(h===x?' hb':''); });
+  if(lHandResults) drawHandResults(lHandResults);
+}
+function reprocess(){
+  if(!imgEl) return;
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+  ctx.drawImage(imgEl,0,0);
+  if(mode==='pose'||mode==='combo') pose.send({image:imgEl});
+  if(mode==='hand'||mode==='combo') hands.send({image:imgEl});
+}
+
+// ── CALIBRACIÓN ───────────────────────────────────────────────────────────────
+document.getElementById('height-input').addEventListener('input',function(){
+  heightCm=parseFloat(this.value);
+  if(!isNaN(heightCm)&&heightCm>0){
+    document.getElementById('calib-st').textContent=`Altura: ${heightCm} cm — calibración activa`;
+    document.getElementById('calib-st').className='calib-st ok';
+    if(lLms) recalib(lLms);
   } else {
-    pxPerCm = null;
-    document.getElementById('calib-status').textContent = 'Sin calibrar — distancias en píxeles';
-    document.getElementById('calib-status').className = 'calib-status';
+    pxPerCm=null;
+    document.getElementById('calib-st').textContent='Sin calibrar — distancias en píxeles';
+    document.getElementById('calib-st').className='calib-st';
   }
 });
-
-function recalibrate(lms){
-  // Usa distancia cabeza-pie (punto 0 y promedio de 27,28) para calibrar
-  const head = lms[0];
-  const footL = lms[31], footR = lms[32];
-  const footY = (footL.y + footR.y) / 2;
-  const bodyPxHeight = Math.abs(head.y - footY) * canvas.height;
-  if(bodyPxHeight > 10 && heightCm > 0){
-    pxPerCm = bodyPxHeight / heightCm;
-    document.getElementById('calib-status').textContent = `Calibrado: 1 cm = ${pxPerCm.toFixed(1)} px`;
-    document.getElementById('calib-status').className = 'calib-status ok';
-    // Redibujar con nueva calibración
-    if(lAng && lDist){ lDist=cDist(lms); rdImg(); updP(lAng,lDist); }
+function recalib(lms){
+  const head=lms[0], fL=lms[31], fR=lms[32];
+  const footY=(fL.y+fR.y)/2;
+  const bodyPx=Math.abs(head.y-footY)*canvas.height;
+  if(bodyPx>10&&heightCm>0){
+    pxPerCm=bodyPx/heightCm;
+    document.getElementById('calib-st').textContent=`Calibrado: 1 cm = ${pxPerCm.toFixed(1)} px`;
+    document.getElementById('calib-st').className='calib-st ok';
+    if(lAng&&lDist){ lDist=cDist(lms); rdImg(); updPose(lAng,lDist); }
   }
 }
+function distLabel(px){ return pxPerCm&&pxPerCm>0?(px/pxPerCm).toFixed(1)+' cm':Math.round(px)+' px'; }
 
-// ── MEDIAPIPE ────────────────────────────────────────────────────────────────
-function initPose(){
-  setSt('loading','Cargando modelo MediaPipe Pose… (~15 seg la primera vez)');
-  pose = new Pose({ locateFile: f=>`https://unpkg.com/@mediapipe/pose@0.5.1675469404/${f}` });
-  pose.setOptions({ modelComplexity:1, smoothLandmarks:true, enableSegmentation:false, minDetectionConfidence:0.5, minTrackingConfidence:0.5 });
-  pose.onResults(onRes);
+// ── INIT MEDIAPIPE ────────────────────────────────────────────────────────────
+function initModels(){
+  setSt('loading','Cargando modelos MediaPipe…');
+
+  pose=new Pose({locateFile:f=>`https://unpkg.com/@mediapipe/pose@0.5.1675469404/${f}`});
+  pose.setOptions({modelComplexity:1,smoothLandmarks:true,enableSegmentation:false,minDetectionConfidence:0.5,minTrackingConfidence:0.5});
+  pose.onResults(onPoseRes);
+
+  hands=new Hands({locateFile:f=>`https://unpkg.com/@mediapipe/hands@0.4.1646424915/${f}`});
+  hands.setOptions({maxNumHands:2,modelComplexity:1,minDetectionConfidence:0.6,minTrackingConfidence:0.5});
+  hands.onResults(onHandRes);
+
   const wc=document.createElement('canvas'); wc.width=64; wc.height=64;
-  pose.send({image:wc}).then(()=>{ ready=true; setSt('done','Modelo listo — selecciona vista, ingresa altura y sube archivo'); }).catch(()=>{ ready=true; setSt('done','Modelo listo'); });
+  Promise.all([
+    pose.send({image:wc}).catch(()=>{}),
+    hands.send({image:wc}).catch(()=>{})
+  ]).then(()=>{ poseReady=true; handsReady=true; setSt('done','Modelos listos — sube un archivo'); });
 }
-window.addEventListener('load', initPose);
+window.addEventListener('load',initModels);
 
-// ── ARCHIVOS ─────────────────────────────────────────────────────────────────
-const ua=document.getElementById('ua'), fi=document.getElementById('fi');
-ua.addEventListener('dragover', e=>{e.preventDefault();ua.classList.add('drag');});
-ua.addEventListener('dragleave', ()=>ua.classList.remove('drag'));
-ua.addEventListener('drop', e=>{e.preventDefault();ua.classList.remove('drag');hf(e.dataTransfer.files[0]);});
-fi.addEventListener('change', e=>hf(e.target.files[0]));
+// ── ARCHIVOS ──────────────────────────────────────────────────────────────────
+const ua=document.getElementById('ua'),fi=document.getElementById('fi');
+ua.addEventListener('dragover',e=>{e.preventDefault();ua.classList.add('drag');});
+ua.addEventListener('dragleave',()=>ua.classList.remove('drag'));
+ua.addEventListener('drop',e=>{e.preventDefault();ua.classList.remove('drag');hf(e.dataTransfer.files[0]);});
+fi.addEventListener('change',e=>hf(e.target.files[0]));
 
 function hf(f){
-  if(!f) return;
-  if(!ready){ setSt('loading','El modelo aún carga, espera…'); return; }
-  frames=[]; velH=[]; pxPerCm=null;
+  if(!f)return;
+  if(!poseReady&&!handsReady){setSt('loading','Modelos aún cargando…');return;}
+  frames=[];velH=[];pxPerCm=null;lHandResults=null;
   const url=URL.createObjectURL(f);
   if(f.type.startsWith('image/')) liImg(url);
   else if(f.type.startsWith('video/')) liVid(url);
@@ -452,19 +519,20 @@ function hf(f){
 }
 
 function liImg(url){
-  mode='image'; hideVid(); setSt('loading','Detectando pose…');
+  mediaMode='image'; hideVid(); setSt('loading','Analizando…');
   imgEl=new Image();
   imgEl.onload=async()=>{
     canvas.width=imgEl.naturalWidth; canvas.height=imgEl.naturalHeight;
     ctx.drawImage(imgEl,0,0); showCv();
-    try{ await pose.send({image:imgEl}); } catch(e){ setSt('error','Error: '+e.message); }
+    if(mode==='pose'||mode==='combo') await pose.send({image:imgEl}).catch(e=>setSt('error',e.message));
+    if(mode==='hand'||mode==='combo') await hands.send({image:imgEl}).catch(e=>setSt('error',e.message));
   };
   imgEl.src=url;
 }
 
 function liVid(url){
-  mode='video';
-  if(videoEl){ videoEl.pause(); videoEl.src=''; }
+  mediaMode='video';
+  if(videoEl){videoEl.pause();videoEl.src='';}
   videoEl=document.createElement('video');
   videoEl.src=url; videoEl.muted=true; videoEl.playsInline=true;
   setSt('loading','Cargando video…');
@@ -478,212 +546,322 @@ function liVid(url){
 }
 
 async function exFrames(){
-  const fps=10, step=1/fps, dur=videoEl.duration, tot=Math.ceil(dur*fps);
+  const fps=10,step=1/fps,dur=videoEl.duration,tot=Math.ceil(dur*fps);
   for(let i=0;i<tot;i++){
-    await new Promise(r=>{ videoEl.currentTime=i*step; videoEl.onseeked=r; });
+    await new Promise(r=>{videoEl.currentTime=i*step;videoEl.onseeked=r;});
     const oc=new OffscreenCanvas(canvas.width,canvas.height);
     oc.getContext('2d').drawImage(videoEl,0,0);
-    try{ await pose.send({image:oc}); } catch(_){}
+    if(mode==='pose'||mode==='combo') try{await pose.send({image:oc});}catch(_){}
+    if(mode==='hand'||mode==='combo') try{await hands.send({image:oc});}catch(_){}
     if(i%3===0) setSt('loading',`Analizando frames… ${i}/${tot}`);
   }
-  setSt('done',`Listo — ${frames.length} frames analizados ✓`);
+  setSt('done',`Listo — ${frames.length} frames ✓`);
   document.getElementById('vsec').style.display='block';
-  document.getElementById('chart-area').classList.add('vis');
-  if(frames.length){ recalibrate(frames[0].landmarks); df(0); }
-  renderVelChart(); enExp();
+  if(frames.length){recalib(frames[0].landmarks||[]); df(0);}
+  enExp();
 }
 
-// ── RESULTADOS ───────────────────────────────────────────────────────────────
-function onRes(r){
+// ── RESULTADOS POSE ───────────────────────────────────────────────────────────
+function onPoseRes(r){
   const lms=r.poseLandmarks;
-  if(mode==='image'){
-    if(!lms){ setSt('error','No se detectó persona. Foto más clara con cuerpo completo visible.'); return; }
+  if(mediaMode==='image'){
+    if(!lms){if(mode==='pose')setSt('error','No se detectó cuerpo. Foto más clara con cuerpo completo visible.');return;}
     lLms=lms; lAng=cAng(lms); lDist=cDist(lms);
-    if(heightCm) recalibrate(lms);
-    rdImg(); updP(lAng,lDist);
-    setSt('done',`Pose detectada ✓ (${view}) — ${lms.length} puntos clave`); enExp();
+    if(heightCm) recalib(lms);
+    if(mode!=='combo') rdImg();
+    updPose(lAng,lDist);
+    if(mode==='pose') setSt('done',`Pose detectada ✓ — ${lms.length} puntos`);
   } else {
-    if(!lms) return;
-    frames.push({ time:videoEl?videoEl.currentTime:0, landmarks:lms, angles:cAng(lms), dists:cDist(lms) });
+    if(!lms)return;
+    if(!frames.length||frames[frames.length-1].time!==videoEl.currentTime){
+      frames.push({time:videoEl?videoEl.currentTime:0,landmarks:lms,angles:cAng(lms),dists:cDist(lms)});
+    }
     cVel();
   }
 }
 
-// ── GEOMETRÍA ────────────────────────────────────────────────────────────────
+// ── RESULTADOS MANO ───────────────────────────────────────────────────────────
+function onHandRes(r){
+  lHandResults=r;
+  if(mediaMode==='image'){
+    if(!r.multiHandLandmarks||r.multiHandLandmarks.length===0){
+      if(mode==='hand') setSt('error','No se detectó mano. Asegúrate de que la mano sea visible y esté bien iluminada.');
+      return;
+    }
+    if(mode==='combo'){
+      // Redibujar pose encima + mano
+      ctx.clearRect(0,0,canvas.width,canvas.height);
+      ctx.drawImage(imgEl,0,0);
+      if(lLms) drawPoseSkeleton(ctx,lLms,lAng,lDist);
+      drawHandResults(r);
+    } else {
+      ctx.clearRect(0,0,canvas.width,canvas.height);
+      ctx.drawImage(imgEl,0,0);
+      drawHandResults(r);
+    }
+    updHand(r);
+    setSt('done',`Mano detectada ✓ — ${r.multiHandLandmarks.length} mano(s)`);
+    enExp();
+  }
+}
+
+// ── GEOMETRÍA ─────────────────────────────────────────────────────────────────
 function a3(a,b,c){
-  const v1=[a.x-b.x,a.y-b.y,(a.z||0)-(b.z||0)], v2=[c.x-b.x,c.y-b.y,(c.z||0)-(b.z||0)];
-  const dot=v1[0]*v2[0]+v1[1]*v2[1]+v1[2]*v2[2], m=Math.hypot(...v1)*Math.hypot(...v2);
-  if(!m) return null;
+  const v1=[a.x-b.x,a.y-b.y,(a.z||0)-(b.z||0)],v2=[c.x-b.x,c.y-b.y,(c.z||0)-(b.z||0)];
+  const dot=v1[0]*v2[0]+v1[1]*v2[1]+v1[2]*v2[2],m=Math.hypot(...v1)*Math.hypot(...v2);
+  if(!m)return null;
   return Math.round(Math.acos(Math.min(1,Math.max(-1,dot/m)))*180/Math.PI);
 }
-
-function distPx(a,b){ return Math.hypot((a.x-b.x)*canvas.width,(a.y-b.y)*canvas.height); }
-
-function distLabel(px){
-  if(pxPerCm && pxPerCm>0) return (px/pxPerCm).toFixed(1)+' cm';
-  return Math.round(px)+' px';
-}
-
-function cAng(lms){ return curJoints().map(j=>({ n:j.n, ref:j.ref, desc:j.desc, L:a3(lms[j.L[0]],lms[j.L[1]],lms[j.L[2]]), R:a3(lms[j.R[0]],lms[j.R[1]],lms[j.R[2]]) })); }
-function cDist(lms){ return curDists().map(d=>({ n:d.n, px:distPx(lms[d.p[0]],lms[d.p[1]]), label:distLabel(distPx(lms[d.p[0]],lms[d.p[1]])) })); }
-
+function distPx(a,b){return Math.hypot((a.x-b.x)*canvas.width,(a.y-b.y)*canvas.height);}
+function cAng(lms){return curJoints().map(j=>({n:j.n,ref:j.ref,L:a3(lms[j.L[0]],lms[j.L[1]],lms[j.L[2]]),R:a3(lms[j.R[0]],lms[j.R[1]],lms[j.R[2]])}));}
+function cDist(lms){return curDists().map(d=>({n:d.n,px:distPx(lms[d.p[0]],lms[d.p[1]]),label:distLabel(distPx(lms[d.p[0]],lms[d.p[1]]))}));}
 function cVel(){
-  if(frames.length<2) return;
-  const a=frames[frames.length-2], b=frames[frames.length-1], dt=(b.time-a.time)||0.001;
-  velH.push({ time:b.time, vels:VJ.map(j=>{ const p1=a.landmarks[j.id],p2=b.landmarks[j.id]; return{ id:j.id,n:j.n,v:Math.round(Math.hypot((p2.x-p1.x)*canvas.width,(p2.y-p1.y)*canvas.height)/dt) }; }) });
+  if(frames.length<2)return;
+  const a=frames[frames.length-2],b=frames[frames.length-1],dt=(b.time-a.time)||0.001;
+  velH.push({time:b.time,vels:VJ.map(j=>{const p1=a.landmarks[j.id],p2=b.landmarks[j.id];return{id:j.id,n:j.n,v:Math.round(Math.hypot((p2.x-p1.x)*canvas.width,(p2.y-p1.y)*canvas.height)/dt)};})});
 }
 
-// ── RENDER ───────────────────────────────────────────────────────────────────
-function rp(c,lms,ang,dist){
-  const W=canvas.width, H=canvas.height;
+// ── RENDER POSE ───────────────────────────────────────────────────────────────
+function drawPoseSkeleton(c,lms,ang,dist){
+  const W=canvas.width,H=canvas.height;
   if(opts.sk){
     CONN.forEach(([a,b])=>{
-      const pa=lms[a],pb=lms[b]; if(pa.visibility<0.35||pb.visibility<0.35) return;
-      c.beginPath(); c.moveTo(pa.x*W,pa.y*H); c.lineTo(pb.x*W,pb.y*H);
+      const pa=lms[a],pb=lms[b];if(pa.visibility<0.35||pb.visibility<0.35)return;
+      c.beginPath();c.moveTo(pa.x*W,pa.y*H);c.lineTo(pb.x*W,pb.y*H);
       c.strokeStyle=opts.col?(LI.has(a)?'rgba(74,222,128,.8)':'rgba(96,165,250,.8)'):'rgba(255,255,255,.6)';
-      c.lineWidth=Math.max(2,W*0.003); c.stroke();
+      c.lineWidth=Math.max(2,W*0.003);c.stroke();
     });
     lms.forEach((lm,i)=>{
-      if(lm.visibility<0.35) return;
-      c.beginPath(); c.arc(lm.x*W,lm.y*H,Math.max(3,W*0.006),0,2*Math.PI);
+      if(lm.visibility<0.35)return;
+      c.beginPath();c.arc(lm.x*W,lm.y*H,Math.max(3,W*0.006),0,2*Math.PI);
       c.fillStyle=opts.col?(LI.has(i)?'#4ade80':'#60a5fa'):'#fff';
-      c.fill(); c.strokeStyle='rgba(0,0,0,.5)'; c.lineWidth=1.5; c.stroke();
+      c.fill();c.strokeStyle='rgba(0,0,0,.5)';c.lineWidth=1.5;c.stroke();
     });
   }
   if(opts.an&&ang){
     curJoints().forEach((j,i)=>{
       [['L',j.L[1],'#4ade80'],['R',j.R[1],'#60a5fa']].forEach(([s,pi,col])=>{
-        const v=ang[i][s]; if(!v) return;
-        const lm=lms[pi]; if(lm.visibility<0.35) return;
-        const x=lm.x*W, y=lm.y*H, t=`${v}°`, tw=t.length*7+8;
-        c.save(); c.fillStyle='rgba(0,0,0,.72)'; c.beginPath();
-        c.roundRect(x+6,y-16,tw,17,3); c.fill();
-        c.fillStyle=col; c.font=`bold ${Math.max(10,W*0.013)}px DM Mono,monospace`;
-        c.fillText(t,x+10,y-3); c.restore();
+        const v=ang[i][s];if(!v)return;
+        const lm=lms[pi];if(lm.visibility<0.35)return;
+        const x=lm.x*W,y=lm.y*H,t=`${v}°`,tw=t.length*7+8;
+        c.save();c.fillStyle='rgba(0,0,0,.72)';c.beginPath();c.roundRect(x+5,y-15,tw,16,3);c.fill();
+        c.fillStyle=col;c.font=`bold ${Math.max(10,W*0.012)}px DM Mono,monospace`;c.fillText(t,x+8,y-2);c.restore();
       });
     });
   }
   if(opts.di&&dist){
     curDists().forEach((d,i)=>{
       const pa=lms[d.p[0]],pb=lms[d.p[1]];
-      const mx=(pa.x+pb.x)/2*W, my=(pa.y+pb.y)/2*H, t=dist[i].label;
-      const tw=t.length*6+8;
-      c.save(); c.fillStyle='rgba(0,0,0,.72)'; c.beginPath();
-      c.roundRect(mx-tw/2,my-13,tw,14,3); c.fill();
-      c.fillStyle='#f59e0b'; c.font='10px DM Mono,monospace';
-      c.fillText(t,mx-tw/2+4,my-2); c.restore();
+      const mx=(pa.x+pb.x)/2*W,my=(pa.y+pb.y)/2*H,t=dist[i].label,tw=t.length*6+8;
+      c.save();c.fillStyle='rgba(0,0,0,.72)';c.beginPath();c.roundRect(mx-tw/2,my-12,tw,14,3);c.fill();
+      c.fillStyle='#f59e0b';c.font='10px DM Mono,monospace';c.fillText(t,mx-tw/2+4,my-1);c.restore();
     });
   }
 }
 
-function rdImg(){ if(!imgEl||!lLms) return; ctx.clearRect(0,0,canvas.width,canvas.height); ctx.drawImage(imgEl,0,0); rp(ctx,lLms,lAng,lDist); }
-
-function df(idx){
-  if(!frames.length) return;
-  const f=frames[Math.min(idx,frames.length-1)];
-  ctx.clearRect(0,0,canvas.width,canvas.height); ctx.drawImage(videoEl,0,0,canvas.width,canvas.height);
-  // Recalcular dists con calibración actual
-  const dists=cDist(f.landmarks);
-  rp(ctx,f.landmarks,f.angles,dists); updP(f.angles,dists);
-  const vel=velH.find(v=>Math.abs(v.time-f.time)<0.12);
-  if(vel) document.getElementById('vg').innerHTML=vel.vels.map(v=>{ const c=v.v<50?'g':v.v<150?'a':'r'; return`<div class="mc"><div class="mn">${v.n}</div><div class="mv ${c}">${v.v}</div><div class="mu">px/seg</div></div>`; }).join('');
+function rdImg(){
+  if(!imgEl||!lLms)return;
+  ctx.clearRect(0,0,canvas.width,canvas.height);ctx.drawImage(imgEl,0,0);
+  drawPoseSkeleton(ctx,lLms,lAng,lDist);
 }
 
-// ── PANEL ────────────────────────────────────────────────────────────────────
-function angCol(v,ref){
-  if(!v) return 'var(--text3)';
-  // Parsear rango de referencia "X–Y"
-  const m=ref.match(/([\d]+)[^\d]+([\d]+)/);
-  if(!m) return 'var(--acc)';
-  const lo=parseInt(m[1]), hi=parseInt(m[2]);
-  const margin = (hi-lo)*0.15;
-  if(v>=lo-margin && v<=hi+margin) return 'var(--acc)';
-  if(v>=lo-margin*3 && v<=hi+margin*3) return 'var(--acc3)';
-  return 'var(--acc4)';
-}
-
-function updP(ang,dist){
-  // Tabla ángulos
-  document.getElementById('atb').innerHTML=ang.map(a=>{
-    const colL=angCol(a.L,a.ref), colR=angCol(a.R,a.ref);
-    return`<tr>
-      <td><span class="adot" style="background:var(--acc)"></span>${a.n}<br><span class="ref-range">${a.ref}</span></td>
-      <td style="text-align:center;font-family:var(--mono)"><span style="color:${colL}">${a.L??'—'}°</span></td>
-      <td style="text-align:center;font-family:var(--mono)"><span style="color:${colR}">${a.R??'—'}°</span></td>
-      <td style="text-align:right"><span class="ref-range">${a.ref}</span></td>
-    </tr>`;
-  }).join('');
-
-  // Distancias
-  const unit = pxPerCm ? 'cm' : 'px';
-  document.getElementById('dg').innerHTML=dist.map(d=>
-    `<div class="mc"><div class="mn">${d.n.toUpperCase()}</div><div class="mv b">${d.label}</div><div class="mu">${unit}</div></div>`
-  ).join('');
-
-  // Simetría
-  document.getElementById('symc').innerHTML=ang.map(a=>{
-    if(!a.L||!a.R) return '';
-    const diff=Math.abs(a.L-a.R), pct=Math.min(a.L,a.R)/Math.max(a.L,a.R)*100;
-    const col=pct>90?'var(--acc)':pct>75?'var(--acc3)':'var(--acc4)';
-    return`<div class="sb">
-      <div class="sl"><span>${a.n}</span><span style="color:${col}">${diff?`Δ${diff}° · ${Math.round(pct)}%`:'Simétrico'}</span></div>
-      <div class="st"><div class="sf" style="width:${pct}%;background:${col}"></div><div class="sc"></div></div>
-    </div>`;
-  }).join('');
-}
-
-function renderVelChart(){
-  const c=document.getElementById('vel-canvas'); c.width=c.parentElement.offsetWidth-36; c.height=58;
-  const cx=c.getContext('2d'); if(velH.length<2) return;
-  const maxV=Math.max(...velH.flatMap(f=>f.vels.map(v=>v.v)),1), W=c.width, H=c.height;
-  const cols=['#4ade80','#60a5fa','#f59e0b','#f87171','#a78bfa','#34d399'];
-  VJ.forEach((j,ci)=>{
-    cx.beginPath(); velH.forEach((fr,i)=>{ const x=i/(velH.length-1)*(W-10)+5,val=fr.vels.find(v=>v.id===j.id)?.v||0,y=H-4-(val/maxV)*(H-10); i===0?cx.moveTo(x,y):cx.lineTo(x,y); });
-    cx.strokeStyle=cols[ci]; cx.lineWidth=1.5; cx.stroke();
-    cx.fillStyle=cols[ci]; cx.font='9px DM Mono,monospace'; cx.fillText(j.n,5+ci*78,H-2);
+// ── RENDER MANO ───────────────────────────────────────────────────────────────
+function drawHandResults(r){
+  if(!r||!r.multiHandLandmarks)return;
+  const W=canvas.width,H=canvas.height;
+  r.multiHandLandmarks.forEach((lms,hi)=>{
+    const label=r.multiHandedness[hi]?.label||'Unknown';
+    const isLeft=label==='Left';
+    if(handSide==='izq'&&!isLeft)return;
+    if(handSide==='der'&&isLeft)return;
+    const col=isLeft?'rgba(74,222,128,.9)':'rgba(192,132,252,.9)';
+    const colFill=isLeft?'#4ade80':'#c084fc';
+    if(opts.sk){
+      HAND_CONN.forEach(([a,b])=>{
+        c2.beginPath();c2.moveTo(lms[a].x*W,lms[a].y*H);c2.lineTo(lms[b].x*W,lms[b].y*H);
+        c2.strokeStyle=col;c2.lineWidth=Math.max(1.5,W*0.002);c2.stroke();
+      });
+      lms.forEach((lm,i)=>{
+        c2.beginPath();c2.arc(lm.x*W,lm.y*H,Math.max(2,W*0.004),0,2*Math.PI);
+        c2.fillStyle=i===0?'#fff':colFill;
+        c2.fill();c2.strokeStyle='rgba(0,0,0,.4)';c2.lineWidth=1;c2.stroke();
+      });
+    }
+    if(opts.an){
+      FINGER_ANGLES.forEach(fa=>{
+        const mid=lms[fa.pts[1]];
+        const ang=a3(lms[fa.pts[0]],lms[fa.pts[1]],lms[fa.pts[2]]);
+        if(!ang)return;
+        const x=mid.x*W,y=mid.y*H,t=`${ang}°`;
+        c2.save();c2.fillStyle='rgba(0,0,0,.65)';c2.beginPath();c2.roundRect(x+3,y-13,30,13,2);c2.fill();
+        c2.fillStyle=colFill;c2.font='9px DM Mono,monospace';c2.fillText(t,x+5,y-2);c2.restore();
+      });
+    }
   });
 }
 
-// ── VIDEO CONTROLES ───────────────────────────────────────────────────────────
-document.getElementById('sk').addEventListener('input',function(){
-  if(!frames.length) return;
-  const t=parseFloat(this.value), idx=frames.reduce((b,f,i)=>Math.abs(f.time-t)<Math.abs(frames[b].time-t)?i:b,0);
-  df(idx); document.getElementById('tdisp').textContent=`${t.toFixed(2)}s / ${(videoEl?.duration||0).toFixed(2)}s`;
-});
-function tplay(){ playing=!playing; document.getElementById('bpl').textContent=playing?'⏸ Pause':'▶ Play'; if(playing)pl(); else cancelAnimationFrame(raf); }
-function pl(){
-  if(!playing||!frames.length) return;
-  const sk=document.getElementById('sk'), t=parseFloat(sk.value)+0.1;
-  if(t>frames[frames.length-1].time){ sk.value=0; playing=false; document.getElementById('bpl').textContent='▶ Play'; return; }
-  sk.value=t; sk.dispatchEvent(new Event('input')); raf=requestAnimationFrame(pl);
-}
-function sf(d){
-  if(!frames.length) return;
-  const t=parseFloat(document.getElementById('sk').value), cur=frames.reduce((b,f,i)=>Math.abs(f.time-t)<Math.abs(frames[b].time-t)?i:b,0);
-  const ni=Math.max(0,Math.min(frames.length-1,cur+d)); document.getElementById('sk').value=frames[ni].time; document.getElementById('sk').dispatchEvent(new Event('input'));
+// Usar ctx directamente para dibujar mano también
+const c2=ctx; // mismo canvas
+
+function drawHandResultsOnCanvas(r){
+  if(!r||!r.multiHandLandmarks)return;
+  drawHandResults(r);
 }
 
-// ── OPCIONES ─────────────────────────────────────────────────────────────────
-function to(k,el){ opts[k]=!opts[k]; el.classList.toggle('on',opts[k]); if(mode==='image') rdImg(); else if(frames.length){ const t=parseFloat(document.getElementById('sk').value); df(frames.reduce((b,f,i)=>Math.abs(f.time-t)<Math.abs(frames[b].time-t)?i:b,0)); } }
+// ── PANEL POSE ────────────────────────────────────────────────────────────────
+function angCol(v,ref){
+  if(!v)return'var(--text3)';
+  const m=ref.match(/([\d]+)[^\d]+([\d]+)/);
+  if(!m)return'var(--acc)';
+  const lo=parseInt(m[1]),hi=parseInt(m[2]),margin=(hi-lo)*0.15;
+  if(v>=lo-margin&&v<=hi+margin)return'var(--acc)';
+  if(v>=lo-margin*3&&v<=hi+margin*3)return'var(--acc3)';
+  return'var(--acc4)';
+}
+function updPose(ang,dist){
+  document.getElementById('atb').innerHTML=ang.map(a=>`<tr>
+    <td><span class="adot" style="background:var(--acc)"></span>${a.n}<br><span class="ref-range">${a.ref}°</span></td>
+    <td style="text-align:center;font-family:var(--mono)"><span style="color:${angCol(a.L,a.ref)}">${a.L??'—'}°</span></td>
+    <td style="text-align:center;font-family:var(--mono)"><span style="color:${angCol(a.R,a.ref)}">${a.R??'—'}°</span></td>
+    <td style="text-align:right"><span class="ref-range">${a.ref}°</span></td></tr>`).join('');
+  const unit=pxPerCm?'cm':'px';
+  document.getElementById('dg').innerHTML=dist.map(d=>`<div class="mc"><div class="mn">${d.n.toUpperCase()}</div><div class="mv b">${d.label}</div><div class="mu">${unit}</div></div>`).join('');
+  document.getElementById('symc').innerHTML=ang.map(a=>{
+    if(!a.L||!a.R)return'';
+    const diff=Math.abs(a.L-a.R),pct=Math.min(a.L,a.R)/Math.max(a.L,a.R)*100;
+    const col=pct>90?'var(--acc)':pct>75?'var(--acc3)':'var(--acc4)';
+    return`<div class="sb"><div class="sl"><span>${a.n}</span><span style="color:${col}">${diff?`Δ${diff}° · ${Math.round(pct)}%`:'Simétrico'}</span></div>
+    <div class="st"><div class="sf" style="width:${pct}%;background:${col}"></div><div class="sc"></div></div></div>`;
+  }).join('');
+}
+
+// ── PANEL MANO ────────────────────────────────────────────────────────────────
+function updHand(r){
+  if(!r||!r.multiHandLandmarks||r.multiHandLandmarks.length===0){
+    document.getElementById('hand-results').innerHTML='<div style="color:var(--text3);font-size:11px;text-align:center;padding:10px 0">Sin datos de mano</div>';
+    return;
+  }
+  let html='';
+  r.multiHandLandmarks.forEach((lms,hi)=>{
+    const label=r.multiHandedness[hi]?.label||'?';
+    const isLeft=label==='Left';
+    if(handSide==='izq'&&!isLeft)return;
+    if(handSide==='der'&&isLeft)return;
+    const col=isLeft?'var(--acc)':'var(--acc5)';
+    const handName=isLeft?'Mano izquierda':'Mano derecha';
+    html+=`<div style="font-size:10px;color:${col};font-family:var(--mono);margin-bottom:6px;letter-spacing:.5px;">${handName.toUpperCase()}</div>`;
+    html+='<div class="finger-grid">';
+    FINGER_ANGLES.forEach(fa=>{
+      const ang=a3(lms[fa.pts[0]],lms[fa.pts[1]],lms[fa.pts[2]]);
+      const angCol2=ang?(ang>150?'g':ang>100?'a':'r'):'';
+      html+=`<div class="fc"><div class="fn">${fa.n.toUpperCase()}</div><div class="fv ${angCol2}">${ang??'—'}°</div></div>`;
+    });
+    html+='</div>';
+  });
+  document.getElementById('hand-results').innerHTML=html||'<div style="color:var(--text3);font-size:11px;text-align:center;padding:10px 0">Sin mano seleccionada</div>';
+
+  // Apertura
+  let spreadHtml='';
+  r.multiHandLandmarks.forEach((lms,hi)=>{
+    const label=r.multiHandedness[hi]?.label||'?';
+    const isLeft=label==='Left';
+    if(handSide==='izq'&&!isLeft)return;
+    if(handSide==='der'&&isLeft)return;
+    SPREAD_PAIRS.forEach(sp=>{
+      const d=distPx(lms[sp.pts[0]],lms[sp.pts[1]]);
+      spreadHtml+=`<div class="mc"><div class="mn">${sp.n.toUpperCase()}</div><div class="mv p">${distLabel(d)}</div></div>`;
+    });
+  });
+  document.getElementById('spread-grid').innerHTML=spreadHtml||'<div class="mc full"><div class="mu" style="padding:5px 0;text-align:center">Sin datos</div></div>';
+
+  // Tipo de agarre
+  updGraspType(r);
+}
+
+function updGraspType(r){
+  if(!r||!r.multiHandLandmarks||!r.multiHandLandmarks[0]){
+    document.getElementById('grasp-type').innerHTML='<div style="color:var(--text3);font-size:11px;text-align:center;padding:6px 0">Sin datos</div>';
+    return;
+  }
+  const lms=r.multiHandLandmarks[0];
+  // Calcular ángulos de MCP de todos los dedos
+  const mcps=[
+    a3(lms[1],lms[2],lms[3]),  // pulgar
+    a3(lms[5],lms[6],lms[7]),  // indice
+    a3(lms[9],lms[10],lms[11]),// medio
+    a3(lms[13],lms[14],lms[15]),// anular
+    a3(lms[17],lms[18],lms[19]),// menique
+  ];
+  const avgMcp=mcps.filter(Boolean).reduce((a,b)=>a+b,0)/mcps.filter(Boolean).length;
+  const thumbAng=a3(lms[1],lms[2],lms[3])||180;
+  const spreadThumbIdx=distPx(lms[4],lms[8]);
+  let grasp='', gcolor='', gdesc='';
+  if(avgMcp>150){ grasp='Mano extendida'; gcolor='var(--acc)'; gdesc='Dedos en extensión completa'; }
+  else if(avgMcp>120){ grasp='Agarre cilíndrico'; gcolor='var(--acc2)'; gdesc='Flexión parcial de todos los dedos'; }
+  else if(avgMcp>90){ grasp='Agarre esférico'; gcolor='var(--acc3)'; gdesc='Flexión moderada tipo pelota'; }
+  else if(spreadThumbIdx<canvas.width*0.05){ grasp='Pinza fina'; gcolor='var(--acc5)'; gdesc='Pulgar e índice opuestos, separación mínima'; }
+  else{ grasp='Agarre de potencia'; gcolor='var(--acc4)'; gdesc='Flexión profunda de todos los dedos'; }
+  document.getElementById('grasp-type').innerHTML=`
+    <div style="background:var(--sur2);border:1px solid var(--brd);border-radius:8px;padding:10px 12px;">
+      <div style="font-size:14px;font-weight:600;color:${gcolor};font-family:var(--mono);margin-bottom:3px;">${grasp}</div>
+      <div style="font-size:11px;color:var(--text2);">${gdesc}</div>
+      <div style="font-size:10px;color:var(--text3);margin-top:4px;font-family:var(--mono);">Angulo MCP promedio: ${Math.round(avgMcp)}°</div>
+    </div>`;
+}
+
+// ── VIDEO ─────────────────────────────────────────────────────────────────────
+function df(idx){
+  if(!frames.length)return;
+  const f=frames[Math.min(idx,frames.length-1)];
+  ctx.clearRect(0,0,canvas.width,canvas.height);ctx.drawImage(videoEl,0,0,canvas.width,canvas.height);
+  const dists=cDist(f.landmarks);
+  drawPoseSkeleton(ctx,f.landmarks,f.angles,dists);updPose(f.angles,dists);
+  const vel=velH.find(v=>Math.abs(v.time-f.time)<0.12);
+  if(vel)document.getElementById('vg').innerHTML=vel.vels.map(v=>{const c=v.v<50?'g':v.v<150?'a':'r';return`<div class="mc"><div class="mn">${v.n}</div><div class="mv ${c}">${v.v}</div><div class="mu">px/seg</div></div>`;}).join('');
+}
+
+document.getElementById('sk').addEventListener('input',function(){
+  if(!frames.length)return;
+  const t=parseFloat(this.value),idx=frames.reduce((b,f,i)=>Math.abs(f.time-t)<Math.abs(frames[b].time-t)?i:b,0);
+  df(idx);document.getElementById('tdisp').textContent=`${t.toFixed(2)}s / ${(videoEl?.duration||0).toFixed(2)}s`;
+});
+function tplay(){playing=!playing;document.getElementById('bpl').textContent=playing?'⏸ Pause':'▶ Play';if(playing)pl();else cancelAnimationFrame(raf);}
+function pl(){if(!playing||!frames.length)return;const sk=document.getElementById('sk'),t=parseFloat(sk.value)+0.1;if(t>frames[frames.length-1].time){sk.value=0;playing=false;document.getElementById('bpl').textContent='▶ Play';return;}sk.value=t;sk.dispatchEvent(new Event('input'));raf=requestAnimationFrame(pl);}
+function sf(d){if(!frames.length)return;const t=parseFloat(document.getElementById('sk').value),cur=frames.reduce((b,f,i)=>Math.abs(f.time-t)<Math.abs(frames[b].time-t)?i:b,0);const ni=Math.max(0,Math.min(frames.length-1,cur+d));document.getElementById('sk').value=frames[ni].time;document.getElementById('sk').dispatchEvent(new Event('input'));}
+
+// ── OPCIONES ──────────────────────────────────────────────────────────────────
+function to(k,el){opts[k]=!opts[k];el.classList.toggle('on',opts[k]);if(mediaMode==='image')reprocess();}
 
 // ── EXPORT ────────────────────────────────────────────────────────────────────
 function xcsv(){
-  const unit = pxPerCm ? 'cm' : 'px';
-  const rows=[`Vista,${view.toUpperCase()},,`,'Articulacion,Lado,Angulo (grados),Tiempo (s)'];
-  const src=frames.length?frames:(lAng?[{time:0,angles:lAng,dists:lDist}]:[]);
-  src.forEach(f=>{ f.angles.forEach(a=>{ rows.push(`${a.n},Izquierdo,${a.L??''},${f.time.toFixed(3)}`); rows.push(`${a.n},Derecho,${a.R??''},${f.time.toFixed(3)}`); }); });
-  rows.push('',`Segmento,Valor (${unit})`);
-  const f0=src[0]; if(f0) cDist(f0.landmarks||lLms).forEach(d=>rows.push(`${d.n},${d.label}`));
-  if(heightCm) rows.push('',`Altura paciente,${heightCm} cm`,`Calibracion,${pxPerCm?pxPerCm.toFixed(2)+' px/cm':'sin calibrar'}`);
-  const a=document.createElement('a'); a.href=URL.createObjectURL(new Blob([rows.join('\n')],{type:'text/csv'})); a.download=`analisis_${view}_UNAL.csv`; a.click();
+  const rows=[`Modo,${mode} | Vista: ${view}`,''];
+  if(lAng){
+    rows.push('ANGULOS CORPORALES','Articulacion,Lado,Angulo (grados)');
+    lAng.forEach(a=>{rows.push(`${a.n},Izquierdo,${a.L??''}`);rows.push(`${a.n},Derecho,${a.R??''}`);});
+  }
+  if(lHandResults?.multiHandLandmarks?.length){
+    rows.push('','ANGULOS DE MANO','Dedo,Articulacion,Angulo (grados),Mano');
+    lHandResults.multiHandLandmarks.forEach((lms,hi)=>{
+      const label=lHandResults.multiHandedness[hi]?.label||'?';
+      FINGER_ANGLES.forEach(fa=>{const ang=a3(lms[fa.pts[0]],lms[fa.pts[1]],lms[fa.pts[2]]);rows.push(`${fa.n},,${ang??''},${label}`);});
+    });
+    rows.push('','APERTURA ENTRE DEDOS','Par,Distancia');
+    lHandResults.multiHandLandmarks.forEach((lms,hi)=>{
+      const label=lHandResults.multiHandedness[hi]?.label||'?';
+      SPREAD_PAIRS.forEach(sp=>{rows.push(`${sp.n} (${label}),${distLabel(distPx(lms[sp.pts[0]],lms[sp.pts[1]]))}`);});
+    });
+  }
+  if(lDist){rows.push('','DISTANCIAS CORPORALES','Segmento,Valor');lDist.forEach(d=>rows.push(`${d.n},${d.label}`));}
+  if(heightCm)rows.push('',`Altura paciente,${heightCm} cm`,`Calibracion,${pxPerCm?pxPerCm.toFixed(2)+' px/cm':'sin calibrar'}`);
+  const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([rows.join('\n')],{type:'text/csv'}));a.download=`analisis_${mode}_UNAL.csv`;a.click();
 }
-function ximg(){ const a=document.createElement('a'); a.href=canvas.toDataURL('image/png'); a.download=`postura_${view}_anotada.png`; a.click(); }
+function ximg(){const a=document.createElement('a');a.href=canvas.toDataURL('image/png');a.download=`postura_${mode}_anotada.png`;a.click();}
 
 // ── UTILS ─────────────────────────────────────────────────────────────────────
-function setSt(type,msg){ const b=document.getElementById('sbar'); b.style.display='flex'; document.getElementById('sdot').className='sdot '+type; document.getElementById('stxt').textContent=msg; }
-function showCv(){ document.getElementById('ph').style.display='none'; document.getElementById('ci').style.display='inline-block'; }
-function hideVid(){ document.getElementById('vbar').classList.remove('vis'); document.getElementById('chart-area').classList.remove('vis'); document.getElementById('vsec').style.display='none'; }
-function enExp(){ document.getElementById('bcsv').disabled=false; document.getElementById('bimg').disabled=false; }
+function setSt(type,msg){const b=document.getElementById('sbar');b.style.display='flex';document.getElementById('sdot').className='sdot '+type;document.getElementById('stxt').textContent=msg;}
+function showCv(){document.getElementById('ph').style.display='none';document.getElementById('ci').style.display='inline-block';}
+function hideVid(){document.getElementById('vbar').classList.remove('vis');document.getElementById('vsec').style.display='none';}
+function enExp(){document.getElementById('bcsv').disabled=false;document.getElementById('bimg').disabled=false;}
 </script>
 </body>
 </html>
