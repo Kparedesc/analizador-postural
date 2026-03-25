@@ -39,6 +39,7 @@ header{display:flex;align-items:center;justify-content:space-between;padding:0 2
 .tag.g{border-color:rgba(74,222,128,.4);color:var(--acc);}
 .tag.b{border-color:rgba(96,165,250,.4);color:var(--acc2);}
 .tag.p{border-color:rgba(192,132,252,.4);color:var(--acc5);}
+.tag.o{border-color:rgba(245,158,11,.4);color:var(--acc3);}
 .author-card{background:var(--sur2);border:1px solid var(--brd);border-radius:10px;padding:11px 13px;min-width:195px;flex-shrink:0;}
 .ac-top{display:flex;align-items:center;gap:8px;margin-bottom:8px;}
 .ac-av{width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,#534AB7,#1D9E75);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#fff;flex-shrink:0;border:2px solid var(--brd);}
@@ -103,6 +104,10 @@ header{display:flex;align-items:center;justify-content:space-between;padding:0 2
 .sdot.error{background:var(--acc4);}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
 
+/* Confidence indicator */
+.conf-bar{height:3px;border-radius:2px;background:var(--brd);margin-top:5px;overflow:hidden;}
+.conf-fill{height:100%;border-radius:2px;transition:width .5s;}
+
 .ctrl{display:flex;align-items:center;justify-content:space-between;margin-bottom:7px;}
 .ctrl-lbl{font-size:12px;color:var(--text2);}
 .tog{position:relative;width:28px;height:15px;background:var(--brd);border-radius:8px;cursor:pointer;transition:background .2s;flex-shrink:0;}
@@ -110,7 +115,7 @@ header{display:flex;align-items:center;justify-content:space-between;padding:0 2
 .tog::after{content:'';position:absolute;top:2px;left:2px;width:11px;height:11px;border-radius:50%;background:#fff;transition:transform .2s;}
 .tog.on::after{transform:translateX(13px);}
 
-/* Tabs para resultados */
+/* Tabs */
 .tab-bar{display:flex;border-bottom:1px solid var(--brd);margin-bottom:10px;}
 .tab{padding:6px 12px;font-family:var(--mono);font-size:10px;cursor:pointer;color:var(--text3);border-bottom:2px solid transparent;transition:all .15s;letter-spacing:.5px;}
 .tab.active-g{color:var(--acc);border-bottom-color:var(--acc);}
@@ -123,6 +128,11 @@ header{display:flex;align-items:center;justify-content:space-between;padding:0 2
 .atbl td{padding:5px 0;border-bottom:1px solid var(--brd);color:var(--text2);}
 .adot{display:inline-block;width:6px;height:6px;border-radius:50%;margin-right:4px;vertical-align:middle;}
 .ref-range{font-family:var(--mono);font-size:9px;color:var(--text3);}
+/* Asymmetry badge */
+.asym-badge{font-family:var(--mono);font-size:9px;padding:1px 5px;border-radius:3px;margin-left:4px;}
+.asym-ok{background:rgba(74,222,128,.15);color:var(--acc);}
+.asym-warn{background:rgba(245,158,11,.15);color:var(--acc3);}
+.asym-bad{background:rgba(248,113,113,.15);color:var(--acc4);}
 
 .mgrid{display:grid;grid-template-columns:1fr 1fr;gap:5px;}
 .mc{background:var(--sur2);border:1px solid var(--brd);border-radius:7px;padding:8px 10px;}
@@ -139,22 +149,35 @@ header{display:flex;align-items:center;justify-content:space-between;padding:0 2
 .sc{position:absolute;top:-2px;left:50%;width:1px;height:8px;background:var(--text3);}
 
 /* Hand panel */
-.hand-diagram{display:flex;justify-content:center;gap:20px;margin-bottom:10px;}
-.hand-svg-wrap{text-align:center;}
-.hand-svg-wrap canvas{border-radius:8px;background:var(--sur2);border:1px solid var(--brd);}
-.hand-label{font-family:var(--mono);font-size:10px;color:var(--text3);margin-top:4px;text-align:center;}
+.finger-section{margin-bottom:10px;}
+.finger-section-title{font-size:9px;color:var(--text3);font-family:var(--mono);letter-spacing:.5px;margin-bottom:5px;text-transform:uppercase;}
+.finger-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:4px;}
+.fc{background:var(--sur2);border:1px solid var(--brd);border-radius:7px;padding:6px 8px;}
+.fn{font-size:8px;color:var(--text3);font-family:var(--mono);margin-bottom:2px;}
+.fv{font-size:13px;font-weight:600;font-family:var(--mono);line-height:1;}
+.fu{font-size:8px;color:var(--text3);margin-top:1px;}
 
-.finger-grid{display:grid;grid-template-columns:1fr 1fr;gap:5px;}
-.fc{background:var(--sur2);border:1px solid var(--brd);border-radius:7px;padding:7px 9px;}
-.fn{font-size:9px;color:var(--text3);font-family:var(--mono);margin-bottom:2px;}
-.fv{font-size:14px;font-weight:600;font-family:var(--mono);line-height:1;}
-.fu{font-size:9px;color:var(--text3);margin-top:1px;}
+/* Grasp visualization */
+.grasp-visual{display:flex;gap:10px;align-items:flex-start;margin-bottom:8px;}
+.grasp-icon-wrap{width:54px;height:54px;border-radius:8px;background:var(--sur2);border:1px solid var(--brd);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:28px;}
+.grasp-detail{flex:1;}
+
+/* Quality indicator */
+.quality-bar{display:flex;gap:4px;margin-top:6px;}
+.qb{flex:1;height:4px;border-radius:2px;background:var(--brd);transition:background .4s;}
+.qb.on{background:var(--acc);}
+.qb.warn{background:var(--acc3);}
+.qb.bad{background:var(--acc4);}
 
 .btn{width:100%;padding:8px;border-radius:7px;border:1px solid var(--acc);background:rgba(74,222,128,.07);color:var(--acc);font-family:var(--mono);font-size:11px;cursor:pointer;transition:all .2s;margin-top:5px;}
 .btn:hover{background:rgba(74,222,128,.15);}
 .btn:disabled{opacity:.3;cursor:not-allowed;}
 .btn.b2{border-color:var(--acc2);color:var(--acc2);background:rgba(96,165,250,.05);}
 .btn.b2:hover{background:rgba(96,165,250,.13);}
+.btn.b3{border-color:var(--acc5);color:var(--acc5);background:rgba(192,132,252,.05);}
+.btn.b3:hover{background:rgba(192,132,252,.13);}
+.btn.b4{border-color:var(--acc3);color:var(--acc3);background:rgba(245,158,11,.05);}
+.btn.b4:hover{background:rgba(245,158,11,.13);}
 
 .panel-r{display:flex;flex-direction:column;background:var(--bg);overflow:hidden;}
 .cvwrap{flex:1;display:flex;align-items:center;justify-content:center;padding:16px;min-height:360px;position:relative;}
@@ -162,6 +185,12 @@ header{display:flex;align-items:center;justify-content:space-between;padding:0 2
 .ph{display:flex;flex-direction:column;align-items:center;gap:9px;color:var(--text3);text-align:center;}
 .phg{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;width:56px;height:56px;opacity:.18;margin-bottom:4px;}
 .phg div{background:var(--brd);border-radius:2px;}
+
+/* Confidence overlay badge */
+.conf-overlay{position:absolute;top:24px;right:24px;background:rgba(14,15,17,.85);border:1px solid var(--brd);border-radius:8px;padding:6px 10px;font-family:var(--mono);font-size:10px;display:none;gap:6px;flex-direction:column;}
+.conf-overlay.vis{display:flex;}
+.co-row{display:flex;align-items:center;gap:6px;}
+.co-dot{width:5px;height:5px;border-radius:50%;flex-shrink:0;}
 
 .vbar{padding:10px 16px;border-top:1px solid var(--brd);background:var(--sur);display:none;flex-direction:column;gap:5px;}
 .vbar.vis{display:flex;}
@@ -171,6 +200,12 @@ header{display:flex;align-items:center;justify-content:space-between;padding:0 2
 .vcb{background:none;border:1px solid var(--brd);color:var(--text2);border-radius:5px;padding:4px 9px;font-family:var(--mono);font-size:10px;cursor:pointer;transition:all .15s;}
 .vcb:hover{border-color:var(--acc2);color:var(--acc2);}
 .td{font-family:var(--mono);font-size:10px;color:var(--text3);margin-left:auto;}
+
+/* Alert box for low confidence */
+.alert-box{display:none;padding:8px 10px;border-radius:7px;font-size:11px;margin-top:7px;border:1px solid;}
+.alert-box.warn{background:rgba(245,158,11,.08);border-color:rgba(245,158,11,.3);color:var(--acc3);}
+.alert-box.error-box{background:rgba(248,113,113,.08);border-color:rgba(248,113,113,.3);color:var(--acc4);}
+.alert-box.vis{display:block;}
 
 footer{border-top:1px solid var(--brd);background:var(--sur);padding:9px 28px;display:flex;align-items:center;justify-content:space-between;font-size:11px;color:var(--text3);}
 .fdot{width:5px;height:5px;border-radius:50%;background:var(--acc);flex-shrink:0;margin-right:6px;}
@@ -187,19 +222,19 @@ footer{border-top:1px solid var(--brd);background:var(--sur);padding:9px 28px;di
     <div class="logo-icon">🦴</div>
     <div>
       <div class="logo-text">Analizador Postural · TO</div>
-      <div class="logo-sub">MediaPipe Pose + Hands · Análisis biomecánico</div>
+      <div class="logo-sub">MediaPipe Pose + Hands · Análisis biomecánico v5.0</div>
     </div>
   </div>
   <div class="hdr-r">
     <div class="author-chip"><div class="av">KP</div><span class="author-name">Karen Paredes · UNAL</span></div>
-    <div class="badge-h">v4.0 · 2026</div>
+    <div class="badge-h">v5.0 · 2026</div>
   </div>
 </header>
 
 <div id="hero">
   <div class="hero-l">
     <div class="hero-title">Análisis postural y de mano <span>asistido por IA</span></div>
-    <div class="hero-desc">Herramienta para valoración de ayudas técnicas en Terapia Ocupacional. Analiza postura corporal, mano y combinado desde imágenes o videos.</div>
+    <div class="hero-desc">Herramienta para valoración de ayudas técnicas en Terapia Ocupacional. Analiza postura corporal, mano y combinado desde imágenes o videos con detección de confianza, clasificación avanzada de agarre y exportación clínica.</div>
     <div class="hero-tags">
       <span class="tag g">Pose corporal</span>
       <span class="tag p">Análisis de mano</span>
@@ -207,6 +242,9 @@ footer{border-top:1px solid var(--brd);background:var(--sur);padding:9px 28px;di
       <span class="tag">Vista frontal / sagital</span>
       <span class="tag">Calibración en cm</span>
       <span class="tag">Exportar CSV</span>
+      <span class="tag o">Confianza por landmark</span>
+      <span class="tag o">DIP completo</span>
+      <span class="tag o">Asimetría L/D</span>
     </div>
   </div>
   <div class="author-card">
@@ -262,6 +300,10 @@ footer{border-top:1px solid var(--brd);background:var(--sur);padding:9px 28px;di
       </div>
       <input type="file" id="fi" accept="image/*,video/*">
       <div class="sbar" id="sbar"><div class="sdot" id="sdot"></div><span id="stxt">—</span></div>
+      <!-- Alert for low-confidence detection -->
+      <div class="alert-box warn" id="alert-conf">
+        ⚠ Confianza baja en algunos landmarks. Revisa la iluminación o encuadre.
+      </div>
     </div>
 
     <div class="sec">
@@ -269,7 +311,8 @@ footer{border-top:1px solid var(--brd);background:var(--sur);padding:9px 28px;di
       <div class="ctrl"><span class="ctrl-lbl">Mostrar esqueleto / mano</span><div class="tog on" id="tsk" onclick="to('sk',this)"></div></div>
       <div class="ctrl"><span class="ctrl-lbl">Ángulos en imagen</span><div class="tog on" id="tan" onclick="to('an',this)"></div></div>
       <div class="ctrl"><span class="ctrl-lbl">Distancias en imagen</span><div class="tog" id="tdi" onclick="to('di',this)"></div></div>
-      <div class="ctrl" style="margin-bottom:0"><span class="ctrl-lbl">Colores Izq(verde)/Der(azul)</span><div class="tog on" id="tcol" onclick="to('col',this)"></div></div>
+      <div class="ctrl"><span class="ctrl-lbl">Colores Izq(verde)/Der(azul)</span><div class="tog on" id="tcol" onclick="to('col',this)"></div></div>
+      <div class="ctrl" style="margin-bottom:0"><span class="ctrl-lbl">Indicador de confianza</span><div class="tog on" id="tconf" onclick="to('conf',this)"></div></div>
     </div>
 
     <!-- RESULTADOS CON TABS -->
@@ -283,18 +326,17 @@ footer{border-top:1px solid var(--brd);background:var(--sur);padding:9px 28px;di
       <div class="tab-content show" id="pose-tab">
         <div style="font-size:10px;color:var(--text3);font-family:var(--mono);margin-bottom:7px;letter-spacing:.5px;">ÁNGULOS ARTICULARES</div>
         <table class="atbl">
-          <thead><tr><th>Articulación</th><th style="text-align:center">Izq</th><th style="text-align:center">Der</th><th style="text-align:right">Ref.</th></tr></thead>
+          <thead><tr><th>Articulación</th><th style="text-align:center">Izq</th><th style="text-align:center">Der</th><th style="text-align:right">Δ Asim.</th></tr></thead>
           <tbody id="atb"><tr><td colspan="4" style="color:var(--text3);font-size:11px;text-align:center;padding:12px 0">Carga un archivo</td></tr></tbody>
         </table>
         <div style="font-size:10px;color:var(--text3);font-family:var(--mono);margin:10px 0 7px;letter-spacing:.5px;">DISTANCIAS</div>
         <div class="mgrid" id="dg"><div class="mc full"><div class="mu" style="padding:5px 0;text-align:center">Sin datos</div></div></div>
-        <div style="font-size:10px;color:var(--text3);font-family:var(--mono);margin:10px 0 7px;letter-spacing:.5px;">SIMETRÍA</div>
+        <div style="font-size:10px;color:var(--text3);font-family:var(--mono);margin:10px 0 7px;letter-spacing:.5px;">ÍNDICE DE SIMETRÍA</div>
         <div id="symc"><div style="color:var(--text3);font-size:11px;text-align:center;padding:6px 0">Sin datos</div></div>
       </div>
 
       <!-- TAB MANO -->
       <div class="tab-content" id="hand-tab">
-        <div style="font-size:10px;color:var(--text3);font-family:var(--mono);margin-bottom:7px;letter-spacing:.5px;">ÁNGULOS POR DEDO</div>
         <div id="hand-results"><div style="color:var(--text3);font-size:11px;text-align:center;padding:12px 0">Carga un archivo con mano visible</div></div>
         <div style="font-size:10px;color:var(--text3);font-family:var(--mono);margin:10px 0 7px;letter-spacing:.5px;">APERTURA ENTRE DEDOS</div>
         <div class="mgrid" id="spread-grid"><div class="mc full"><div class="mu" style="padding:5px 0;text-align:center">Sin datos</div></div></div>
@@ -304,14 +346,15 @@ footer{border-top:1px solid var(--brd);background:var(--sur);padding:9px 28px;di
     </div>
 
     <div class="sec" id="vsec" style="display:none">
-      <div class="sec-lbl">Velocidad (video)</div>
+      <div class="sec-lbl">Velocidad angular (video)</div>
       <div class="mgrid" id="vg"></div>
     </div>
 
     <div class="sec">
       <div class="sec-lbl">Exportar</div>
-      <button class="btn" id="bcsv" disabled onclick="xcsv()">↓ Exportar CSV</button>
+      <button class="btn" id="bcsv" disabled onclick="xcsv()">↓ Exportar CSV clínico</button>
       <button class="btn b2" id="bimg" disabled onclick="ximg()">↓ Guardar imagen anotada</button>
+      <button class="btn b3" id="bjson" disabled onclick="xjson()">↓ Exportar JSON landmarks</button>
     </div>
 
   </div>
@@ -323,7 +366,11 @@ footer{border-top:1px solid var(--brd);background:var(--sur);padding:9px 28px;di
         <div style="font-size:13px;font-weight:500;color:var(--text2)">Sin archivo cargado</div>
         <div style="font-size:11px">Selecciona el modo, ingresa la altura y sube un archivo</div>
       </div>
-      <div id="ci" style="display:none"><canvas id="cv"></canvas></div>
+      <div id="ci" style="display:none;position:relative;">
+        <canvas id="cv"></canvas>
+        <!-- Confidence overlay -->
+        <div class="conf-overlay" id="conf-overlay"></div>
+      </div>
     </div>
     <div class="vbar" id="vbar">
       <input type="range" id="sk" min="0" max="100" value="0" step="0.1">
@@ -341,7 +388,7 @@ footer{border-top:1px solid var(--brd);background:var(--sur);padding:9px 28px;di
   <div style="display:flex;align-items:center"><div class="fdot"></div>
     <span>Desarrollado por <strong style="color:var(--text2)">Karen Vanessa Paredes Castro</strong> · Docente de Terapia Ocupacional · Universidad Nacional de Colombia · 2026</span>
   </div>
-  <span style="font-family:var(--mono);font-size:10px">MediaPipe Pose + Hands · Uso educativo</span>
+  <span style="font-family:var(--mono);font-size:10px">MediaPipe Pose + Hands · v5.0 · Uso educativo y clínico</span>
 </footer>
 
 <!-- MediaPipe -->
@@ -349,67 +396,114 @@ footer{border-top:1px solid var(--brd);background:var(--sur);padding:9px 28px;di
 <script src="https://unpkg.com/@mediapipe/hands@0.4.1646424915/hands.js" crossorigin="anonymous"></script>
 
 <script>
-// ── DEFINICIONES ─────────────────────────────────────────────────────────────
+// ══════════════════════════════════════════════════════════════════════════════
+// DEFINICIONES ANATÓMICAS
+// ══════════════════════════════════════════════════════════════════════════════
 const CONN=[[11,12],[11,13],[13,15],[12,14],[14,16],[11,23],[12,24],[23,24],[23,25],[24,26],[25,27],[26,28],[27,29],[28,30],[27,31],[28,32],[0,1],[1,2],[2,3],[3,7],[0,4],[4,5],[5,6],[6,8],[9,10],[15,17],[15,19],[15,21],[16,18],[16,20],[16,22]];
 const LI=new Set([1,3,7,11,13,15,17,19,21,23,25,27,29,31]);
 
+// ── Articulaciones posturales (frontal y sagital) ─────────────────────────────
 const JOINTS_FRONTAL=[
-  {n:'Hombros',L:[12,11,23],R:[11,12,24],ref:'170-180'},
-  {n:'Caderas', L:[11,23,25],R:[12,24,26],ref:'170-180'},
-  {n:'Rodilla', L:[23,25,27],R:[24,26,28],ref:'170-180'},
-  {n:'Tronco',  L:[23,11,12],R:[24,12,11],ref:'85-95'},
+  {n:'Hombros',  L:[12,11,23], R:[11,12,24], ref:'170-180', refLo:170, refHi:180},
+  {n:'Caderas',  L:[11,23,25], R:[12,24,26], ref:'170-180', refLo:170, refHi:180},
+  {n:'Rodilla',  L:[23,25,27], R:[24,26,28], ref:'170-180', refLo:170, refHi:180},
+  {n:'Tronco',   L:[23,11,12], R:[24,12,11], ref:'85-95',   refLo:85,  refHi:95},
 ];
 const JOINTS_SAGITAL=[
-  {n:'Codo',   L:[11,13,15],R:[12,14,16],ref:'0-145'},
-  {n:'Hombro', L:[13,11,23],R:[14,12,24],ref:'0-180'},
-  {n:'Cadera', L:[11,23,25],R:[12,24,26],ref:'80-100'},
-  {n:'Rodilla',L:[23,25,27],R:[24,26,28],ref:'0-135'},
-  {n:'Tobillo',L:[25,27,31],R:[26,28,32],ref:'90-110'},
-  {n:'Cabeza', L:[11,0,7],  R:[12,0,8],  ref:'160-175'},
+  {n:'Codo',    L:[11,13,15], R:[12,14,16], ref:'0-145',   refLo:0,   refHi:145},
+  {n:'Hombro',  L:[13,11,23], R:[14,12,24], ref:'0-180',   refLo:0,   refHi:180},
+  {n:'Cadera',  L:[11,23,25], R:[12,24,26], ref:'80-100',  refLo:80,  refHi:100},
+  {n:'Rodilla', L:[23,25,27], R:[24,26,28], ref:'0-135',   refLo:0,   refHi:135},
+  {n:'Tobillo', L:[25,27,31], R:[26,28,32], ref:'90-110',  refLo:90,  refHi:110},
+  {n:'Cabeza',  L:[11,0,7],   R:[12,0,8],   ref:'160-175', refLo:160, refHi:175},
 ];
-const DISTS_FRONTAL=[{n:'Ancho hombros',p:[11,12]},{n:'Ancho caderas',p:[23,24]},{n:'Brazo izq',p:[11,15]},{n:'Brazo der',p:[12,16]},{n:'Pierna izq',p:[23,27]},{n:'Pierna der',p:[24,28]},{n:'Tronco',p:[11,23]}];
-const DISTS_SAGITAL=[{n:'Tronco',p:[11,23]},{n:'Femur izq',p:[23,25]},{n:'Femur der',p:[24,26]},{n:'Tibia izq',p:[25,27]},{n:'Tibia der',p:[26,28]},{n:'Brazo izq',p:[11,15]},{n:'Antebrazo izq',p:[13,15]}];
-const VJ=[{id:11,n:'Hombro I'},{id:12,n:'Hombro D'},{id:13,n:'Codo I'},{id:14,n:'Codo D'},{id:23,n:'Cadera I'},{id:25,n:'Rodilla I'}];
+const DISTS_FRONTAL=[
+  {n:'Ancho hombros',p:[11,12]},{n:'Ancho caderas',p:[23,24]},
+  {n:'Brazo izq',p:[11,15]},{n:'Brazo der',p:[12,16]},
+  {n:'Pierna izq',p:[23,27]},{n:'Pierna der',p:[24,28]},
+  {n:'Tronco',p:[11,23]}
+];
+const DISTS_SAGITAL=[
+  {n:'Tronco',p:[11,23]},{n:'Fémur izq',p:[23,25]},{n:'Fémur der',p:[24,26]},
+  {n:'Tibia izq',p:[25,27]},{n:'Tibia der',p:[26,28]},
+  {n:'Brazo izq',p:[11,15]},{n:'Antebrazo izq',p:[13,15]}
+];
+const VJ=[
+  {id:11,n:'Hombro I'},{id:12,n:'Hombro D'},
+  {id:13,n:'Codo I'},{id:14,n:'Codo D'},
+  {id:23,n:'Cadera I'},{id:25,n:'Rodilla I'}
+];
 
-// Hand landmark connections
+// ── Conexiones de mano ────────────────────────────────────────────────────────
 const HAND_CONN=[[0,1],[1,2],[2,3],[3,4],[0,5],[5,6],[6,7],[7,8],[5,9],[9,10],[10,11],[11,12],[9,13],[13,14],[14,15],[15,16],[13,17],[17,18],[18,19],[19,20],[0,17]];
-// Finger joint triplets for angle calculation [base, mid, tip]
-const FINGER_ANGLES=[
-  {n:'Pulgar MCP',   pts:[1,2,3]},
-  {n:'Pulgar IP',    pts:[2,3,4]},
-  {n:'Indice MCP',   pts:[5,6,7]},
-  {n:'Indice PIP',   pts:[6,7,8]},
-  {n:'Medio MCP',    pts:[9,10,11]},
-  {n:'Medio PIP',    pts:[10,11,12]},
-  {n:'Anular MCP',   pts:[13,14,15]},
-  {n:'Anular PIP',   pts:[14,15,16]},
-  {n:'Menique MCP',  pts:[17,18,19]},
-  {n:'Menique PIP',  pts:[18,19,20]},
-];
-const SPREAD_PAIRS=[
-  {n:'Pulgar-Indice', pts:[4,8]},
-  {n:'Indice-Medio',  pts:[8,12]},
-  {n:'Medio-Anular',  pts:[12,16]},
-  {n:'Anular-Menique',pts:[16,20]},
+
+// ── ÁNGULOS DE DEDOS: MCP + PIP + DIP (articulaciones completas) ──────────────
+// MediaPipe Hand landmarks:
+// Pulgar: 1(CMC), 2(MCP), 3(IP), 4(tip)
+// Índice: 5(MCP), 6(PIP), 7(DIP), 8(tip)
+// Medio:  9(MCP), 10(PIP), 11(DIP), 12(tip)
+// Anular: 13(MCP), 14(PIP), 15(DIP), 16(tip)
+// Meñique:17(MCP), 18(PIP), 19(DIP), 20(tip)
+const FINGER_ANGLES_BY_FINGER=[
+  {finger:'Pulgar', joints:[
+    {n:'CMC',  pts:[0,1,2]},
+    {n:'MCP',  pts:[1,2,3]},
+    {n:'IP',   pts:[2,3,4]},
+  ]},
+  {finger:'Índice', joints:[
+    {n:'MCP',  pts:[0,5,6]},
+    {n:'PIP',  pts:[5,6,7]},
+    {n:'DIP',  pts:[6,7,8]},
+  ]},
+  {finger:'Medio', joints:[
+    {n:'MCP',  pts:[0,9,10]},
+    {n:'PIP',  pts:[9,10,11]},
+    {n:'DIP',  pts:[10,11,12]},
+  ]},
+  {finger:'Anular', joints:[
+    {n:'MCP',  pts:[0,13,14]},
+    {n:'PIP',  pts:[13,14,15]},
+    {n:'DIP',  pts:[14,15,16]},
+  ]},
+  {finger:'Meñique', joints:[
+    {n:'MCP',  pts:[0,17,18]},
+    {n:'PIP',  pts:[17,18,19]},
+    {n:'DIP',  pts:[18,19,20]},
+  ]},
 ];
 
-// ── ESTADO ────────────────────────────────────────────────────────────────────
+// Lista plana para compatibilidad con exportación CSV
+const FINGER_ANGLES_FLAT=FINGER_ANGLES_BY_FINGER.flatMap(f=>f.joints.map(j=>({n:`${f.finger} ${j.n}`,pts:j.pts,finger:f.finger,joint:j.n})));
+
+const SPREAD_PAIRS=[
+  {n:'Pulgar–Índice', pts:[4,8]},
+  {n:'Índice–Medio',  pts:[8,12]},
+  {n:'Medio–Anular',  pts:[12,16]},
+  {n:'Anular–Meñique',pts:[16,20]},
+];
+
+// ══════════════════════════════════════════════════════════════════════════════
+// ESTADO GLOBAL
+// ══════════════════════════════════════════════════════════════════════════════
 let mode='pose', view='frontal', handSide='ambas';
 let pxPerCm=null, heightCm=null;
-let opts={sk:true,an:true,di:false,col:true};
+let opts={sk:true,an:true,di:false,col:true,conf:true};
 let pose=null, hands=null, poseReady=false, handsReady=false;
 let mediaMode=null, imgEl=null, videoEl=null;
 let frames=[], velH=[], playing=false, raf=null;
 let lLms=null, lAng=null, lDist=null;
 let lHandResults=null;
+let lastPoseConf=null, lastHandConf=null;
 
 const canvas=document.getElementById('cv');
 const ctx=canvas.getContext('2d');
 
-function curJoints(){ return view==='frontal'?JOINTS_FRONTAL:JOINTS_SAGITAL; }
-function curDists(){  return view==='frontal'?DISTS_FRONTAL:DISTS_SAGITAL; }
+function curJoints(){return view==='frontal'?JOINTS_FRONTAL:JOINTS_SAGITAL;}
+function curDists() {return view==='frontal'?DISTS_FRONTAL:DISTS_SAGITAL;}
 
-// ── TABS ──────────────────────────────────────────────────────────────────────
+// ══════════════════════════════════════════════════════════════════════════════
+// TABS
+// ══════════════════════════════════════════════════════════════════════════════
 function showTab(id){
   document.querySelectorAll('.tab-content').forEach(t=>t.classList.remove('show'));
   document.getElementById(id).classList.add('show');
@@ -417,10 +511,12 @@ function showTab(id){
   document.getElementById('tab-hand-btn').className='tab'+(id==='hand-tab'?' active-p':'');
 }
 
-// ── MODO / VISTA ──────────────────────────────────────────────────────────────
+// ══════════════════════════════════════════════════════════════════════════════
+// MODO / VISTA / MANO
+// ══════════════════════════════════════════════════════════════════════════════
 const modeDescs={
-  pose:'Valgo/varo · Simetría · Alcance funcional',
-  hand:'Ángulos de dedos · Apertura · Tipo de agarre',
+  pose:'Valgo/varo · Simetría · Asimetría L/D · Alcance funcional',
+  hand:'MCP · PIP · DIP · Apertura · Agarre avanzado',
   combo:'Postura corporal + análisis de mano simultáneo'
 };
 function setMode(m){
@@ -440,22 +536,24 @@ function setView(v){
   view=v;
   document.getElementById('btn-frontal').className='view-btn'+(v==='frontal'?' vf':'');
   document.getElementById('btn-sagital').className='view-btn'+(v==='sagital'?' vs':'');
-  if(lLms){ lAng=cAng(lLms); lDist=cDist(lLms); rdImg(); updPose(lAng,lDist); }
+  if(lLms){lAng=cAng(lLms);lDist=cDist(lLms);rdImg();updPose(lAng,lDist);}
 }
 function setHand(h){
   handSide=h;
-  ['ambas','izq','der'].forEach(x=>{ document.getElementById('btn-'+x).className='hand-btn'+(h===x?' hb':''); });
+  ['ambas','izq','der'].forEach(x=>{document.getElementById('btn-'+x).className='hand-btn'+(h===x?' hb':'');});
   if(lHandResults) drawHandResults(lHandResults);
 }
 function reprocess(){
-  if(!imgEl) return;
+  if(!imgEl)return;
   ctx.clearRect(0,0,canvas.width,canvas.height);
   ctx.drawImage(imgEl,0,0);
   if(mode==='pose'||mode==='combo') pose.send({image:imgEl});
   if(mode==='hand'||mode==='combo') hands.send({image:imgEl});
 }
 
-// ── CALIBRACIÓN ───────────────────────────────────────────────────────────────
+// ══════════════════════════════════════════════════════════════════════════════
+// CALIBRACIÓN
+// ══════════════════════════════════════════════════════════════════════════════
 document.getElementById('height-input').addEventListener('input',function(){
   heightCm=parseFloat(this.value);
   if(!isNaN(heightCm)&&heightCm>0){
@@ -476,15 +574,63 @@ function recalib(lms){
     pxPerCm=bodyPx/heightCm;
     document.getElementById('calib-st').textContent=`Calibrado: 1 cm = ${pxPerCm.toFixed(1)} px`;
     document.getElementById('calib-st').className='calib-st ok';
-    if(lAng&&lDist){ lDist=cDist(lms); rdImg(); updPose(lAng,lDist); }
+    if(lAng&&lDist){lDist=cDist(lLms);rdImg();updPose(lAng,lDist);}
   }
 }
-function distLabel(px){ return pxPerCm&&pxPerCm>0?(px/pxPerCm).toFixed(1)+' cm':Math.round(px)+' px'; }
+function distLabel(px){return pxPerCm&&pxPerCm>0?(px/pxPerCm).toFixed(1)+' cm':Math.round(px)+' px';}
 
-// ── INIT MEDIAPIPE ────────────────────────────────────────────────────────────
+// ══════════════════════════════════════════════════════════════════════════════
+// INDICADOR DE CONFIANZA
+// ══════════════════════════════════════════════════════════════════════════════
+function updateConfidenceOverlay(poseLms, handResults){
+  const overlay=document.getElementById('conf-overlay');
+  const alert=document.getElementById('alert-conf');
+  if(!opts.conf){overlay.classList.remove('vis');alert.classList.remove('vis');return;}
+
+  let lines=[];
+  let hasLowConf=false;
+
+  if(poseLms){
+    // Calcular confianza promedio de landmarks clave
+    const keyIds=[0,11,12,13,14,23,24,25,26,27,28];
+    const confs=keyIds.map(i=>poseLms[i]?.visibility||0);
+    const avgConf=confs.reduce((a,b)=>a+b,0)/confs.length;
+    const low=confs.filter(c=>c<0.6).length;
+    const col=avgConf>0.8?'var(--acc)':avgConf>0.6?'var(--acc3)':'var(--acc4)';
+    lines.push(`<div class="co-row"><div class="co-dot" style="background:${col}"></div><span style="font-size:10px;color:${col}">Pose: ${Math.round(avgConf*100)}%</span></div>`);
+    if(low>0){hasLowConf=true;}
+    lastPoseConf=avgConf;
+  }
+  if(handResults?.multiHandLandmarks?.length){
+    handResults.multiHandLandmarks.forEach((lms,hi)=>{
+      const label=handResults.multiHandedness[hi]?.label||'?';
+      const score=handResults.multiHandedness[hi]?.score||0;
+      const col=score>0.8?'var(--acc)':score>0.6?'var(--acc3)':'var(--acc4)';
+      lines.push(`<div class="co-row"><div class="co-dot" style="background:${col}"></div><span style="font-size:10px;color:${col}">Mano ${label==='Left'?'Izq':'Der'}: ${Math.round(score*100)}%</span></div>`);
+      if(score<0.6) hasLowConf=true;
+    });
+    lastHandConf=handResults.multiHandedness[0]?.score||null;
+  }
+
+  if(lines.length){
+    overlay.innerHTML=lines.join('');
+    overlay.classList.add('vis');
+  } else {
+    overlay.classList.remove('vis');
+  }
+
+  if(hasLowConf){
+    alert.classList.add('vis');
+  } else {
+    alert.classList.remove('vis');
+  }
+}
+
+// ══════════════════════════════════════════════════════════════════════════════
+// INIT MEDIAPIPE
+// ══════════════════════════════════════════════════════════════════════════════
 function initModels(){
   setSt('loading','Cargando modelos MediaPipe…');
-
   pose=new Pose({locateFile:f=>`https://unpkg.com/@mediapipe/pose@0.5.1675469404/${f}`});
   pose.setOptions({modelComplexity:1,smoothLandmarks:true,enableSegmentation:false,minDetectionConfidence:0.5,minTrackingConfidence:0.5});
   pose.onResults(onPoseRes);
@@ -493,15 +639,17 @@ function initModels(){
   hands.setOptions({maxNumHands:2,modelComplexity:1,minDetectionConfidence:0.6,minTrackingConfidence:0.5});
   hands.onResults(onHandRes);
 
-  const wc=document.createElement('canvas'); wc.width=64; wc.height=64;
+  const wc=document.createElement('canvas');wc.width=64;wc.height=64;
   Promise.all([
     pose.send({image:wc}).catch(()=>{}),
     hands.send({image:wc}).catch(()=>{})
-  ]).then(()=>{ poseReady=true; handsReady=true; setSt('done','Modelos listos — sube un archivo'); });
+  ]).then(()=>{poseReady=true;handsReady=true;setSt('done','Modelos listos — sube un archivo');});
 }
 window.addEventListener('load',initModels);
 
-// ── ARCHIVOS ──────────────────────────────────────────────────────────────────
+// ══════════════════════════════════════════════════════════════════════════════
+// ARCHIVOS
+// ══════════════════════════════════════════════════════════════════════════════
 const ua=document.getElementById('ua'),fi=document.getElementById('fi');
 ua.addEventListener('dragover',e=>{e.preventDefault();ua.classList.add('drag');});
 ua.addEventListener('dragleave',()=>ua.classList.remove('drag'));
@@ -512,39 +660,38 @@ function hf(f){
   if(!f)return;
   if(!poseReady&&!handsReady){setSt('loading','Modelos aún cargando…');return;}
   frames=[];velH=[];pxPerCm=null;lHandResults=null;
+  document.getElementById('alert-conf').classList.remove('vis');
+  document.getElementById('conf-overlay').classList.remove('vis');
   const url=URL.createObjectURL(f);
   if(f.type.startsWith('image/')) liImg(url);
   else if(f.type.startsWith('video/')) liVid(url);
   else setSt('error','Formato no soportado.');
 }
-
 function liImg(url){
-  mediaMode='image'; hideVid(); setSt('loading','Analizando…');
+  mediaMode='image';hideVid();setSt('loading','Analizando…');
   imgEl=new Image();
   imgEl.onload=async()=>{
-    canvas.width=imgEl.naturalWidth; canvas.height=imgEl.naturalHeight;
-    ctx.drawImage(imgEl,0,0); showCv();
+    canvas.width=imgEl.naturalWidth;canvas.height=imgEl.naturalHeight;
+    ctx.drawImage(imgEl,0,0);showCv();
     if(mode==='pose'||mode==='combo') await pose.send({image:imgEl}).catch(e=>setSt('error',e.message));
     if(mode==='hand'||mode==='combo') await hands.send({image:imgEl}).catch(e=>setSt('error',e.message));
   };
   imgEl.src=url;
 }
-
 function liVid(url){
   mediaMode='video';
   if(videoEl){videoEl.pause();videoEl.src='';}
   videoEl=document.createElement('video');
-  videoEl.src=url; videoEl.muted=true; videoEl.playsInline=true;
+  videoEl.src=url;videoEl.muted=true;videoEl.playsInline=true;
   setSt('loading','Cargando video…');
   videoEl.onloadedmetadata=()=>{
-    canvas.width=videoEl.videoWidth||640; canvas.height=videoEl.videoHeight||480;
+    canvas.width=videoEl.videoWidth||640;canvas.height=videoEl.videoHeight||480;
     document.getElementById('sk').max=videoEl.duration;
     document.getElementById('vbar').classList.add('vis');
-    showCv(); exFrames();
+    showCv();exFrames();
   };
   videoEl.onerror=()=>setSt('error','No se pudo cargar el video.');
 }
-
 async function exFrames(){
   const fps=10,step=1/fps,dur=videoEl.duration,tot=Math.ceil(dur*fps);
   for(let i=0;i<tot;i++){
@@ -557,19 +704,25 @@ async function exFrames(){
   }
   setSt('done',`Listo — ${frames.length} frames ✓`);
   document.getElementById('vsec').style.display='block';
-  if(frames.length){recalib(frames[0].landmarks||[]); df(0);}
+  if(frames.length){recalib(frames[0].landmarks||[]);df(0);}
   enExp();
 }
 
-// ── RESULTADOS POSE ───────────────────────────────────────────────────────────
+// ══════════════════════════════════════════════════════════════════════════════
+// RESULTADOS POSE
+// ══════════════════════════════════════════════════════════════════════════════
 function onPoseRes(r){
   const lms=r.poseLandmarks;
   if(mediaMode==='image'){
-    if(!lms){if(mode==='pose')setSt('error','No se detectó cuerpo. Foto más clara con cuerpo completo visible.');return;}
-    lLms=lms; lAng=cAng(lms); lDist=cDist(lms);
+    if(!lms){
+      if(mode==='pose') setSt('error','No se detectó cuerpo. Verifica: cuerpo completo visible, fondo sin otras personas, ropa ajustada.');
+      return;
+    }
+    lLms=lms;lAng=cAng(lms);lDist=cDist(lms);
     if(heightCm) recalib(lms);
     if(mode!=='combo') rdImg();
     updPose(lAng,lDist);
+    updateConfidenceOverlay(lms,null);
     if(mode==='pose') setSt('done',`Pose detectada ✓ — ${lms.length} puntos`);
   } else {
     if(!lms)return;
@@ -580,16 +733,17 @@ function onPoseRes(r){
   }
 }
 
-// ── RESULTADOS MANO ───────────────────────────────────────────────────────────
+// ══════════════════════════════════════════════════════════════════════════════
+// RESULTADOS MANO
+// ══════════════════════════════════════════════════════════════════════════════
 function onHandRes(r){
   lHandResults=r;
   if(mediaMode==='image'){
     if(!r.multiHandLandmarks||r.multiHandLandmarks.length===0){
-      if(mode==='hand') setSt('error','No se detectó mano. Asegúrate de que la mano sea visible y esté bien iluminada.');
+      if(mode==='hand') setSt('error','No se detectó mano. Verifica: mano en primer plano, fondo contrastante, sin objetos ocluidos.');
       return;
     }
     if(mode==='combo'){
-      // Redibujar pose encima + mano
       ctx.clearRect(0,0,canvas.width,canvas.height);
       ctx.drawImage(imgEl,0,0);
       if(lLms) drawPoseSkeleton(ctx,lLms,lAng,lDist);
@@ -600,20 +754,26 @@ function onHandRes(r){
       drawHandResults(r);
     }
     updHand(r);
+    updateConfidenceOverlay(lLms,r);
     setSt('done',`Mano detectada ✓ — ${r.multiHandLandmarks.length} mano(s)`);
     enExp();
   }
 }
 
-// ── GEOMETRÍA ─────────────────────────────────────────────────────────────────
+// ══════════════════════════════════════════════════════════════════════════════
+// GEOMETRÍA
+// ══════════════════════════════════════════════════════════════════════════════
 function a3(a,b,c){
-  const v1=[a.x-b.x,a.y-b.y,(a.z||0)-(b.z||0)],v2=[c.x-b.x,c.y-b.y,(c.z||0)-(b.z||0)];
-  const dot=v1[0]*v2[0]+v1[1]*v2[1]+v1[2]*v2[2],m=Math.hypot(...v1)*Math.hypot(...v2);
+  if(!a||!b||!c)return null;
+  const v1=[a.x-b.x,a.y-b.y,(a.z||0)-(b.z||0)];
+  const v2=[c.x-b.x,c.y-b.y,(c.z||0)-(b.z||0)];
+  const dot=v1[0]*v2[0]+v1[1]*v2[1]+v1[2]*v2[2];
+  const m=Math.hypot(...v1)*Math.hypot(...v2);
   if(!m)return null;
   return Math.round(Math.acos(Math.min(1,Math.max(-1,dot/m)))*180/Math.PI);
 }
 function distPx(a,b){return Math.hypot((a.x-b.x)*canvas.width,(a.y-b.y)*canvas.height);}
-function cAng(lms){return curJoints().map(j=>({n:j.n,ref:j.ref,L:a3(lms[j.L[0]],lms[j.L[1]],lms[j.L[2]]),R:a3(lms[j.R[0]],lms[j.R[1]],lms[j.R[2]])}));}
+function cAng(lms){return curJoints().map(j=>({n:j.n,ref:j.ref,refLo:j.refLo,refHi:j.refHi,L:a3(lms[j.L[0]],lms[j.L[1]],lms[j.L[2]]),R:a3(lms[j.R[0]],lms[j.R[1]],lms[j.R[2]])}));}
 function cDist(lms){return curDists().map(d=>({n:d.n,px:distPx(lms[d.p[0]],lms[d.p[1]]),label:distLabel(distPx(lms[d.p[0]],lms[d.p[1]]))}));}
 function cVel(){
   if(frames.length<2)return;
@@ -621,30 +781,177 @@ function cVel(){
   velH.push({time:b.time,vels:VJ.map(j=>{const p1=a.landmarks[j.id],p2=b.landmarks[j.id];return{id:j.id,n:j.n,v:Math.round(Math.hypot((p2.x-p1.x)*canvas.width,(p2.y-p1.y)*canvas.height)/dt)};})});
 }
 
-// ── RENDER POSE ───────────────────────────────────────────────────────────────
+// ══════════════════════════════════════════════════════════════════════════════
+// CLASIFICACIÓN AVANZADA DE AGARRE
+// ══════════════════════════════════════════════════════════════════════════════
+// Basada en evaluación multidimensional: flexión por dedo (MCP+PIP+DIP),
+// separación pulgar-índice, y patrones funcionales de TO.
+function classifyGrasp(lms){
+  if(!lms||lms.length<21) return null;
+
+  // Ángulos completos MCP, PIP, DIP por dedo usando coordenadas 3D
+  function fingerFlexion(mcpPts, pipPts, dipPts){
+    const mcp = a3(lms[mcpPts[0]], lms[mcpPts[1]], lms[mcpPts[2]]);
+    const pip = a3(lms[pipPts[0]], lms[pipPts[1]], lms[pipPts[2]]);
+    const dip = dipPts ? a3(lms[dipPts[0]], lms[dipPts[1]], lms[dipPts[2]]) : null;
+    // Índice de flexión: 0=extensión total, 1=flexión total
+    // 180°=extensión, ~30°=flexión máxima
+    const toFlex=(ang)=> ang!=null ? Math.max(0, Math.min(1, (180-ang)/150)) : 0;
+    const dipFlex = dip!=null ? toFlex(dip) : toFlex(pip)*0.7;
+    const avg = (toFlex(mcp)*0.35 + toFlex(pip)*0.4 + dipFlex*0.25);
+    return {mcp, pip, dip, flex:avg};
+  }
+
+  const thumb  = fingerFlexion([0,1,2],  [1,2,3],   [2,3,4]);
+  const index  = fingerFlexion([0,5,6],  [5,6,7],   [6,7,8]);
+  const middle = fingerFlexion([0,9,10], [9,10,11], [10,11,12]);
+  const ring   = fingerFlexion([0,13,14],[13,14,15],[14,15,16]);
+  const pinky  = fingerFlexion([0,17,18],[17,18,19],[18,19,20]);
+
+  const avgFlex4 = (index.flex+middle.flex+ring.flex+pinky.flex)/4;
+  const thumbIdxDist = distPx(lms[4],lms[8]);
+  const wristW = distPx(lms[0],lms[5]); // ancho de referencia
+  const relThumbIdx = wristW>0 ? thumbIdxDist/wristW : 0.5;
+
+  // Oposición del pulgar (ángulo CMC-MCP-punta relativo al plano palmar)
+  const thumbOppose = thumb.flex > 0.3;
+
+  // ── Clasificación por árbol de decisión funcional ─────────────────────────
+  // Rangos basados en literatura de TO (Kapandji, Tubiana)
+
+  // 1. MANO EXTENDIDA: todos los dedos en extensión (~180°)
+  if(avgFlex4 < 0.12 && thumb.flex < 0.15){
+    return {
+      grasp:'Mano extendida',
+      icon:'✋',
+      color:'var(--acc)',
+      desc:'Extensión completa de todos los dedos',
+      detail:`Flexión dedos: ${Math.round(avgFlex4*100)}%`,
+      type:'postura'
+    };
+  }
+  // 2. PINZA FINA PULGAR-ÍNDICE (tip pinch): DIP índice flexionado, pulgar opuesto, separación mínima
+  if(relThumbIdx < 0.35 && thumbOppose && index.dip!=null && index.dip < 120 && index.flex > 0.4 && middle.flex < 0.35){
+    return {
+      grasp:'Pinza fina (tip pinch)',
+      icon:'🤌',
+      color:'var(--acc5)',
+      desc:'Pulgar opuesto a yema de índice, DIP flexionado',
+      detail:`Dist pulgar-índice: ${relThumbIdx.toFixed(2)} rel | DIP índice: ${index.dip}°`,
+      type:'precision'
+    };
+  }
+  // 3. PINZA LATERAL (key pinch): pulgar en aducción contra cara lateral índice
+  if(relThumbIdx < 0.4 && !thumbOppose && thumb.mcp!=null && thumb.mcp < 140 && index.pip!=null && index.pip > 120){
+    return {
+      grasp:'Pinza lateral (key pinch)',
+      icon:'🗝️',
+      color:'var(--acc3)',
+      desc:'Pulgar en aducción, índice semiflexionado',
+      detail:`Ángulo pulgar MCP: ${thumb.mcp}° | PIP índice: ${index.pip}°`,
+      type:'precision'
+    };
+  }
+  // 4. PINZA TRÍPODE / PINZA DIGITAL: pulgar+índice+medio
+  if(relThumbIdx < 0.55 && thumbOppose && index.flex > 0.35 && middle.flex > 0.3 && ring.flex < 0.35){
+    return {
+      grasp:'Pinza trípode (digital)',
+      icon:'👌',
+      color:'#60a5fa',
+      desc:'Pulgar, índice y medio en oposición',
+      detail:`Flex índice: ${Math.round(index.flex*100)}% | Flex medio: ${Math.round(middle.flex*100)}%`,
+      type:'precision'
+    };
+  }
+  // 5. AGARRE CILÍNDRICO: flexión moderada-alta uniforme, todos los dedos
+  if(avgFlex4 > 0.45 && avgFlex4 < 0.78 && ring.flex > 0.3 && pinky.flex > 0.25){
+    return {
+      grasp:'Agarre cilíndrico',
+      icon:'🥤',
+      color:'var(--acc2)',
+      desc:'Flexión moderada uniforme en todos los dedos',
+      detail:`Flex promedio dedos: ${Math.round(avgFlex4*100)}% | MCP índice: ${index.mcp}°`,
+      type:'potencia'
+    };
+  }
+  // 6. AGARRE ESFÉRICO: flexión moderada con abducción palmar, dedos arqueados
+  if(avgFlex4 > 0.28 && avgFlex4 < 0.6 && relThumbIdx > 0.55){
+    return {
+      grasp:'Agarre esférico',
+      icon:'🍊',
+      color:'var(--acc3)',
+      desc:'Flexión moderada con apertura palmar amplia',
+      detail:`Flex promedio: ${Math.round(avgFlex4*100)}% | Apertura pulgar-índice: ${Math.round(relThumbIdx*100)}%`,
+      type:'potencia'
+    };
+  }
+  // 7. AGARRE DE POTENCIA (power grip): flexión profunda todos los dedos
+  if(avgFlex4 > 0.7){
+    return {
+      grasp:'Agarre de potencia',
+      icon:'✊',
+      color:'var(--acc4)',
+      desc:'Flexión profunda de todos los dedos',
+      detail:`Flex promedio: ${Math.round(avgFlex4*100)}% | MCP índice: ${index.mcp}°`,
+      type:'potencia'
+    };
+  }
+  // 8. AGARRE DE GANCHO (hook grip): dedos en flexión sin el pulgar
+  if(avgFlex4 > 0.45 && thumb.flex < 0.2){
+    return {
+      grasp:'Agarre de gancho',
+      icon:'🪝',
+      color:'#a78bfa',
+      desc:'Dedos en flexión sin participación del pulgar',
+      detail:`Flex pulgar: ${Math.round(thumb.flex*100)}% | Flex dedos: ${Math.round(avgFlex4*100)}%`,
+      type:'potencia'
+    };
+  }
+  // Default: postura de transición
+  return {
+    grasp:'Postura de transición',
+    icon:'🖐️',
+    color:'var(--text2)',
+    desc:'Patrón de agarre no clasificado en categorías estándar',
+    detail:`Flex promedio: ${Math.round(avgFlex4*100)}%`,
+    type:'indeterminado'
+  };
+}
+
+// ══════════════════════════════════════════════════════════════════════════════
+// RENDER POSE
+// ══════════════════════════════════════════════════════════════════════════════
 function drawPoseSkeleton(c,lms,ang,dist){
   const W=canvas.width,H=canvas.height;
   if(opts.sk){
     CONN.forEach(([a,b])=>{
-      const pa=lms[a],pb=lms[b];if(pa.visibility<0.35||pb.visibility<0.35)return;
+      const pa=lms[a],pb=lms[b];
+      if((pa.visibility||0)<0.35||(pb.visibility||0)<0.35)return;
+      // Color según confianza de visibilidad
+      const conf=Math.min(pa.visibility||0,pb.visibility||0);
+      const alpha=opts.col?0.85:0.7;
+      const sideColor=opts.col?(LI.has(a)?`rgba(74,222,128,${alpha})`:`rgba(96,165,250,${alpha})`):`rgba(255,255,255,${alpha*0.8})`;
       c.beginPath();c.moveTo(pa.x*W,pa.y*H);c.lineTo(pb.x*W,pb.y*H);
-      c.strokeStyle=opts.col?(LI.has(a)?'rgba(74,222,128,.8)':'rgba(96,165,250,.8)'):'rgba(255,255,255,.6)';
-      c.lineWidth=Math.max(2,W*0.003);c.stroke();
+      c.strokeStyle=sideColor;c.lineWidth=Math.max(2,W*0.003);c.stroke();
     });
     lms.forEach((lm,i)=>{
-      if(lm.visibility<0.35)return;
+      if((lm.visibility||0)<0.35)return;
+      const conf=lm.visibility||0;
+      // Color del punto según confianza
+      let dotColor=opts.col?(LI.has(i)?'#4ade80':'#60a5fa'):'#fff';
+      if(conf<0.6) dotColor='#f59e0b'; // baja confianza: amarillo
       c.beginPath();c.arc(lm.x*W,lm.y*H,Math.max(3,W*0.006),0,2*Math.PI);
-      c.fillStyle=opts.col?(LI.has(i)?'#4ade80':'#60a5fa'):'#fff';
-      c.fill();c.strokeStyle='rgba(0,0,0,.5)';c.lineWidth=1.5;c.stroke();
+      c.fillStyle=dotColor;c.fill();
+      c.strokeStyle='rgba(0,0,0,.5)';c.lineWidth=1.5;c.stroke();
     });
   }
   if(opts.an&&ang){
     curJoints().forEach((j,i)=>{
       [['L',j.L[1],'#4ade80'],['R',j.R[1],'#60a5fa']].forEach(([s,pi,col])=>{
         const v=ang[i][s];if(!v)return;
-        const lm=lms[pi];if(lm.visibility<0.35)return;
+        const lm=lms[pi];if((lm.visibility||0)<0.35)return;
         const x=lm.x*W,y=lm.y*H,t=`${v}°`,tw=t.length*7+8;
-        c.save();c.fillStyle='rgba(0,0,0,.72)';c.beginPath();c.roundRect(x+5,y-15,tw,16,3);c.fill();
+        c.save();c.fillStyle='rgba(0,0,0,.75)';c.beginPath();c.roundRect(x+5,y-15,tw,16,3);c.fill();
         c.fillStyle=col;c.font=`bold ${Math.max(10,W*0.012)}px DM Mono,monospace`;c.fillText(t,x+8,y-2);c.restore();
       });
     });
@@ -658,14 +965,16 @@ function drawPoseSkeleton(c,lms,ang,dist){
     });
   }
 }
-
 function rdImg(){
   if(!imgEl||!lLms)return;
   ctx.clearRect(0,0,canvas.width,canvas.height);ctx.drawImage(imgEl,0,0);
   drawPoseSkeleton(ctx,lLms,lAng,lDist);
 }
 
-// ── RENDER MANO ───────────────────────────────────────────────────────────────
+// ══════════════════════════════════════════════════════════════════════════════
+// RENDER MANO
+// ══════════════════════════════════════════════════════════════════════════════
+const c2=ctx;
 function drawHandResults(r){
   if(!r||!r.multiHandLandmarks)return;
   const W=canvas.width,H=canvas.height;
@@ -688,59 +997,88 @@ function drawHandResults(r){
       });
     }
     if(opts.an){
-      FINGER_ANGLES.forEach(fa=>{
+      FINGER_ANGLES_FLAT.forEach(fa=>{
         const mid=lms[fa.pts[1]];
         const ang=a3(lms[fa.pts[0]],lms[fa.pts[1]],lms[fa.pts[2]]);
         if(!ang)return;
         const x=mid.x*W,y=mid.y*H,t=`${ang}°`;
-        c2.save();c2.fillStyle='rgba(0,0,0,.65)';c2.beginPath();c2.roundRect(x+3,y-13,30,13,2);c2.fill();
+        c2.save();c2.fillStyle='rgba(0,0,0,.7)';c2.beginPath();c2.roundRect(x+3,y-13,30,13,2);c2.fill();
         c2.fillStyle=colFill;c2.font='9px DM Mono,monospace';c2.fillText(t,x+5,y-2);c2.restore();
       });
     }
   });
 }
 
-// Usar ctx directamente para dibujar mano también
-const c2=ctx; // mismo canvas
-
-function drawHandResultsOnCanvas(r){
-  if(!r||!r.multiHandLandmarks)return;
-  drawHandResults(r);
+// ══════════════════════════════════════════════════════════════════════════════
+// VIDEO
+// ══════════════════════════════════════════════════════════════════════════════
+function df(idx){
+  if(!frames.length)return;
+  const f=frames[Math.min(idx,frames.length-1)];
+  ctx.clearRect(0,0,canvas.width,canvas.height);ctx.drawImage(videoEl,0,0,canvas.width,canvas.height);
+  const dists=cDist(f.landmarks);
+  drawPoseSkeleton(ctx,f.landmarks,f.angles,dists);updPose(f.angles,dists);
+  const vel=velH.find(v=>Math.abs(v.time-f.time)<0.12);
+  if(vel)document.getElementById('vg').innerHTML=vel.vels.map(v=>{const c=v.v<50?'g':v.v<150?'a':'r';return`<div class="mc"><div class="mn">${v.n}</div><div class="mv ${c}">${v.v}</div><div class="mu">px/seg</div></div>`;}).join('');
 }
+document.getElementById('sk').addEventListener('input',function(){
+  if(!frames.length)return;
+  const t=parseFloat(this.value),idx=frames.reduce((b,f,i)=>Math.abs(f.time-t)<Math.abs(frames[b].time-t)?i:b,0);
+  df(idx);document.getElementById('tdisp').textContent=`${t.toFixed(2)}s / ${(videoEl?.duration||0).toFixed(2)}s`;
+});
+function tplay(){playing=!playing;document.getElementById('bpl').textContent=playing?'⏸ Pause':'▶ Play';if(playing)pl();else cancelAnimationFrame(raf);}
+function pl(){if(!playing||!frames.length)return;const sk=document.getElementById('sk'),t=parseFloat(sk.value)+0.1;if(t>frames[frames.length-1].time){sk.value=0;playing=false;document.getElementById('bpl').textContent='▶ Play';return;}sk.value=t;sk.dispatchEvent(new Event('input'));raf=requestAnimationFrame(pl);}
+function sf(d){if(!frames.length)return;const t=parseFloat(document.getElementById('sk').value),cur=frames.reduce((b,f,i)=>Math.abs(f.time-t)<Math.abs(frames[b].time-t)?i:b,0);const ni=Math.max(0,Math.min(frames.length-1,cur+d));document.getElementById('sk').value=frames[ni].time;document.getElementById('sk').dispatchEvent(new Event('input'));}
 
-// ── PANEL POSE ────────────────────────────────────────────────────────────────
-function angCol(v,ref){
+// ══════════════════════════════════════════════════════════════════════════════
+// PANEL POSE
+// ══════════════════════════════════════════════════════════════════════════════
+function angCol(v,refLo,refHi){
   if(!v)return'var(--text3)';
-  const m=ref.match(/([\d]+)[^\d]+([\d]+)/);
-  if(!m)return'var(--acc)';
-  const lo=parseInt(m[1]),hi=parseInt(m[2]),margin=(hi-lo)*0.15;
-  if(v>=lo-margin&&v<=hi+margin)return'var(--acc)';
-  if(v>=lo-margin*3&&v<=hi+margin*3)return'var(--acc3)';
+  const margin=(refHi-refLo)*0.15||5;
+  if(v>=refLo-margin&&v<=refHi+margin)return'var(--acc)';
+  if(v>=refLo-margin*3&&v<=refHi+margin*3)return'var(--acc3)';
   return'var(--acc4)';
 }
+function asymBadge(diff){
+  if(diff===null)return '';
+  if(diff<=5) return `<span class="asym-badge asym-ok">Δ${diff}°</span>`;
+  if(diff<=10) return `<span class="asym-badge asym-warn">Δ${diff}°</span>`;
+  return `<span class="asym-badge asym-bad">Δ${diff}° !</span>`;
+}
 function updPose(ang,dist){
-  document.getElementById('atb').innerHTML=ang.map(a=>`<tr>
-    <td><span class="adot" style="background:var(--acc)"></span>${a.n}<br><span class="ref-range">${a.ref}°</span></td>
-    <td style="text-align:center;font-family:var(--mono)"><span style="color:${angCol(a.L,a.ref)}">${a.L??'—'}°</span></td>
-    <td style="text-align:center;font-family:var(--mono)"><span style="color:${angCol(a.R,a.ref)}">${a.R??'—'}°</span></td>
-    <td style="text-align:right"><span class="ref-range">${a.ref}°</span></td></tr>`).join('');
+  document.getElementById('atb').innerHTML=ang.map(a=>{
+    const diff=(a.L!=null&&a.R!=null)?Math.abs(a.L-a.R):null;
+    return`<tr>
+      <td><span class="adot" style="background:var(--acc)"></span>${a.n}<br><span class="ref-range">${a.ref}°</span></td>
+      <td style="text-align:center;font-family:var(--mono)"><span style="color:${angCol(a.L,a.refLo,a.refHi)}">${a.L!=null?a.L+'°':'—'}</span></td>
+      <td style="text-align:center;font-family:var(--mono)"><span style="color:${angCol(a.R,a.refLo,a.refHi)}">${a.R!=null?a.R+'°':'—'}</span></td>
+      <td style="text-align:right">${asymBadge(diff)}</td></tr>`;
+  }).join('');
   const unit=pxPerCm?'cm':'px';
   document.getElementById('dg').innerHTML=dist.map(d=>`<div class="mc"><div class="mn">${d.n.toUpperCase()}</div><div class="mv b">${d.label}</div><div class="mu">${unit}</div></div>`).join('');
   document.getElementById('symc').innerHTML=ang.map(a=>{
-    if(!a.L||!a.R)return'';
-    const diff=Math.abs(a.L-a.R),pct=Math.min(a.L,a.R)/Math.max(a.L,a.R)*100;
+    if(a.L==null||a.R==null)return'';
+    const diff=Math.abs(a.L-a.R);
+    const pct=a.L&&a.R?Math.min(a.L,a.R)/Math.max(a.L,a.R)*100:0;
     const col=pct>90?'var(--acc)':pct>75?'var(--acc3)':'var(--acc4)';
-    return`<div class="sb"><div class="sl"><span>${a.n}</span><span style="color:${col}">${diff?`Δ${diff}° · ${Math.round(pct)}%`:'Simétrico'}</span></div>
-    <div class="st"><div class="sf" style="width:${pct}%;background:${col}"></div><div class="sc"></div></div></div>`;
+    const clinNote=diff>10?' ⚠ Asimetría clínica relevante':'';
+    return`<div class="sb">
+      <div class="sl"><span>${a.n}</span><span style="color:${col}">${diff?`Δ${diff}° · ${Math.round(pct)}%${clinNote}`:'Simétrico'}</span></div>
+      <div class="st"><div class="sf" style="width:${pct}%;background:${col}"></div><div class="sc"></div></div>
+    </div>`;
   }).join('');
 }
 
-// ── PANEL MANO ────────────────────────────────────────────────────────────────
+// ══════════════════════════════════════════════════════════════════════════════
+// PANEL MANO
+// ══════════════════════════════════════════════════════════════════════════════
 function updHand(r){
   if(!r||!r.multiHandLandmarks||r.multiHandLandmarks.length===0){
     document.getElementById('hand-results').innerHTML='<div style="color:var(--text3);font-size:11px;text-align:center;padding:10px 0">Sin datos de mano</div>';
     return;
   }
+
   let html='';
   r.multiHandLandmarks.forEach((lms,hi)=>{
     const label=r.multiHandedness[hi]?.label||'?';
@@ -749,18 +1087,34 @@ function updHand(r){
     if(handSide==='der'&&isLeft)return;
     const col=isLeft?'var(--acc)':'var(--acc5)';
     const handName=isLeft?'Mano izquierda':'Mano derecha';
-    html+=`<div style="font-size:10px;color:${col};font-family:var(--mono);margin-bottom:6px;letter-spacing:.5px;">${handName.toUpperCase()}</div>`;
-    html+='<div class="finger-grid">';
-    FINGER_ANGLES.forEach(fa=>{
-      const ang=a3(lms[fa.pts[0]],lms[fa.pts[1]],lms[fa.pts[2]]);
-      const angCol2=ang?(ang>150?'g':ang>100?'a':'r'):'';
-      html+=`<div class="fc"><div class="fn">${fa.n.toUpperCase()}</div><div class="fv ${angCol2}">${ang??'—'}°</div></div>`;
+
+    html+=`<div style="font-size:10px;color:${col};font-family:var(--mono);margin-bottom:8px;letter-spacing:.5px;">${handName.toUpperCase()}</div>`;
+
+    // Ángulos por dedo: MCP + PIP + DIP agrupados
+    FINGER_ANGLES_BY_FINGER.forEach(fingerDef=>{
+      html+=`<div class="finger-section">`;
+      html+=`<div class="finger-section-title">${fingerDef.finger}</div>`;
+      html+=`<div class="finger-grid">`;
+      fingerDef.joints.forEach(jt=>{
+        const ang=a3(lms[jt.pts[0]],lms[jt.pts[1]],lms[jt.pts[2]]);
+        // Color según rango clínico
+        let angClass='';
+        if(ang!=null){
+          if(jt.n==='MCP'||jt.n==='CMC') angClass=ang>120?'g':ang>70?'a':'r';
+          else if(jt.n==='PIP') angClass=ang>100?'g':ang>60?'a':'r';
+          else if(jt.n==='DIP'||jt.n==='IP') angClass=ang>70?'g':ang>40?'a':'r';
+        }
+        html+=`<div class="fc">
+          <div class="fn">${jt.n}</div>
+          <div class="fv ${angClass}">${ang!=null?ang+'°':'—'}</div>
+        </div>`;
+      });
+      html+=`</div></div>`;
     });
-    html+='</div>';
   });
   document.getElementById('hand-results').innerHTML=html||'<div style="color:var(--text3);font-size:11px;text-align:center;padding:10px 0">Sin mano seleccionada</div>';
 
-  // Apertura
+  // Apertura entre dedos
   let spreadHtml='';
   r.multiHandLandmarks.forEach((lms,hi)=>{
     const label=r.multiHandedness[hi]?.label||'?';
@@ -774,94 +1128,131 @@ function updHand(r){
   });
   document.getElementById('spread-grid').innerHTML=spreadHtml||'<div class="mc full"><div class="mu" style="padding:5px 0;text-align:center">Sin datos</div></div>';
 
-  // Tipo de agarre
-  updGraspType(r);
-}
-
-function updGraspType(r){
-  if(!r||!r.multiHandLandmarks||!r.multiHandLandmarks[0]){
-    document.getElementById('grasp-type').innerHTML='<div style="color:var(--text3);font-size:11px;text-align:center;padding:6px 0">Sin datos</div>';
-    return;
+  // Clasificación avanzada de agarre
+  if(r.multiHandLandmarks[0]){
+    const g=classifyGrasp(r.multiHandLandmarks[0]);
+    if(g){
+      const typeColors={precision:'rgba(192,132,252,.1)',potencia:'rgba(248,113,113,.1)',postura:'rgba(74,222,128,.1)',indeterminado:'rgba(139,143,168,.08)'};
+      document.getElementById('grasp-type').innerHTML=`
+        <div style="background:${typeColors[g.type]||typeColors.indeterminado};border:1px solid var(--brd);border-radius:8px;padding:10px 12px;">
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;">
+            <span style="font-size:22px;">${g.icon}</span>
+            <div>
+              <div style="font-size:13px;font-weight:600;color:${g.color};font-family:var(--mono);">${g.grasp}</div>
+              <div style="font-size:10px;color:var(--text3);font-family:var(--mono);text-transform:uppercase;letter-spacing:.5px;">${g.type}</div>
+            </div>
+          </div>
+          <div style="font-size:11px;color:var(--text2);margin-bottom:4px;">${g.desc}</div>
+          <div style="font-size:10px;color:var(--text3);font-family:var(--mono);">${g.detail}</div>
+        </div>`;
+    }
   }
-  const lms=r.multiHandLandmarks[0];
-  // Calcular ángulos de MCP de todos los dedos
-  const mcps=[
-    a3(lms[1],lms[2],lms[3]),  // pulgar
-    a3(lms[5],lms[6],lms[7]),  // indice
-    a3(lms[9],lms[10],lms[11]),// medio
-    a3(lms[13],lms[14],lms[15]),// anular
-    a3(lms[17],lms[18],lms[19]),// menique
-  ];
-  const avgMcp=mcps.filter(Boolean).reduce((a,b)=>a+b,0)/mcps.filter(Boolean).length;
-  const thumbAng=a3(lms[1],lms[2],lms[3])||180;
-  const spreadThumbIdx=distPx(lms[4],lms[8]);
-  let grasp='', gcolor='', gdesc='';
-  if(avgMcp>150){ grasp='Mano extendida'; gcolor='var(--acc)'; gdesc='Dedos en extensión completa'; }
-  else if(avgMcp>120){ grasp='Agarre cilíndrico'; gcolor='var(--acc2)'; gdesc='Flexión parcial de todos los dedos'; }
-  else if(avgMcp>90){ grasp='Agarre esférico'; gcolor='var(--acc3)'; gdesc='Flexión moderada tipo pelota'; }
-  else if(spreadThumbIdx<canvas.width*0.05){ grasp='Pinza fina'; gcolor='var(--acc5)'; gdesc='Pulgar e índice opuestos, separación mínima'; }
-  else{ grasp='Agarre de potencia'; gcolor='var(--acc4)'; gdesc='Flexión profunda de todos los dedos'; }
-  document.getElementById('grasp-type').innerHTML=`
-    <div style="background:var(--sur2);border:1px solid var(--brd);border-radius:8px;padding:10px 12px;">
-      <div style="font-size:14px;font-weight:600;color:${gcolor};font-family:var(--mono);margin-bottom:3px;">${grasp}</div>
-      <div style="font-size:11px;color:var(--text2);">${gdesc}</div>
-      <div style="font-size:10px;color:var(--text3);margin-top:4px;font-family:var(--mono);">Angulo MCP promedio: ${Math.round(avgMcp)}°</div>
-    </div>`;
 }
 
-// ── VIDEO ─────────────────────────────────────────────────────────────────────
-function df(idx){
-  if(!frames.length)return;
-  const f=frames[Math.min(idx,frames.length-1)];
-  ctx.clearRect(0,0,canvas.width,canvas.height);ctx.drawImage(videoEl,0,0,canvas.width,canvas.height);
-  const dists=cDist(f.landmarks);
-  drawPoseSkeleton(ctx,f.landmarks,f.angles,dists);updPose(f.angles,dists);
-  const vel=velH.find(v=>Math.abs(v.time-f.time)<0.12);
-  if(vel)document.getElementById('vg').innerHTML=vel.vels.map(v=>{const c=v.v<50?'g':v.v<150?'a':'r';return`<div class="mc"><div class="mn">${v.n}</div><div class="mv ${c}">${v.v}</div><div class="mu">px/seg</div></div>`;}).join('');
-}
-
-document.getElementById('sk').addEventListener('input',function(){
-  if(!frames.length)return;
-  const t=parseFloat(this.value),idx=frames.reduce((b,f,i)=>Math.abs(f.time-t)<Math.abs(frames[b].time-t)?i:b,0);
-  df(idx);document.getElementById('tdisp').textContent=`${t.toFixed(2)}s / ${(videoEl?.duration||0).toFixed(2)}s`;
-});
-function tplay(){playing=!playing;document.getElementById('bpl').textContent=playing?'⏸ Pause':'▶ Play';if(playing)pl();else cancelAnimationFrame(raf);}
-function pl(){if(!playing||!frames.length)return;const sk=document.getElementById('sk'),t=parseFloat(sk.value)+0.1;if(t>frames[frames.length-1].time){sk.value=0;playing=false;document.getElementById('bpl').textContent='▶ Play';return;}sk.value=t;sk.dispatchEvent(new Event('input'));raf=requestAnimationFrame(pl);}
-function sf(d){if(!frames.length)return;const t=parseFloat(document.getElementById('sk').value),cur=frames.reduce((b,f,i)=>Math.abs(f.time-t)<Math.abs(frames[b].time-t)?i:b,0);const ni=Math.max(0,Math.min(frames.length-1,cur+d));document.getElementById('sk').value=frames[ni].time;document.getElementById('sk').dispatchEvent(new Event('input'));}
-
-// ── OPCIONES ──────────────────────────────────────────────────────────────────
+// ══════════════════════════════════════════════════════════════════════════════
+// OPCIONES
+// ══════════════════════════════════════════════════════════════════════════════
 function to(k,el){opts[k]=!opts[k];el.classList.toggle('on',opts[k]);if(mediaMode==='image')reprocess();}
 
-// ── EXPORT ────────────────────────────────────────────────────────────────────
+// ══════════════════════════════════════════════════════════════════════════════
+// EXPORTACIÓN
+// ══════════════════════════════════════════════════════════════════════════════
 function xcsv(){
-  const rows=[`Modo,${mode} | Vista: ${view}`,''];
+  const ts=new Date().toISOString().slice(0,19).replace('T',' ');
+  const rows=[
+    `# ANÁLISIS BIOMECÁNICO - Analizador Postural TO v5.0`,
+    `# Universidad Nacional de Colombia - Terapia Ocupacional`,
+    `# Fecha análisis,${ts}`,
+    `# Modo,${mode} | Vista: ${view}`,
+    ``
+  ];
   if(lAng){
-    rows.push('ANGULOS CORPORALES','Articulacion,Lado,Angulo (grados)');
-    lAng.forEach(a=>{rows.push(`${a.n},Izquierdo,${a.L??''}`);rows.push(`${a.n},Derecho,${a.R??''}`);});
+    rows.push('## ÁNGULOS ARTICULARES POSTURALES');
+    rows.push('Articulación,Lado Izquierdo (°),Lado Derecho (°),Referencia normal (°),Delta Asimetría (°),Estado');
+    lAng.forEach(a=>{
+      const diff=(a.L!=null&&a.R!=null)?Math.abs(a.L-a.R):'';
+      const margin=(a.refHi-a.refLo)*0.15||5;
+      const stateL=a.L!=null?(a.L>=a.refLo-margin&&a.L<=a.refHi+margin?'Normal':a.L>=a.refLo-margin*3&&a.L<=a.refHi+margin*3?'Leve alteración':'Alteración'):'Sin dato';
+      rows.push(`${a.n},${a.L??''},${a.R??''},${a.ref},${diff},${stateL}`);
+    });
   }
   if(lHandResults?.multiHandLandmarks?.length){
-    rows.push('','ANGULOS DE MANO','Dedo,Articulacion,Angulo (grados),Mano');
+    rows.push('','## ÁNGULOS DE DEDOS (MCP / PIP / DIP)');
+    rows.push('Mano,Dedo,Articulación,Ángulo (°)');
     lHandResults.multiHandLandmarks.forEach((lms,hi)=>{
       const label=lHandResults.multiHandedness[hi]?.label||'?';
-      FINGER_ANGLES.forEach(fa=>{const ang=a3(lms[fa.pts[0]],lms[fa.pts[1]],lms[fa.pts[2]]);rows.push(`${fa.n},,${ang??''},${label}`);});
+      const manoName=label==='Left'?'Izquierda':'Derecha';
+      FINGER_ANGLES_BY_FINGER.forEach(fingerDef=>{
+        fingerDef.joints.forEach(jt=>{
+          const ang=a3(lms[jt.pts[0]],lms[jt.pts[1]],lms[jt.pts[2]]);
+          rows.push(`${manoName},${fingerDef.finger},${jt.n},${ang??''}`);
+        });
+      });
     });
-    rows.push('','APERTURA ENTRE DEDOS','Par,Distancia');
+    rows.push('','## APERTURA ENTRE DEDOS');
+    rows.push('Mano,Par de dedos,Distancia');
     lHandResults.multiHandLandmarks.forEach((lms,hi)=>{
       const label=lHandResults.multiHandedness[hi]?.label||'?';
-      SPREAD_PAIRS.forEach(sp=>{rows.push(`${sp.n} (${label}),${distLabel(distPx(lms[sp.pts[0]],lms[sp.pts[1]]))}`);});
+      const manoName=label==='Left'?'Izquierda':'Derecha';
+      SPREAD_PAIRS.forEach(sp=>{
+        rows.push(`${manoName},${sp.n},${distLabel(distPx(lms[sp.pts[0]],lms[sp.pts[1]]))}`);
+      });
     });
+    // Tipo de agarre
+    if(lHandResults.multiHandLandmarks[0]){
+      const g=classifyGrasp(lHandResults.multiHandLandmarks[0]);
+      if(g){
+        rows.push('','## CLASIFICACIÓN DE AGARRE');
+        rows.push(`Tipo,${g.grasp}`);
+        rows.push(`Categoría,${g.type}`);
+        rows.push(`Descripción,${g.desc}`);
+        rows.push(`Detalle,${g.detail}`);
+      }
+    }
   }
-  if(lDist){rows.push('','DISTANCIAS CORPORALES','Segmento,Valor');lDist.forEach(d=>rows.push(`${d.n},${d.label}`));}
-  if(heightCm)rows.push('',`Altura paciente,${heightCm} cm`,`Calibracion,${pxPerCm?pxPerCm.toFixed(2)+' px/cm':'sin calibrar'}`);
-  const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([rows.join('\n')],{type:'text/csv'}));a.download=`analisis_${mode}_UNAL.csv`;a.click();
-}
-function ximg(){const a=document.createElement('a');a.href=canvas.toDataURL('image/png');a.download=`postura_${mode}_anotada.png`;a.click();}
+  if(lDist){
+    rows.push('','## DISTANCIAS SEGMENTARIAS');
+    rows.push('Segmento,Valor');
+    lDist.forEach(d=>rows.push(`${d.n},${d.label}`));
+  }
+  if(heightCm) rows.push('',`## CALIBRACIÓN`,`Altura paciente (cm),${heightCm}`,`px/cm,${pxPerCm?pxPerCm.toFixed(2):'sin calibrar'}`);
+  if(lastPoseConf!=null) rows.push('','## CONFIANZA DE DETECCIÓN',`Pose (%),${Math.round(lastPoseConf*100)}`);
 
-// ── UTILS ─────────────────────────────────────────────────────────────────────
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(new Blob([rows.join('\n')],{type:'text/csv;charset=utf-8'}));
+  a.download=`analisis_biomecánico_${ts.slice(0,10)}_UNAL.csv`;
+  a.click();
+}
+function ximg(){
+  const a=document.createElement('a');
+  a.href=canvas.toDataURL('image/png');
+  a.download=`postura_anotada_${new Date().toISOString().slice(0,10)}.png`;
+  a.click();
+}
+function xjson(){
+  const data={
+    meta:{version:'5.0',fecha:new Date().toISOString(),modo:mode,vista:view,autora:'Karen Vanessa Paredes Castro',institucion:'Universidad Nacional de Colombia'},
+    poseLandmarks:lLms||null,
+    handLandmarks:lHandResults?.multiHandLandmarks||null,
+    handedness:lHandResults?.multiHandedness||null,
+    angulos:lAng||null,
+    distancias:lDist||null,
+    calibracion:{heightCm,pxPerCm},
+    confianza:{pose:lastPoseConf,mano:lastHandConf}
+  };
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(new Blob([JSON.stringify(data,null,2)],{type:'application/json'}));
+  a.download=`landmarks_${new Date().toISOString().slice(0,10)}.json`;
+  a.click();
+}
+
+// ══════════════════════════════════════════════════════════════════════════════
+// UTILS
+// ══════════════════════════════════════════════════════════════════════════════
 function setSt(type,msg){const b=document.getElementById('sbar');b.style.display='flex';document.getElementById('sdot').className='sdot '+type;document.getElementById('stxt').textContent=msg;}
 function showCv(){document.getElementById('ph').style.display='none';document.getElementById('ci').style.display='inline-block';}
 function hideVid(){document.getElementById('vbar').classList.remove('vis');document.getElementById('vsec').style.display='none';}
-function enExp(){document.getElementById('bcsv').disabled=false;document.getElementById('bimg').disabled=false;}
+function enExp(){document.getElementById('bcsv').disabled=false;document.getElementById('bimg').disabled=false;document.getElementById('bjson').disabled=false;}
 </script>
 </body>
 </html>
