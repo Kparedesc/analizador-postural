@@ -126,6 +126,10 @@ header{display:flex;align-items:center;justify-content:space-between;padding:0 2
 .atbl{width:100%;border-collapse:collapse;font-size:11px;}
 .atbl th{font-family:var(--mono);font-size:9px;color:var(--text3);letter-spacing:.7px;padding:0 0 5px;border-bottom:1px solid var(--brd);text-align:left;}
 .atbl td{padding:5px 0;border-bottom:1px solid var(--brd);color:var(--text2);}
+.atbl td[title]{border-bottom-style:dashed;border-bottom-color:var(--acc2);opacity:.9;}
+.atbl td[title]:hover{opacity:1;background:rgba(96,165,250,.04);}
+.mov-label{font-size:9px;color:var(--acc2);font-family:var(--mono);display:block;margin-top:1px;letter-spacing:.2px;}
+.pos-label{font-size:8px;color:var(--text3);font-family:var(--mono);display:block;margin-top:1px;}
 .adot{display:inline-block;width:6px;height:6px;border-radius:50%;margin-right:4px;vertical-align:middle;}
 .ref-range{font-family:var(--mono);font-size:9px;color:var(--text3);}
 /* Asymmetry badge */
@@ -222,12 +226,12 @@ footer{border-top:1px solid var(--brd);background:var(--sur);padding:9px 28px;di
     <div class="logo-icon">🦴</div>
     <div>
       <div class="logo-text">Analizador Postural · TO</div>
-      <div class="logo-sub">MediaPipe Pose + Hands · Análisis biomecánico v5.0</div>
+      <div class="logo-sub">MediaPipe Pose + Hands · Análisis biomecánico v5.1</div>
     </div>
   </div>
   <div class="hdr-r">
     <div class="author-chip"><div class="av">KP</div><span class="author-name">Karen Paredes · UNAL</span></div>
-    <div class="badge-h">v5.0 · 2026</div>
+    <div class="badge-h">v5.1 · 2026</div>
   </div>
 </header>
 
@@ -326,7 +330,7 @@ footer{border-top:1px solid var(--brd);background:var(--sur);padding:9px 28px;di
       <div class="tab-content show" id="pose-tab">
         <div style="font-size:10px;color:var(--text3);font-family:var(--mono);margin-bottom:7px;letter-spacing:.5px;">ÁNGULOS ARTICULARES</div>
         <table class="atbl">
-          <thead><tr><th>Articulación</th><th style="text-align:center">Izq</th><th style="text-align:center">Der</th><th style="text-align:right">Δ Asim.</th></tr></thead>
+          <thead><tr><th>Articulación / Movimiento</th><th style="text-align:center">Izq</th><th style="text-align:center">Der</th><th style="text-align:right">Δ Asim.</th></tr></thead>
           <tbody id="atb"><tr><td colspan="4" style="color:var(--text3);font-size:11px;text-align:center;padding:12px 0">Carga un archivo</td></tr></tbody>
         </table>
         <div style="font-size:10px;color:var(--text3);font-family:var(--mono);margin:10px 0 7px;letter-spacing:.5px;">DISTANCIAS</div>
@@ -388,7 +392,7 @@ footer{border-top:1px solid var(--brd);background:var(--sur);padding:9px 28px;di
   <div style="display:flex;align-items:center"><div class="fdot"></div>
     <span>Desarrollado por <strong style="color:var(--text2)">Karen Vanessa Paredes Castro</strong> · Docente de Terapia Ocupacional · Universidad Nacional de Colombia · 2026</span>
   </div>
-  <span style="font-family:var(--mono);font-size:10px">MediaPipe Pose + Hands · v5.0 · Uso educativo y clínico</span>
+  <span style="font-family:var(--mono);font-size:10px">MediaPipe Pose + Hands · v5.1 · Uso educativo y clínico</span>
 </footer>
 
 <!-- MediaPipe -->
@@ -403,19 +407,107 @@ const CONN=[[11,12],[11,13],[13,15],[12,14],[14,16],[11,23],[12,24],[23,24],[23,
 const LI=new Set([1,3,7,11,13,15,17,19,21,23,25,27,29,31]);
 
 // ── Articulaciones posturales (frontal y sagital) ─────────────────────────────
+// Cada entrada incluye:
+//   n      = nombre en pantalla
+//   mov    = movimiento biomecánico que mide el ángulo
+//   plano  = plano anatómico de medición
+//   desc   = descripción corta para tooltip
+//   ref    = rango como texto
+//   refLo / refHi = límites numéricos para semáforo de color
+//   posRef = qué posición corresponde al rango de referencia
 const JOINTS_FRONTAL=[
-  {n:'Hombros',  L:[12,11,23], R:[11,12,24], ref:'170-180', refLo:170, refHi:180},
-  {n:'Caderas',  L:[11,23,25], R:[12,24,26], ref:'170-180', refLo:170, refHi:180},
-  {n:'Rodilla',  L:[23,25,27], R:[24,26,28], ref:'170-180', refLo:170, refHi:180},
-  {n:'Tronco',   L:[23,11,12], R:[24,12,11], ref:'85-95',   refLo:85,  refHi:95},
+  {
+    n:'Inclinación lat. tronco sup.',
+    mov:'Inclinación lateral del tronco superior',
+    plano:'Frontal',
+    desc:'Ángulo entre la línea hombro→cadera y la horizontal. 180°=tronco recto sin inclinación lateral.',
+    L:[12,11,23], R:[11,12,24],
+    ref:'170-180', refLo:170, refHi:180,
+    posRef:'Bipedestación erguida'
+  },
+  {
+    n:'Alineación tronco–cadera–rodilla',
+    mov:'Alineación axial segmento tronco-pelvis-muslo',
+    plano:'Frontal',
+    desc:'Ángulo entre hombro→cadera→rodilla. 180°=alineación vertical perfecta sin desviación lateral.',
+    L:[11,23,25], R:[12,24,26],
+    ref:'170-180', refLo:170, refHi:180,
+    posRef:'Bipedestación erguida'
+  },
+  {
+    n:'Ángulo femorotibial (valgo/varo)',
+    mov:'Alineación femorotibial — valgo / varo de rodilla',
+    plano:'Frontal',
+    desc:'Ángulo cadera→rodilla→tobillo. 180°=rodilla recta. <170°=posible genu valgo o varo. Comparar L vs R.',
+    L:[23,25,27], R:[24,26,28],
+    ref:'170-180', refLo:170, refHi:180,
+    posRef:'Bipedestación, pies paralelos'
+  },
+  {
+    n:'Simetría cintura escapular',
+    mov:'Ángulo tronco–línea interhumeral',
+    plano:'Frontal',
+    desc:'Ángulo entre el eje vertical del tronco (cadera→hombro) y la línea entre hombros. 90°=hombros nivelados y simétricos.',
+    L:[23,11,12], R:[24,12,11],
+    ref:'85-95', refLo:85, refHi:95,
+    posRef:'Bipedestación, hombros nivelados'
+  },
 ];
 const JOINTS_SAGITAL=[
-  {n:'Codo',    L:[11,13,15], R:[12,14,16], ref:'0-145',   refLo:0,   refHi:145},
-  {n:'Hombro',  L:[13,11,23], R:[14,12,24], ref:'0-180',   refLo:0,   refHi:180},
-  {n:'Cadera',  L:[11,23,25], R:[12,24,26], ref:'80-100',  refLo:80,  refHi:100},
-  {n:'Rodilla', L:[23,25,27], R:[24,26,28], ref:'0-135',   refLo:0,   refHi:135},
-  {n:'Tobillo', L:[25,27,31], R:[26,28,32], ref:'90-110',  refLo:90,  refHi:110},
-  {n:'Cabeza',  L:[11,0,7],   R:[12,0,8],   ref:'160-175', refLo:160, refHi:175},
+  {
+    n:'Flexo-extensión de codo',
+    mov:'Flexión / extensión del codo',
+    plano:'Sagital',
+    desc:'Ángulo hombro→codo→muñeca. 180°=extensión total. 30-130°=rango funcional para AVD. Ref. amplitud total: 0-145°.',
+    L:[11,13,15], R:[12,14,16],
+    ref:'0-145', refLo:0, refHi:145,
+    posRef:'Amplitud total (0°=extensión, 145°=flexión máx.)'
+  },
+  {
+    n:'Flexo-extensión de hombro',
+    mov:'Flexión / extensión glenohumeral',
+    plano:'Sagital',
+    desc:'Ángulo codo→hombro→cadera. Equivale a la medición goniométrica clásica: brazo fijo=tronco, brazo móvil=húmero. 0°=brazo junto al cuerpo, 180°=elevación completa.',
+    L:[13,11,23], R:[14,12,24],
+    ref:'0-180', refLo:0, refHi:180,
+    posRef:'Amplitud total (0°=neutro, 180°=flexión máx.)'
+  },
+  {
+    n:'Flexo-extensión de cadera',
+    mov:'Flexión / extensión de cadera',
+    plano:'Sagital',
+    desc:'Ángulo hombro→cadera→rodilla. 170-180°=cadera extendida en bipedestación. 85-95°=cadera en 90° de flexión (sedestación). Valor depende de la posición evaluada.',
+    L:[11,23,25], R:[12,24,26],
+    ref:'170-180', refLo:170, refHi:180,
+    posRef:'Bipedestación (cadera extendida)'
+  },
+  {
+    n:'Flexo-extensión de rodilla',
+    mov:'Flexión / extensión de rodilla',
+    plano:'Sagital',
+    desc:'Ángulo cadera→rodilla→tobillo. 180°=rodilla en extensión completa (bipedestación). 0-135°=amplitud total de flexión.',
+    L:[23,25,27], R:[24,26,28],
+    ref:'170-180', refLo:170, refHi:180,
+    posRef:'Bipedestación (rodilla extendida)'
+  },
+  {
+    n:'Dorsiflexión / flexión plantar',
+    mov:'Dorsiflexión y flexión plantar de tobillo',
+    plano:'Sagital',
+    desc:'Ángulo rodilla→tobillo→pie. 90°=posición neutra (pie perpendicular a pierna). >90°=dorsiflexión. <90°=flexión plantar.',
+    L:[25,27,31], R:[26,28,32],
+    ref:'85-110', refLo:85, refHi:110,
+    posRef:'Posición neutra: 90° ± margen funcional'
+  },
+  {
+    n:'Posición anterior de cabeza',
+    mov:'Forward head posture (protrusión cefálica)',
+    plano:'Sagital',
+    desc:'Ángulo hombro→nariz→oreja. 160-175°=cabeza bien alineada sobre hombros. Valores <160°=protrusión anterior de cabeza (forward head posture).',
+    L:[11,0,7], R:[12,0,8],
+    ref:'160-175', refLo:160, refHi:175,
+    posRef:'Bipedestación, cabeza neutra'
+  },
 ];
 const DISTS_FRONTAL=[
   {n:'Ancho hombros',p:[11,12]},{n:'Ancho caderas',p:[23,24]},
@@ -442,38 +534,94 @@ const HAND_CONN=[[0,1],[1,2],[2,3],[3,4],[0,5],[5,6],[6,7],[7,8],[5,9],[9,10],[1
 // Pulgar: 1(CMC), 2(MCP), 3(IP), 4(tip)
 // Índice: 5(MCP), 6(PIP), 7(DIP), 8(tip)
 // Medio:  9(MCP), 10(PIP), 11(DIP), 12(tip)
-// Anular: 13(MCP), 14(PIP), 15(DIP), 16(tip)
-// Meñique:17(MCP), 18(PIP), 19(DIP), 20(tip)
+// MediaPipe Hand landmarks:
+// Pulgar: 0(muñeca), 1(CMC), 2(MCP), 3(IP), 4(tip)
+// Índice: 5(MCP_base), 6(PIP), 7(DIP), 8(tip)
+// Medio:  9(MCP_base), 10(PIP), 11(DIP), 12(tip)
+// Anular: 13(MCP_base), 14(PIP), 15(DIP), 16(tip)
+// Meñique:17(MCP_base), 18(PIP), 19(DIP), 20(tip)
+//
+// CORRECCIÓN: MCP de dedos largos usa el propio landmark MCP como pivote,
+// con los landmarks adyacentes del mismo dedo (no el landmark 0=muñeca).
+// Estándar: [lm_proximal_mismo_dedo, MCP, PIP] → ángulo entre metacarpiano y falange proximal.
+// Ejemplo índice: pts[5,6,7] = base_metacarp → articulación_MCP → falange_prox.
+//
+// Cada articulación incluye n, mov (movimiento), desc (tooltip), ref, refLo, refHi.
 const FINGER_ANGLES_BY_FINGER=[
   {finger:'Pulgar', joints:[
-    {n:'CMC',  pts:[0,1,2]},
-    {n:'MCP',  pts:[1,2,3]},
-    {n:'IP',   pts:[2,3,4]},
+    {n:'CMC — abducción',
+     mov:'Abducción CMC del pulgar',
+     desc:'Ángulo muñeca→CMC→MCP. Mide abducción radial del pulgar (vista dorsal). 0°=aducción completa, 50-70°=abducción máxima.',
+     pts:[0,1,2], ref:'0-70', refLo:0, refHi:70},
+    {n:'MCP — flexión',
+     mov:'Flexión/extensión MCP del pulgar',
+     desc:'Ángulo CMC→MCP→IP. 0°=extensión, 50°=flexión máxima.',
+     pts:[1,2,3], ref:'0-50', refLo:0, refHi:50},
+    {n:'IP — flexión',
+     mov:'Flexión/extensión IP del pulgar',
+     desc:'Ángulo MCP→IP→tip. 0°=extensión, 80°=flexión máxima.',
+     pts:[2,3,4], ref:'0-80', refLo:0, refHi:80},
   ]},
   {finger:'Índice', joints:[
-    {n:'MCP',  pts:[0,5,6]},
-    {n:'PIP',  pts:[5,6,7]},
-    {n:'DIP',  pts:[6,7,8]},
+    {n:'MCP — flexión',
+     mov:'Flexión/extensión MCP del índice',
+     desc:'Ángulo base_metacarp→MCP→PIP. 180°=extensión completa. Flexión activa: 0-90°.',
+     pts:[5,6,7], ref:'0-90', refLo:0, refHi:90},
+    {n:'PIP — flexión',
+     mov:'Flexión/extensión PIP del índice',
+     desc:'Ángulo MCP→PIP→DIP. 180°=extensión. Flexión funcional: 0-100°.',
+     pts:[5,6,7], ref:'0-100', refLo:0, refHi:100},
+    {n:'DIP — flexión',
+     mov:'Flexión/extensión DIP del índice',
+     desc:'Ángulo PIP→DIP→tip. 180°=extensión. Flexión: 0-80°.',
+     pts:[6,7,8], ref:'0-80', refLo:0, refHi:80},
   ]},
   {finger:'Medio', joints:[
-    {n:'MCP',  pts:[0,9,10]},
-    {n:'PIP',  pts:[9,10,11]},
-    {n:'DIP',  pts:[10,11,12]},
+    {n:'MCP — flexión',
+     mov:'Flexión/extensión MCP del medio',
+     desc:'Ángulo base_metacarp→MCP→PIP. Flexión activa: 0-90°.',
+     pts:[9,10,11], ref:'0-90', refLo:0, refHi:90},
+    {n:'PIP — flexión',
+     mov:'Flexión/extensión PIP del medio',
+     desc:'Ángulo MCP→PIP→DIP. Flexión: 0-100°.',
+     pts:[9,10,11], ref:'0-100', refLo:0, refHi:100},
+    {n:'DIP — flexión',
+     mov:'Flexión/extensión DIP del medio',
+     desc:'Ángulo PIP→DIP→tip. Flexión: 0-80°.',
+     pts:[10,11,12], ref:'0-80', refLo:0, refHi:80},
   ]},
   {finger:'Anular', joints:[
-    {n:'MCP',  pts:[0,13,14]},
-    {n:'PIP',  pts:[13,14,15]},
-    {n:'DIP',  pts:[14,15,16]},
+    {n:'MCP — flexión',
+     mov:'Flexión/extensión MCP del anular',
+     desc:'Ángulo base_metacarp→MCP→PIP. Flexión: 0-90°.',
+     pts:[13,14,15], ref:'0-90', refLo:0, refHi:90},
+    {n:'PIP — flexión',
+     mov:'Flexión/extensión PIP del anular',
+     desc:'Ángulo MCP→PIP→DIP. Flexión: 0-100°.',
+     pts:[13,14,15], ref:'0-100', refLo:0, refHi:100},
+    {n:'DIP — flexión',
+     mov:'Flexión/extensión DIP del anular',
+     desc:'Ángulo PIP→DIP→tip. Flexión: 0-80°.',
+     pts:[14,15,16], ref:'0-80', refLo:0, refHi:80},
   ]},
   {finger:'Meñique', joints:[
-    {n:'MCP',  pts:[0,17,18]},
-    {n:'PIP',  pts:[17,18,19]},
-    {n:'DIP',  pts:[18,19,20]},
+    {n:'MCP — flexión',
+     mov:'Flexión/extensión MCP del meñique',
+     desc:'Ángulo base_metacarp→MCP→PIP. Flexión: 0-90°.',
+     pts:[17,18,19], ref:'0-90', refLo:0, refHi:90},
+    {n:'PIP — flexión',
+     mov:'Flexión/extensión PIP del meñique',
+     desc:'Ángulo MCP→PIP→DIP. Flexión: 0-100°.',
+     pts:[17,18,19], ref:'0-100', refLo:0, refHi:100},
+    {n:'DIP — flexión',
+     mov:'Flexión/extensión DIP del meñique',
+     desc:'Ángulo PIP→DIP→tip. Flexión: 0-80°.',
+     pts:[18,19,20], ref:'0-80', refLo:0, refHi:80},
   ]},
 ];
 
-// Lista plana para compatibilidad con exportación CSV
-const FINGER_ANGLES_FLAT=FINGER_ANGLES_BY_FINGER.flatMap(f=>f.joints.map(j=>({n:`${f.finger} ${j.n}`,pts:j.pts,finger:f.finger,joint:j.n})));
+// Lista plana para exportación CSV
+const FINGER_ANGLES_FLAT=FINGER_ANGLES_BY_FINGER.flatMap(f=>f.joints.map(j=>({n:`${f.finger} ${j.n}`,pts:j.pts,finger:f.finger,joint:j.n,mov:j.mov,ref:j.ref})));
 
 const SPREAD_PAIRS=[
   {n:'Pulgar–Índice', pts:[4,8]},
@@ -773,7 +921,7 @@ function a3(a,b,c){
   return Math.round(Math.acos(Math.min(1,Math.max(-1,dot/m)))*180/Math.PI);
 }
 function distPx(a,b){return Math.hypot((a.x-b.x)*canvas.width,(a.y-b.y)*canvas.height);}
-function cAng(lms){return curJoints().map(j=>({n:j.n,ref:j.ref,refLo:j.refLo,refHi:j.refHi,L:a3(lms[j.L[0]],lms[j.L[1]],lms[j.L[2]]),R:a3(lms[j.R[0]],lms[j.R[1]],lms[j.R[2]])}));}
+function cAng(lms){return curJoints().map(j=>({n:j.n,mov:j.mov||'',desc:j.desc||'',posRef:j.posRef||'',ref:j.ref,refLo:j.refLo,refHi:j.refHi,L:a3(lms[j.L[0]],lms[j.L[1]],lms[j.L[2]]),R:a3(lms[j.R[0]],lms[j.R[1]],lms[j.R[2]])}));}
 function cDist(lms){return curDists().map(d=>({n:d.n,px:distPx(lms[d.p[0]],lms[d.p[1]]),label:distLabel(distPx(lms[d.p[0]],lms[d.p[1]]))}));}
 function cVel(){
   if(frames.length<2)return;
@@ -1049,8 +1197,15 @@ function asymBadge(diff){
 function updPose(ang,dist){
   document.getElementById('atb').innerHTML=ang.map(a=>{
     const diff=(a.L!=null&&a.R!=null)?Math.abs(a.L-a.R):null;
+    const tooltip=a.desc?`title="${a.desc.replace(/"/g,"'")}"`:'' ;
+    const posNote=a.posRef?`<span class="ref-range" style="display:block;color:var(--text3);font-size:9px;margin-top:1px;">Pos: ${a.posRef}</span>`:'';
     return`<tr>
-      <td><span class="adot" style="background:var(--acc)"></span>${a.n}<br><span class="ref-range">${a.ref}°</span></td>
+      <td ${tooltip} style="cursor:help;">
+        <span class="adot" style="background:var(--acc)"></span>
+        <span style="font-size:11px;font-weight:500;color:var(--text)">${a.n}</span>
+        <span class="mov-label">${a.mov||''}</span>
+        <span class="ref-range pos-label">Ref: ${a.ref}° · ${a.posRef||''}</span>
+      </td>
       <td style="text-align:center;font-family:var(--mono)"><span style="color:${angCol(a.L,a.refLo,a.refHi)}">${a.L!=null?a.L+'°':'—'}</span></td>
       <td style="text-align:center;font-family:var(--mono)"><span style="color:${angCol(a.R,a.refLo,a.refHi)}">${a.R!=null?a.R+'°':'—'}</span></td>
       <td style="text-align:right">${asymBadge(diff)}</td></tr>`;
@@ -1090,23 +1245,28 @@ function updHand(r){
 
     html+=`<div style="font-size:10px;color:${col};font-family:var(--mono);margin-bottom:8px;letter-spacing:.5px;">${handName.toUpperCase()}</div>`;
 
-    // Ángulos por dedo: MCP + PIP + DIP agrupados
+    // Ángulos por dedo: CMC/MCP + PIP + DIP agrupados con tooltip de movimiento
     FINGER_ANGLES_BY_FINGER.forEach(fingerDef=>{
       html+=`<div class="finger-section">`;
       html+=`<div class="finger-section-title">${fingerDef.finger}</div>`;
       html+=`<div class="finger-grid">`;
       fingerDef.joints.forEach(jt=>{
         const ang=a3(lms[jt.pts[0]],lms[jt.pts[1]],lms[jt.pts[2]]);
-        // Color según rango clínico
+        // Color según rango refLo/refHi del joint
         let angClass='';
-        if(ang!=null){
-          if(jt.n==='MCP'||jt.n==='CMC') angClass=ang>120?'g':ang>70?'a':'r';
-          else if(jt.n==='PIP') angClass=ang>100?'g':ang>60?'a':'r';
-          else if(jt.n==='DIP'||jt.n==='IP') angClass=ang>70?'g':ang>40?'a':'r';
+        if(ang!=null && jt.refLo!=null && jt.refHi!=null){
+          const span=jt.refHi-jt.refLo;
+          const margin=span*0.15||8;
+          const inRange=(v)=>v>=jt.refLo-margin&&v<=jt.refHi+margin;
+          const nearRange=(v)=>v>=jt.refLo-margin*3&&v<=jt.refHi+margin*3;
+          angClass=inRange(ang)?'g':nearRange(ang)?'a':'r';
         }
-        html+=`<div class="fc">
-          <div class="fn">${jt.n}</div>
+        const tip=jt.desc?jt.desc.replace(/"/g,"'"):'';
+        const movShort=jt.mov||jt.n;
+        html+=`<div class="fc" title="${tip}" style="cursor:help;">
+          <div class="fn" style="font-size:8px;line-height:1.3;">${jt.n}</div>
           <div class="fv ${angClass}">${ang!=null?ang+'°':'—'}</div>
+          <div class="fu" style="font-size:7px;color:var(--acc2);margin-top:1px;">${jt.ref}°</div>
         </div>`;
       });
       html+=`</div></div>`;
@@ -1168,24 +1328,24 @@ function xcsv(){
   ];
   if(lAng){
     rows.push('## ÁNGULOS ARTICULARES POSTURALES');
-    rows.push('Articulación,Lado Izquierdo (°),Lado Derecho (°),Referencia normal (°),Delta Asimetría (°),Estado');
+    rows.push('Articulación,Movimiento medido,Lado Izq (°),Lado Der (°),Referencia (°),Posición de referencia,Delta Asim. (°),Estado');
     lAng.forEach(a=>{
       const diff=(a.L!=null&&a.R!=null)?Math.abs(a.L-a.R):'';
       const margin=(a.refHi-a.refLo)*0.15||5;
       const stateL=a.L!=null?(a.L>=a.refLo-margin&&a.L<=a.refHi+margin?'Normal':a.L>=a.refLo-margin*3&&a.L<=a.refHi+margin*3?'Leve alteración':'Alteración'):'Sin dato';
-      rows.push(`${a.n},${a.L??''},${a.R??''},${a.ref},${diff},${stateL}`);
+      rows.push(`${a.n},${a.mov||''},${a.L??''},${a.R??''},${a.ref},${a.posRef||''},${diff},${stateL}`);
     });
   }
   if(lHandResults?.multiHandLandmarks?.length){
     rows.push('','## ÁNGULOS DE DEDOS (MCP / PIP / DIP)');
-    rows.push('Mano,Dedo,Articulación,Ángulo (°)');
+    rows.push('Mano,Dedo,Articulación,Movimiento medido,Ángulo (°),Rango referencia (°)');
     lHandResults.multiHandLandmarks.forEach((lms,hi)=>{
       const label=lHandResults.multiHandedness[hi]?.label||'?';
       const manoName=label==='Left'?'Izquierda':'Derecha';
       FINGER_ANGLES_BY_FINGER.forEach(fingerDef=>{
         fingerDef.joints.forEach(jt=>{
           const ang=a3(lms[jt.pts[0]],lms[jt.pts[1]],lms[jt.pts[2]]);
-          rows.push(`${manoName},${fingerDef.finger},${jt.n},${ang??''}`);
+          rows.push(`${manoName},${fingerDef.finger},${jt.n},${jt.mov||''},${ang??''},${jt.ref||''}`);
         });
       });
     });
