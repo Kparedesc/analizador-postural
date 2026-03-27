@@ -226,12 +226,12 @@ footer{border-top:1px solid var(--brd);background:var(--sur);padding:9px 28px;di
     <div class="logo-icon">🦴</div>
     <div>
       <div class="logo-text">Analizador Postural · TO</div>
-      <div class="logo-sub">MediaPipe Pose + Hands · Análisis biomecánico v5.1</div>
+      <div class="logo-sub">MediaPipe Pose + Hands · Análisis biomecánico v5.2</div>
     </div>
   </div>
   <div class="hdr-r">
     <div class="author-chip"><div class="av">KP</div><span class="author-name">Karen Paredes · UNAL</span></div>
-    <div class="badge-h">v5.1 · 2026</div>
+    <div class="badge-h">v5.2 · 2026</div>
   </div>
 </header>
 
@@ -276,8 +276,13 @@ footer{border-top:1px solid var(--brd);background:var(--sur);padding:9px 28px;di
   </div>
   <div class="hand-sub" id="hand-sub" style="display:none">
     <button class="hand-btn hb" id="btn-ambas" onclick="setHand('ambas')">Ambas manos</button>
-    <button class="hand-btn" id="btn-izq" onclick="setHand('izq')">Izquierda</button>
-    <button class="hand-btn" id="btn-der" onclick="setHand('der')">Derecha</button>
+    <button class="hand-btn" id="btn-izq" onclick="setHand('izq')">Mano izquierda (paciente)</button>
+    <button class="hand-btn" id="btn-der" onclick="setHand('der')">Mano derecha (paciente)</button>
+  </div>
+  <div style="display:flex;align-items:center;gap:6px;margin-left:12px;" id="mirror-wrap" style="display:none">
+    <span style="font-family:var(--mono);font-size:10px;color:var(--text3);">Corregir espejo</span>
+    <div class="tog on" id="tmirror" onclick="toggleMirror(this)" title="Activo: corrige lateralidad para foto frontal del paciente. Desactivar si usas foto desde atrás o selfie."></div>
+    <span style="font-family:var(--mono);font-size:9px;color:var(--acc3);" id="mirror-lbl">Foto frontal</span>
   </div>
   <span class="mode-desc" id="mode-desc">Valgo/varo · Simetría · Alcance funcional</span>
 </div>
@@ -286,12 +291,29 @@ footer{border-top:1px solid var(--brd);background:var(--sur);padding:9px 28px;di
   <div class="panel-l">
 
     <div class="sec">
-      <div class="sec-lbl">Calibración</div>
+      <div class="sec-lbl">Calibración — pose corporal</div>
       <div class="calib-row">
-        <input class="calib-input" type="number" id="height-input" placeholder="Altura del paciente" min="50" max="250" step="1">
+        <input class="calib-input" type="number" id="height-input" placeholder="Talla del paciente" min="50" max="250" step="1">
         <span class="calib-unit">cm</span>
       </div>
       <div class="calib-st" id="calib-st">Sin calibrar — distancias en píxeles</div>
+    </div>
+
+    <div class="sec" id="hand-calib-sec">
+      <div class="sec-lbl">Calibración — mano</div>
+      <div style="font-size:10px;color:var(--text2);margin-bottom:7px;line-height:1.5;">
+        Coloca un objeto de referencia conocido junto a la mano en la foto (ej. regla, moneda de 100 COP = 2.3 cm). Las distancias en 2D dependen de la distancia cámara–mano, que varía entre fotos.
+      </div>
+      <div class="calib-row">
+        <input class="calib-input" type="number" id="ref-obj-cm" placeholder="Tamaño objeto ref." min="0.5" max="50" step="0.1">
+        <span class="calib-unit">cm</span>
+      </div>
+      <div style="font-size:10px;color:var(--text2);margin:4px 0 6px;">Luego haz clic en los dos extremos del objeto en la imagen:</div>
+      <button class="btn b4" id="btn-ref-start" onclick="startRefCalib()" style="margin-top:0;">📍 Marcar referencia en imagen</button>
+      <div class="calib-st" id="hand-calib-st">Sin calibrar — distancias relativas (razón de anchura de muñeca)</div>
+      <div style="font-size:9px;color:var(--text3);margin-top:5px;font-family:var(--mono);">
+        Si no calibras, las aperturas se expresan como proporción del ancho de la muñeca (lm 0–17), que es un referente anatómico estable entre fotos del mismo paciente.
+      </div>
     </div>
 
     <div class="sec">
@@ -355,6 +377,27 @@ footer{border-top:1px solid var(--brd);background:var(--sur);padding:9px 28px;di
     </div>
 
     <div class="sec">
+      <div class="sec-lbl">Condición de evaluación</div>
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:7px;">
+        <div class="tog" id="tadit" onclick="toggleAdit(this)"></div>
+        <span class="ctrl-lbl">Evaluación con aditamento / ayuda técnica</span>
+      </div>
+      <div id="adit-panel" style="display:none;">
+        <input class="calib-input" id="adit-desc" placeholder="Describe el aditamento (ej: férula de reposo muñeca)" style="width:100%;font-size:11px;margin-bottom:5px;">
+        <div style="font-size:10px;color:var(--acc3);background:rgba(245,158,11,.08);border:1px solid rgba(245,158,11,.3);border-radius:6px;padding:7px 9px;line-height:1.5;">
+          ⚠ Con aditamentos rígidos la detección de landmarks puede fallar o ser imprecisa en la zona cubierta. Recomendaciones:<br>
+          · Analiza los dedos que quedan libres del aditamento.<br>
+          · Usa el toggle <strong>Análisis parcial</strong> para ignorar articulaciones no visibles.<br>
+          · Documenta qué articulaciones están cubiertas en el campo de descripción.
+        </div>
+        <div style="display:flex;align-items:center;gap:8px;margin-top:7px;">
+          <div class="tog on" id="tpartial" onclick="togglePartial(this)"></div>
+          <span class="ctrl-lbl" style="font-size:11px;">Análisis parcial (omitir articulaciones con confianza baja)</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="sec">
       <div class="sec-lbl">Exportar</div>
       <button class="btn" id="bcsv" disabled onclick="xcsv()">↓ Exportar CSV clínico</button>
       <button class="btn b2" id="bimg" disabled onclick="ximg()">↓ Guardar imagen anotada</button>
@@ -392,7 +435,7 @@ footer{border-top:1px solid var(--brd);background:var(--sur);padding:9px 28px;di
   <div style="display:flex;align-items:center"><div class="fdot"></div>
     <span>Desarrollado por <strong style="color:var(--text2)">Karen Vanessa Paredes Castro</strong> · Docente de Terapia Ocupacional · Universidad Nacional de Colombia · 2026</span>
   </div>
-  <span style="font-family:var(--mono);font-size:10px">MediaPipe Pose + Hands · v5.1 · Uso educativo y clínico</span>
+  <span style="font-family:var(--mono);font-size:10px">MediaPipe Pose + Hands · v5.2 · Uso educativo y clínico</span>
 </footer>
 
 <!-- MediaPipe -->
@@ -548,7 +591,7 @@ const HAND_CONN=[[0,1],[1,2],[2,3],[3,4],[0,5],[5,6],[6,7],[7,8],[5,9],[9,10],[1
 //
 // Cada articulación incluye n, mov (movimiento), desc (tooltip), ref, refLo, refHi.
 const FINGER_ANGLES_BY_FINGER=[
-  {finger:'Pulgar', joints:[
+  {finger:'1° dedo (pulgar)', joints:[
     {n:'CMC — abducción',
      mov:'Abducción CMC del pulgar',
      desc:'Ángulo muñeca→CMC→MCP. Mide abducción radial del pulgar (vista dorsal). 0°=aducción completa, 50-70°=abducción máxima.',
@@ -562,7 +605,7 @@ const FINGER_ANGLES_BY_FINGER=[
      desc:'Ángulo MCP→IP→tip. 0°=extensión, 80°=flexión máxima.',
      pts:[2,3,4], ref:'0-80', refLo:0, refHi:80},
   ]},
-  {finger:'Índice', joints:[
+  {finger:'2° dedo (índice)', joints:[
     {n:'MCP — flexión',
      mov:'Flexión/extensión MCP del índice',
      desc:'Ángulo base_metacarp→MCP→PIP. 180°=extensión completa. Flexión activa: 0-90°.',
@@ -576,7 +619,7 @@ const FINGER_ANGLES_BY_FINGER=[
      desc:'Ángulo PIP→DIP→tip. 180°=extensión. Flexión: 0-80°.',
      pts:[6,7,8], ref:'0-80', refLo:0, refHi:80},
   ]},
-  {finger:'Medio', joints:[
+  {finger:'3° dedo (medio)', joints:[
     {n:'MCP — flexión',
      mov:'Flexión/extensión MCP del medio',
      desc:'Ángulo base_metacarp→MCP→PIP. Flexión activa: 0-90°.',
@@ -590,7 +633,7 @@ const FINGER_ANGLES_BY_FINGER=[
      desc:'Ángulo PIP→DIP→tip. Flexión: 0-80°.',
      pts:[10,11,12], ref:'0-80', refLo:0, refHi:80},
   ]},
-  {finger:'Anular', joints:[
+  {finger:'4° dedo (anular)', joints:[
     {n:'MCP — flexión',
      mov:'Flexión/extensión MCP del anular',
      desc:'Ángulo base_metacarp→MCP→PIP. Flexión: 0-90°.',
@@ -604,7 +647,7 @@ const FINGER_ANGLES_BY_FINGER=[
      desc:'Ángulo PIP→DIP→tip. Flexión: 0-80°.',
      pts:[14,15,16], ref:'0-80', refLo:0, refHi:80},
   ]},
-  {finger:'Meñique', joints:[
+  {finger:'5° dedo (meñique)', joints:[
     {n:'MCP — flexión',
      mov:'Flexión/extensión MCP del meñique',
      desc:'Ángulo base_metacarp→MCP→PIP. Flexión: 0-90°.',
@@ -624,10 +667,10 @@ const FINGER_ANGLES_BY_FINGER=[
 const FINGER_ANGLES_FLAT=FINGER_ANGLES_BY_FINGER.flatMap(f=>f.joints.map(j=>({n:`${f.finger} ${j.n}`,pts:j.pts,finger:f.finger,joint:j.n,mov:j.mov,ref:j.ref})));
 
 const SPREAD_PAIRS=[
-  {n:'Pulgar–Índice', pts:[4,8]},
-  {n:'Índice–Medio',  pts:[8,12]},
-  {n:'Medio–Anular',  pts:[12,16]},
-  {n:'Anular–Meñique',pts:[16,20]},
+  {n:'1°–2° dedo', pts:[4,8]},
+  {n:'2°–3° dedo',  pts:[8,12]},
+  {n:'3°–4° dedo',  pts:[12,16]},
+  {n:'4°–5° dedo',pts:[16,20]},
 ];
 
 // ══════════════════════════════════════════════════════════════════════════════
@@ -642,6 +685,33 @@ let frames=[], velH=[], playing=false, raf=null;
 let lLms=null, lAng=null, lDist=null;
 let lHandResults=null;
 let lastPoseConf=null, lastHandConf=null;
+// Corrección de espejo: en foto frontal del paciente la lateralidad MediaPipe está invertida.
+// mirrorCorrection=true (default) invierte Left↔Right para dar la lateralidad real del paciente.
+let mirrorCorrection=true;
+let aditMode=false, partialMode=true;
+function toggleAdit(el){
+  aditMode=!aditMode;
+  el.classList.toggle('on',aditMode);
+  document.getElementById('adit-panel').style.display=aditMode?'block':'none';
+}
+function togglePartial(el){
+  partialMode=!partialMode;
+  el.classList.toggle('on',partialMode);
+}
+
+function toggleMirror(el){
+  mirrorCorrection=!mirrorCorrection;
+  el.classList.toggle('on', mirrorCorrection);
+  document.getElementById('mirror-lbl').textContent=mirrorCorrection?'Foto frontal':'Foto trasera/selfie';
+  if(lHandResults) { drawHandResults(lHandResults); updHand(lHandResults); updateConfidenceOverlay(lLms,lHandResults); }
+}
+// Devuelve la lateralidad REAL del paciente según corrección de espejo
+function realSide(mpLabel){
+  // MediaPipe: 'Left'=izquierda imagen, 'Right'=derecha imagen
+  // Con corrección: izquierda imagen = mano DERECHA del paciente (foto frontal)
+  if(mirrorCorrection){ return mpLabel==='Left'?'Right':'Left'; }
+  return mpLabel;
+}
 
 const canvas=document.getElementById('cv');
 const ctx=canvas.getContext('2d');
@@ -675,6 +745,7 @@ function setMode(m){
   });
   document.getElementById('view-sub').style.display=(m==='hand')?'none':'flex';
   document.getElementById('hand-sub').style.display=(m==='pose')?'none':'flex';
+  document.getElementById('mirror-wrap').style.display=(m==='pose')?'none':'flex';
   document.getElementById('mode-desc').textContent=modeDescs[m];
   document.getElementById('tab-hand-btn').style.display=(m==='pose')?'none':'';
   if(m==='hand') showTab('hand-tab'); else showTab('pose-tab');
@@ -725,6 +796,70 @@ function recalib(lms){
     if(lAng&&lDist){lDist=cDist(lLms);rdImg();updPose(lAng,lDist);}
   }
 }
+// ── Calibración de mano por objeto de referencia ─────────────────────────────
+let handPxPerCm=null;   // calibración por objeto físico en imagen
+let refCalibMode=false; // esperando 2 clics del usuario
+let refCalibP1=null;    // primer punto marcado
+let handRefCm=null;     // tamaño del objeto de referencia en cm
+
+function startRefCalib(){
+  const cm=parseFloat(document.getElementById('ref-obj-cm').value);
+  if(!cm||cm<=0){alert('Ingresa el tamaño del objeto de referencia en cm primero.');return;}
+  handRefCm=cm;
+  refCalibMode=true; refCalibP1=null;
+  document.getElementById('btn-ref-start').textContent='1° clic: extremo A del objeto';
+  document.getElementById('btn-ref-start').style.borderColor='var(--acc3)';
+  canvas.style.cursor='crosshair';
+  document.getElementById('hand-calib-st').textContent='Haz clic en el primer extremo del objeto de referencia…';
+  document.getElementById('hand-calib-st').className='calib-st';
+}
+
+canvas.addEventListener('click', function(e){
+  if(!refCalibMode)return;
+  const rect=canvas.getBoundingClientRect();
+  const scaleX=canvas.width/rect.width, scaleY=canvas.height/rect.height;
+  const x=(e.clientX-rect.left)*scaleX, y=(e.clientY-rect.top)*scaleY;
+  if(!refCalibP1){
+    refCalibP1={x,y};
+    document.getElementById('btn-ref-start').textContent='2° clic: extremo B del objeto';
+    document.getElementById('hand-calib-st').textContent='Ahora haz clic en el segundo extremo…';
+    // Dibujar punto A
+    ctx.beginPath();ctx.arc(x,y,5,0,2*Math.PI);
+    ctx.fillStyle='#f59e0b';ctx.fill();
+    ctx.strokeStyle='#000';ctx.lineWidth=1.5;ctx.stroke();
+  } else {
+    const dist=Math.hypot(x-refCalibP1.x, y-refCalibP1.y);
+    handPxPerCm = dist/handRefCm;
+    refCalibMode=false;
+    canvas.style.cursor='default';
+    // Dibujar línea de referencia
+    ctx.beginPath();ctx.moveTo(refCalibP1.x,refCalibP1.y);ctx.lineTo(x,y);
+    ctx.strokeStyle='#f59e0b';ctx.lineWidth=2;ctx.setLineDash([4,3]);ctx.stroke();ctx.setLineDash([]);
+    ctx.beginPath();ctx.arc(x,y,5,0,2*Math.PI);
+    ctx.fillStyle='#f59e0b';ctx.fill();
+    ctx.strokeStyle='#000';ctx.lineWidth=1.5;ctx.stroke();
+    const label=`${handRefCm}cm`;
+    ctx.fillStyle='rgba(0,0,0,.75)';ctx.fillRect(refCalibP1.x+(x-refCalibP1.x)/2-20,(refCalibP1.y+(y-refCalibP1.y)/2)-16,40,14);
+    ctx.fillStyle='#f59e0b';ctx.font='10px DM Mono,monospace';ctx.fillText(label,refCalibP1.x+(x-refCalibP1.x)/2-16,(refCalibP1.y+(y-refCalibP1.y)/2)-4);
+    document.getElementById('hand-calib-st').textContent=`Calibrado: 1 cm = ${handPxPerCm.toFixed(1)} px (ref: ${handRefCm} cm)`;
+    document.getElementById('hand-calib-st').className='calib-st ok';
+    document.getElementById('btn-ref-start').textContent='📍 Marcar referencia en imagen';
+    document.getElementById('btn-ref-start').style.borderColor='';
+    if(lHandResults){updHand(lHandResults);}
+  }
+});
+
+// Distancia de mano: prioridad 1=objeto de referencia, 2=ratio muñeca, 3=píxeles
+function handDistLabel(px, lms){
+  if(handPxPerCm&&handPxPerCm>0) return (px/handPxPerCm).toFixed(1)+' cm';
+  // Fallback: ratio respecto al ancho de muñeca (lm 0–17, estable anatómicamente)
+  if(lms){
+    const wristW=Math.hypot((lms[0].x-lms[17].x)*canvas.width,(lms[0].y-lms[17].y)*canvas.height);
+    if(wristW>5) return (px/wristW).toFixed(2)+' × muñeca';
+  }
+  return Math.round(px)+' px';
+}
+
 function distLabel(px){return pxPerCm&&pxPerCm>0?(px/pxPerCm).toFixed(1)+' cm':Math.round(px)+' px';}
 
 // ══════════════════════════════════════════════════════════════════════════════
@@ -752,9 +887,10 @@ function updateConfidenceOverlay(poseLms, handResults){
   if(handResults?.multiHandLandmarks?.length){
     handResults.multiHandLandmarks.forEach((lms,hi)=>{
       const label=handResults.multiHandedness[hi]?.label||'?';
+      const realLabel=realSide(label);
       const score=handResults.multiHandedness[hi]?.score||0;
       const col=score>0.8?'var(--acc)':score>0.6?'var(--acc3)':'var(--acc4)';
-      lines.push(`<div class="co-row"><div class="co-dot" style="background:${col}"></div><span style="font-size:10px;color:${col}">Mano ${label==='Left'?'Izq':'Der'}: ${Math.round(score*100)}%</span></div>`);
+      lines.push(`<div class="co-row"><div class="co-dot" style="background:${col}"></div><span style="font-size:10px;color:${col}">Mano ${realLabel==='Left'?'Izq (pcte)':'Der (pcte)'}: ${Math.round(score*100)}%</span></div>`);
       if(score<0.6) hasLowConf=true;
     });
     lastHandConf=handResults.multiHandedness[0]?.score||null;
@@ -888,7 +1024,13 @@ function onHandRes(r){
   lHandResults=r;
   if(mediaMode==='image'){
     if(!r.multiHandLandmarks||r.multiHandLandmarks.length===0){
-      if(mode==='hand') setSt('error','No se detectó mano. Verifica: mano en primer plano, fondo contrastante, sin objetos ocluidos.');
+      if(mode==='hand'){
+        if(aditMode){
+          setSt('error','No se detectó mano. Con aditamento rígido esto es frecuente. Intenta: fotografiar solo los dedos libres, retirar el aditamento si es posible, o documentar ángulos manualmente.');
+        } else {
+          setSt('error','No se detectó mano. Verifica: mano en primer plano, fondo contrastante, sin objetos ocluidos.');
+        }
+      }
       return;
     }
     if(mode==='combo'){
@@ -984,7 +1126,7 @@ function classifyGrasp(lms){
       grasp:'Pinza fina (tip pinch)',
       icon:'🤌',
       color:'var(--acc5)',
-      desc:'Pulgar opuesto a yema de índice, DIP flexionado',
+      desc:'1° dedo en oposición a yema del 2° dedo, DIP flexionado',
       detail:`Dist pulgar-índice: ${relThumbIdx.toFixed(2)} rel | DIP índice: ${index.dip}°`,
       type:'precision'
     };
@@ -995,7 +1137,7 @@ function classifyGrasp(lms){
       grasp:'Pinza lateral (key pinch)',
       icon:'🗝️',
       color:'var(--acc3)',
-      desc:'Pulgar en aducción, índice semiflexionado',
+      desc:'1° dedo en aducción contra cara lateral del 2° dedo',
       detail:`Ángulo pulgar MCP: ${thumb.mcp}° | PIP índice: ${index.pip}°`,
       type:'precision'
     };
@@ -1006,7 +1148,7 @@ function classifyGrasp(lms){
       grasp:'Pinza trípode (digital)',
       icon:'👌',
       color:'#60a5fa',
-      desc:'Pulgar, índice y medio en oposición',
+      desc:'1°, 2° y 3° dedo en oposición simultánea',
       detail:`Flex índice: ${Math.round(index.flex*100)}% | Flex medio: ${Math.round(middle.flex*100)}%`,
       type:'precision'
     };
@@ -1128,7 +1270,8 @@ function drawHandResults(r){
   const W=canvas.width,H=canvas.height;
   r.multiHandLandmarks.forEach((lms,hi)=>{
     const label=r.multiHandedness[hi]?.label||'Unknown';
-    const isLeft=label==='Left';
+    const realLabel=realSide(label); // lateralidad real del paciente
+    const isLeft=realLabel==='Left';  // izquierda del PACIENTE
     if(handSide==='izq'&&!isLeft)return;
     if(handSide==='der'&&isLeft)return;
     const col=isLeft?'rgba(74,222,128,.9)':'rgba(192,132,252,.9)';
@@ -1237,11 +1380,12 @@ function updHand(r){
   let html='';
   r.multiHandLandmarks.forEach((lms,hi)=>{
     const label=r.multiHandedness[hi]?.label||'?';
-    const isLeft=label==='Left';
+    const realLabel=realSide(label);
+    const isLeft=realLabel==='Left';
     if(handSide==='izq'&&!isLeft)return;
     if(handSide==='der'&&isLeft)return;
     const col=isLeft?'var(--acc)':'var(--acc5)';
-    const handName=isLeft?'Mano izquierda':'Mano derecha';
+    const handName=isLeft?'Mano izquierda (paciente)':'Mano derecha (paciente)';
 
     html+=`<div style="font-size:10px;color:${col};font-family:var(--mono);margin-bottom:8px;letter-spacing:.5px;">${handName.toUpperCase()}</div>`;
 
@@ -1278,12 +1422,13 @@ function updHand(r){
   let spreadHtml='';
   r.multiHandLandmarks.forEach((lms,hi)=>{
     const label=r.multiHandedness[hi]?.label||'?';
-    const isLeft=label==='Left';
+    const realLabel=realSide(label);
+    const isLeft=realLabel==='Left';
     if(handSide==='izq'&&!isLeft)return;
     if(handSide==='der'&&isLeft)return;
     SPREAD_PAIRS.forEach(sp=>{
       const d=distPx(lms[sp.pts[0]],lms[sp.pts[1]]);
-      spreadHtml+=`<div class="mc"><div class="mn">${sp.n.toUpperCase()}</div><div class="mv p">${distLabel(d)}</div></div>`;
+      spreadHtml+=`<div class="mc"><div class="mn">${sp.n.toUpperCase()}</div><div class="mv p">${handDistLabel(d,lms)}</div></div>`;
     });
   });
   document.getElementById('spread-grid').innerHTML=spreadHtml||'<div class="mc full"><div class="mu" style="padding:5px 0;text-align:center">Sin datos</div></div>';
@@ -1341,7 +1486,7 @@ function xcsv(){
     rows.push('Mano,Dedo,Articulación,Movimiento medido,Ángulo (°),Rango referencia (°)');
     lHandResults.multiHandLandmarks.forEach((lms,hi)=>{
       const label=lHandResults.multiHandedness[hi]?.label||'?';
-      const manoName=label==='Left'?'Izquierda':'Derecha';
+      const manoName=realSide(label)==='Left'?'Izquierda (paciente)':'Derecha (paciente)';
       FINGER_ANGLES_BY_FINGER.forEach(fingerDef=>{
         fingerDef.joints.forEach(jt=>{
           const ang=a3(lms[jt.pts[0]],lms[jt.pts[1]],lms[jt.pts[2]]);
@@ -1353,9 +1498,9 @@ function xcsv(){
     rows.push('Mano,Par de dedos,Distancia');
     lHandResults.multiHandLandmarks.forEach((lms,hi)=>{
       const label=lHandResults.multiHandedness[hi]?.label||'?';
-      const manoName=label==='Left'?'Izquierda':'Derecha';
+      const manoName=realSide(label)==='Left'?'Izquierda (paciente)':'Derecha (paciente)';
       SPREAD_PAIRS.forEach(sp=>{
-        rows.push(`${manoName},${sp.n},${distLabel(distPx(lms[sp.pts[0]],lms[sp.pts[1]]))}`);
+        rows.push(`${manoName},${sp.n},${handDistLabel(distPx(lms[sp.pts[0]],lms[sp.pts[1]]),lms)}`);
       });
     });
     // Tipo de agarre
@@ -1375,8 +1520,16 @@ function xcsv(){
     rows.push('Segmento,Valor');
     lDist.forEach(d=>rows.push(`${d.n},${d.label}`));
   }
-  if(heightCm) rows.push('',`## CALIBRACIÓN`,`Altura paciente (cm),${heightCm}`,`px/cm,${pxPerCm?pxPerCm.toFixed(2):'sin calibrar'}`);
+  if(heightCm) rows.push('',`## CALIBRACIÓN`,`Altura paciente (cm),${heightCm}`,`px/cm pose,${pxPerCm?pxPerCm.toFixed(2):'sin calibrar'}`,`px/cm mano (objeto),${handPxPerCm?handPxPerCm.toFixed(2):'sin calibrar'}`,`Objeto referencia mano,${handRefCm?handRefCm+' cm':'no usado'}`);
+  if(aditMode){
+    const desc=document.getElementById('adit-desc').value||'No especificado';
+    rows.push('','## CONDICIÓN DE EVALUACIÓN',`Tipo,Con aditamento / ayuda técnica`,`Descripción aditamento,${desc}`,`Análisis parcial activo,${partialMode?'Sí':'No'}`);
+  } else {
+    rows.push('','## CONDICIÓN DE EVALUACIÓN','Tipo,Sin aditamento (evaluación base)');
+  }
   if(lastPoseConf!=null) rows.push('','## CONFIANZA DE DETECCIÓN',`Pose (%),${Math.round(lastPoseConf*100)}`);
+  if(lastHandConf!=null) rows.push(`Mano (%),${Math.round(lastHandConf*100)}`);
+  rows.push(`Corrección espejo,${mirrorCorrection?'Activa (foto frontal)':'Inactiva'}`)
 
   const a=document.createElement('a');
   a.href=URL.createObjectURL(new Blob([rows.join('\n')],{type:'text/csv;charset=utf-8'}));
