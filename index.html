@@ -226,12 +226,12 @@ footer{border-top:1px solid var(--brd);background:var(--sur);padding:9px 28px;di
     <div class="logo-icon">🦴</div>
     <div>
       <div class="logo-text">Analizador Postural · TO</div>
-      <div class="logo-sub">MediaPipe Pose + Hands · Análisis biomecánico v5.2</div>
+      <div class="logo-sub">MediaPipe Pose + Hands · Análisis biomecánico v6.0</div>
     </div>
   </div>
   <div class="hdr-r">
     <div class="author-chip"><div class="av">KP</div><span class="author-name">Karen Paredes · UNAL</span></div>
-    <div class="badge-h">v5.2 · 2026</div>
+    <div class="badge-h">v6.0 · 2026</div>
   </div>
 </header>
 
@@ -246,9 +246,9 @@ footer{border-top:1px solid var(--brd);background:var(--sur);padding:9px 28px;di
       <span class="tag">Vista frontal / sagital</span>
       <span class="tag">Calibración en cm</span>
       <span class="tag">Exportar CSV</span>
-      <span class="tag o">Confianza por landmark</span>
-      <span class="tag o">DIP completo</span>
-      <span class="tag o">Asimetría L/D</span>
+      <span class="tag o">11 tipos de agarre (Manual TO)</span>
+      <span class="tag o">3 grupos: Fuerza · Mixto · Precisión</span>
+      <span class="tag o">Patrones integrales MMSS</span>
     </div>
   </div>
   <div class="author-card">
@@ -368,6 +368,31 @@ footer{border-top:1px solid var(--brd);background:var(--sur);padding:9px 28px;di
         <div class="mgrid" id="spread-grid"><div class="mc full"><div class="mu" style="padding:5px 0;text-align:center">Sin datos</div></div></div>
         <div style="font-size:10px;color:var(--text3);font-family:var(--mono);margin:10px 0 7px;letter-spacing:.5px;">TIPO DE AGARRE DETECTADO</div>
         <div id="grasp-type"><div style="color:var(--text3);font-size:11px;text-align:center;padding:6px 0">Sin datos</div></div>
+
+        <div style="font-size:10px;color:var(--text3);font-family:var(--mono);margin:10px 0 7px;letter-spacing:.5px;">PATRONES INTEGRALES DE MIEMBRO SUPERIOR</div>
+        <div id="patrones-integrales">
+          <div style="background:var(--sur2);border:1px solid var(--brd);border-radius:9px;padding:10px 12px;">
+            <div style="font-size:10px;color:var(--text3);font-family:var(--mono);margin-bottom:8px;letter-spacing:.5px;">Clasificación según Manual Clínico de TO — UNAL</div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:5px;">
+              <div style="background:rgba(74,222,128,.06);border:1px solid rgba(74,222,128,.2);border-radius:7px;padding:7px 9px;">
+                <div style="font-size:9px;color:var(--acc);font-family:var(--mono);letter-spacing:.5px;margin-bottom:3px;">ALCANZAR</div>
+                <div style="font-size:10px;color:var(--text2);line-height:1.45;">Hombro: flexión, abducción, aducción y extensión. 3 niveles: superior, medio e inferior.</div>
+              </div>
+              <div style="background:rgba(248,113,113,.06);border:1px solid rgba(248,113,113,.2);border-radius:7px;padding:7px 9px;">
+                <div style="font-size:9px;color:var(--acc4);font-family:var(--mono);letter-spacing:.5px;margin-bottom:3px;">SOLTAR</div>
+                <div style="font-size:10px;color:var(--text2);line-height:1.45;">MCPs e IFs: extensión. Voluntario (controlado) o rudimentario (reflejo).</div>
+              </div>
+              <div style="background:rgba(245,158,11,.06);border:1px solid rgba(245,158,11,.2);border-radius:7px;padding:7px 9px;">
+                <div style="font-size:9px;color:var(--acc3);font-family:var(--mono);letter-spacing:.5px;margin-bottom:3px;">LANZAR</div>
+                <div style="font-size:10px;color:var(--text2);line-height:1.45;">Hombro y codo simultáneos: flexión-extensión o extensión-flexión.</div>
+              </div>
+              <div style="background:rgba(96,165,250,.06);border:1px solid rgba(96,165,250,.2);border-radius:7px;padding:7px 9px;">
+                <div style="font-size:9px;color:var(--acc2);font-family:var(--mono);letter-spacing:.5px;margin-bottom:3px;">AGARRAR</div>
+                <div style="font-size:10px;color:var(--text2);line-height:1.45;">Muñeca, MCPs e IFs implicadas. Grupos: Fuerza · Mixtos · Precisión.</div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -435,7 +460,7 @@ footer{border-top:1px solid var(--brd);background:var(--sur);padding:9px 28px;di
   <div style="display:flex;align-items:center"><div class="fdot"></div>
     <span>Desarrollado por <strong style="color:var(--text2)">Karen Vanessa Paredes Castro</strong> · Docente de Terapia Ocupacional · Universidad Nacional de Colombia · 2026</span>
   </div>
-  <span style="font-family:var(--mono);font-size:10px">MediaPipe Pose + Hands · v5.2 · Uso educativo y clínico</span>
+  <span style="font-family:var(--mono);font-size:10px">MediaPipe Pose + Hands · v6.0 · Taxonomía: Manual Clínico TO, UNAL</span>
 </footer>
 
 <!-- MediaPipe -->
@@ -1072,24 +1097,130 @@ function cVel(){
 }
 
 // ══════════════════════════════════════════════════════════════════════════════
-// CLASIFICACIÓN AVANZADA DE AGARRE
+// TAXONOMÍA CLÍNICA DE AGARRES — Manual Clínico de TO (Paredes Castro, UNAL)
+// Fuente: "Patrones integrales" — clasificación de patrones de miembro superior
+// Grupos: Fuerza (contacto palmar) · Mixtos (palma+movilización) · Precisión (dedos+oposición)
 // ══════════════════════════════════════════════════════════════════════════════
-// Basada en evaluación multidimensional: flexión por dedo (MCP+PIP+DIP),
-// separación pulgar-índice, y patrones funcionales de TO.
+const GRASP_TAXONOMY = {
+  // ─── AGARRES DE FUERZA: objeto inmovilizado por contacto palmar ───────────
+  cilindrico: {
+    grasp:'Agarre cilíndrico',
+    grupo:'Fuerza',
+    icon:'🥤',
+    color:'var(--acc2)',
+    anatomia:'Oposición del pulgar, uso de la palma, cuatro dígitos en ADUCCIÓN',
+    desc:'El objeto es inmovilizado por contacto palmar. Pulgar en oposición, palma activa, 4 dígitos en aducción.',
+    fuente:'Fig. 8 — Manual clínico TO, UNAL'
+  },
+  manoLlena: {
+    grasp:'Agarre a mano llena',
+    grupo:'Fuerza',
+    icon:'✊',
+    color:'var(--acc4)',
+    anatomia:'Oposición del pulgar, uso de la palma, cuatro dígitos en ABDUCCIÓN',
+    desc:'El objeto es inmovilizado por contacto palmar. Pulgar en oposición, palma activa, 4 dígitos en abducción.',
+    fuente:'Fig. 9 — Manual clínico TO, UNAL'
+  },
+  esferico: {
+    grasp:'Agarre esférico',
+    grupo:'Fuerza',
+    icon:'🍊',
+    color:'var(--acc3)',
+    anatomia:'Oposición del pulgar, sin contacto palmar, puede o no incluir los cuatro dígitos',
+    desc:'Contacto palmar ausente o mínimo. Pulgar en oposición. Dedos arqueados rodeando el objeto.',
+    fuente:'Fig. 10 — Manual clínico TO, UNAL'
+  },
+  // ─── AGARRES MIXTOS: sostienen en palma y movilizan el objeto ─────────────
+  digitoPalmar: {
+    grasp:'Agarre dígito-palmar',
+    grupo:'Mixto',
+    icon:'🤚',
+    color:'#a78bfa',
+    anatomia:'Flexión/extensión MCP, extensión de interfalángicas, pulgar como apoyo',
+    desc:'Sostiene el objeto en la palma y lo moviliza. Metacarpofalángicas activas, interfalángicas extendidas, pulgar en apoyo lateral.',
+    fuente:'Fig. 12 — Manual clínico TO, UNAL'
+  },
+  enganche: {
+    grasp:'Enganche',
+    grupo:'Mixto',
+    icon:'🪝',
+    color:'#f87171',
+    anatomia:'Flexión de interfalángicas, extensión de metacarpofalángicas, pulgar libre',
+    desc:'Sostiene y moviliza el objeto. Interfalángicas flexionadas, MCPs extendidas. Pulgar no participa.',
+    fuente:'Fig. 13 — Manual clínico TO, UNAL'
+  },
+  digitoDigital: {
+    grasp:'Agarre dígito-digital',
+    grupo:'Mixto',
+    icon:'🖐️',
+    color:'#34d399',
+    anatomia:'Falanges distales de los cinco dígitos implicadas',
+    desc:'Sostiene el objeto con las falanges distales de los 5 dedos. Contacto palmar mínimo con movilización activa.',
+    fuente:'Fig. 14 — Manual clínico TO, UNAL'
+  },
+  // ─── AGARRES DE PRECISIÓN: objeto en dedos, oposición independiente ────────
+  pinzaLateral: {
+    grasp:'Pinza lateral',
+    grupo:'Precisión',
+    icon:'🗝️',
+    color:'var(--acc3)',
+    anatomia:'Pulgar en contacto con la falange media del 2° dedo (cara lateral)',
+    desc:'Objeto sostenido por los dedos con oposición pulgar. Pulgar presiona cara lateral de la falange media del índice.',
+    fuente:'Fig. 16 — Manual clínico TO, UNAL'
+  },
+  pinzaTripode: {
+    grasp:'Pinza trípode',
+    grupo:'Precisión',
+    icon:'👌',
+    color:'#60a5fa',
+    anatomia:'Falanges distales del 1°, 2° y 3° dedo',
+    desc:'Oposición pulgar con yemas del índice y medio. Tres dígitos sostienen el objeto con movimientos independientes.',
+    fuente:'Fig. 17 — Manual clínico TO, UNAL'
+  },
+  pinzaFina: {
+    grasp:'Pinza fina (oposición terminal)',
+    grupo:'Precisión',
+    icon:'🤌',
+    color:'var(--acc5)',
+    anatomia:'Oposición del pulgar con el 2° dedo; falanges distales de ambos en contacto',
+    desc:'Oposición terminal pulgar-índice: falanges distales de ambos dedos en contacto. Movimientos independientes y coordinados.',
+    fuente:'Fig. 18 — Manual clínico TO, UNAL'
+  },
+  pinzaTripodeDin: {
+    grasp:'Pinza trípode dinámica',
+    grupo:'Precisión',
+    icon:'✍️',
+    color:'#f472b6',
+    anatomia:'3 primeros dígitos; objeto apoyado en cara lateral del 3er dedo',
+    desc:'Variante dinámica del trípode: el objeto se apoya en la cara lateral del dedo medio, permitiendo manipulación fina.',
+    fuente:'Fig. 19 — Manual clínico TO, UNAL'
+  },
+  pinzaLateroLateral: {
+    grasp:'Pinza latero-lateral',
+    grupo:'Precisión',
+    icon:'🤞',
+    color:'#fb923c',
+    anatomia:'Objeto sujeto entre el 2°-3° dedo o entre el 3°-4° dedo',
+    desc:'El objeto es sostenido entre la cara lateral de dos dedos adyacentes, sin participación del pulgar.',
+    fuente:'Fig. 20 — Manual clínico TO, UNAL'
+  }
+};
+
+// ══════════════════════════════════════════════════════════════════════════════
+// CLASIFICACIÓN DE AGARRE — árbol de decisión con landmarks MediaPipe
+// Referencia biomecánica: Manual Clínico de TO, UNAL (Paredes Castro)
+// ══════════════════════════════════════════════════════════════════════════════
 function classifyGrasp(lms){
   if(!lms||lms.length<21) return null;
 
-  // Ángulos completos MCP, PIP, DIP por dedo usando coordenadas 3D
+  // Índice de flexión por articulación: 0=extensión total (180°), 1=flexión máxima (~30°)
   function fingerFlexion(mcpPts, pipPts, dipPts){
     const mcp = a3(lms[mcpPts[0]], lms[mcpPts[1]], lms[mcpPts[2]]);
     const pip = a3(lms[pipPts[0]], lms[pipPts[1]], lms[pipPts[2]]);
     const dip = dipPts ? a3(lms[dipPts[0]], lms[dipPts[1]], lms[dipPts[2]]) : null;
-    // Índice de flexión: 0=extensión total, 1=flexión total
-    // 180°=extensión, ~30°=flexión máxima
     const toFlex=(ang)=> ang!=null ? Math.max(0, Math.min(1, (180-ang)/150)) : 0;
     const dipFlex = dip!=null ? toFlex(dip) : toFlex(pip)*0.7;
-    const avg = (toFlex(mcp)*0.35 + toFlex(pip)*0.4 + dipFlex*0.25);
-    return {mcp, pip, dip, flex:avg};
+    return {mcp, pip, dip, flex:(toFlex(mcp)*0.35 + toFlex(pip)*0.4 + dipFlex*0.25)};
   }
 
   const thumb  = fingerFlexion([0,1,2],  [1,2,3],   [2,3,4]);
@@ -1098,113 +1229,115 @@ function classifyGrasp(lms){
   const ring   = fingerFlexion([0,13,14],[13,14,15],[14,15,16]);
   const pinky  = fingerFlexion([0,17,18],[17,18,19],[18,19,20]);
 
-  const avgFlex4 = (index.flex+middle.flex+ring.flex+pinky.flex)/4;
+  const avgFlex4   = (index.flex+middle.flex+ring.flex+pinky.flex)/4;
   const thumbIdxDist = distPx(lms[4],lms[8]);
-  const wristW = distPx(lms[0],lms[5]); // ancho de referencia
-  const relThumbIdx = wristW>0 ? thumbIdxDist/wristW : 0.5;
+  const wristW     = Math.max(distPx(lms[0],lms[5]),1);
+  const relThumbIdx= thumbIdxDist/wristW;
 
-  // Oposición del pulgar (ángulo CMC-MCP-punta relativo al plano palmar)
-  const thumbOppose = thumb.flex > 0.3;
+  // Señales clave según el manual:
+  const thumbOppose    = thumb.flex > 0.30;              // pulgar en oposición
+  const palmarContact  = avgFlex4 > 0.40;                // contacto palmar probable
+  const mcpExt         = index.mcp!=null && index.mcp > 145; // MCPs en extensión (mixto)
+  const ifFlex         = index.pip!=null && index.pip < 110;  // IF flexionadas (enganche)
+  const thumbFree      = thumb.flex < 0.18;              // pulgar libre (enganche)
+  const thumbLateral   = !thumbOppose && thumb.mcp!=null && thumb.mcp < 145; // aducción pulgar
 
-  // ── Clasificación por árbol de decisión funcional ─────────────────────────
-  // Rangos basados en literatura de TO (Kapandji, Tubiana)
+  // ── Helper para construir respuesta con taxonomía clínica ─────────────────
+  function result(key, detail){
+    const t = GRASP_TAXONOMY[key];
+    return { ...t, detail, key };
+  }
 
-  // 1. MANO EXTENDIDA: todos los dedos en extensión (~180°)
-  if(avgFlex4 < 0.12 && thumb.flex < 0.15){
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  // ÁRBOL DE DECISIÓN — orden: precisión → mixto → fuerza
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  // ─── PRECISIÓN ────────────────────────────────────────────────────────────
+  // Pinza latero-lateral: objeto entre 2°-3° o 3°-4° dedo, sin pulgar
+  if(thumbFree && index.flex>0.3 && middle.flex>0.3 && relThumbIdx>0.9 && ring.flex<0.25){
+    return result('pinzaLateroLateral',
+      `Flex índice: ${Math.round(index.flex*100)}% | Flex medio: ${Math.round(middle.flex*100)}% | Pulgar libre`);
+  }
+  // Pinza fina / oposición terminal: yema pulgar-índice, DIP flexionado, dedos medios libres
+  if(relThumbIdx<0.30 && thumbOppose && index.dip!=null && index.dip<115 && index.flex>0.40 && middle.flex<0.32){
+    return result('pinzaFina',
+      `Dist pulgar-índice: ${relThumbIdx.toFixed(2)} rel | DIP índice: ${index.dip}°`);
+  }
+  // Pinza lateral (key pinch): aducción del pulgar contra cara lateral del índice, IF índice extendida
+  if(relThumbIdx<0.38 && thumbLateral && index.pip!=null && index.pip>125 && index.flex<0.45){
+    return result('pinzaLateral',
+      `MCP pulgar: ${thumb.mcp}° | PIP índice: ${index.pip}° | Aducción pulgar`);
+  }
+  // Pinza trípode dinámica: 3 primeros dedos, objeto en cara lateral del 3er dedo
+  if(relThumbIdx<0.50 && thumbOppose && index.flex>0.38 && middle.flex>0.35 && ring.flex<0.30 && pinky.flex<0.25){
+    const lateralMid = index.flex > middle.flex*1.15; // índice más flexionado que medio → apoyo en cara lateral medio
+    if(lateralMid){
+      return result('pinzaTripodeDin',
+        `Flex índice: ${Math.round(index.flex*100)}% | Flex medio: ${Math.round(middle.flex*100)}% | Apoyo cara lateral 3er dedo`);
+    }
+  }
+  // Pinza trípode: falanges distales 1°-2°-3°, anular y meñique libres
+  if(relThumbIdx<0.55 && thumbOppose && index.flex>0.35 && middle.flex>0.30 && ring.flex<0.30){
+    return result('pinzaTripode',
+      `Flex índice: ${Math.round(index.flex*100)}% | Flex medio: ${Math.round(middle.flex*100)}% | Anular libre`);
+  }
+
+  // ─── MIXTOS ───────────────────────────────────────────────────────────────
+  // Enganche: IF flexionadas, MCPs extendidas, pulgar libre
+  if(thumbFree && ifFlex && mcpExt && avgFlex4>0.35){
+    return result('enganche',
+      `IF flex: IP índice ${index.pip}° | MCP índice: ${index.mcp}° | Pulgar libre`);
+  }
+  // Dígito-digital: 5 falanges distales, contacto palmar mínimo
+  if(thumbOppose && index.dip!=null && index.dip<130 && middle.dip!=null && middle.dip<130
+     && ring.dip!=null && ring.dip<130 && pinky.dip!=null && pinky.dip<130 && avgFlex4<0.55){
+    return result('digitoDigital',
+      `DIP índice: ${index.dip}° | DIP medio: ${middle.dip}° | 5 dígitos`);
+  }
+  // Dígito-palmar: MCPs activos, IF extendidas, pulgar de apoyo lateral
+  if(palmarContact && thumbLateral && !ifFlex && !thumbFree && avgFlex4>0.30 && avgFlex4<0.70){
+    return result('digitoPalmar',
+      `MCP índice: ${index.mcp}° | PIP índice: ${index.pip}° | Pulgar apoyo lateral`);
+  }
+
+  // ─── FUERZA ───────────────────────────────────────────────────────────────
+  // Agarre esférico: pulgar en oposición, sin palma, dedos arqueados, amplia apertura
+  if(thumbOppose && relThumbIdx>0.60 && avgFlex4>0.28 && avgFlex4<0.65 && !palmarContact){
+    return result('esferico',
+      `Apertura pulgar-índice: ${relThumbIdx.toFixed(2)} rel | Flex promedio: ${Math.round(avgFlex4*100)}% | Sin contacto palmar`);
+  }
+  // Agarre cilíndrico: oposición pulgar + palma + 4 dígitos en ADUCCIÓN (índices de separación bajos)
+  const idxMidDist = distPx(lms[8],lms[12])/wristW; // separación entre yemas índice-medio
+  if(thumbOppose && palmarContact && avgFlex4>0.42 && avgFlex4<0.80 && idxMidDist<0.65){
+    return result('cilindrico',
+      `Flex promedio: ${Math.round(avgFlex4*100)}% | MCP índice: ${index.mcp}° | Dígitos en aducción (sep. índice-medio: ${idxMidDist.toFixed(2)})`);
+  }
+  // Agarre a mano llena: oposición pulgar + palma + 4 dígitos en ABDUCCIÓN (mayor separación)
+  if(thumbOppose && palmarContact && avgFlex4>0.42 && idxMidDist>=0.65){
+    return result('manoLlena',
+      `Flex promedio: ${Math.round(avgFlex4*100)}% | MCP índice: ${index.mcp}° | Dígitos en abducción (sep. índice-medio: ${idxMidDist.toFixed(2)})`);
+  }
+
+  // ─── MANO EXTENDIDA (patrón soltar) ───────────────────────────────────────
+  if(avgFlex4 < 0.13 && thumb.flex < 0.15){
     return {
-      grasp:'Mano extendida',
-      icon:'✋',
-      color:'var(--acc)',
-      desc:'Extensión completa de todos los dedos',
-      detail:`Flexión dedos: ${Math.round(avgFlex4*100)}%`,
-      type:'postura'
+      grasp:'Mano extendida', grupo:'Patrón — Soltar', icon:'✋',
+      color:'var(--acc)', key:'extendida',
+      anatomia:'Extensión de metacarpofalángicas e interfalángicas',
+      desc:'Patrón de soltar: extensión de MCPs e IFs. Voluntario o rudimentario.',
+      fuente:'Patrones integrales — Soltar (Manual TO, UNAL)',
+      detail:`Flexión dedos: ${Math.round(avgFlex4*100)}% | Pulgar: ${Math.round(thumb.flex*100)}%`
     };
   }
-  // 2. PINZA FINA PULGAR-ÍNDICE (tip pinch): DIP índice flexionado, pulgar opuesto, separación mínima
-  if(relThumbIdx < 0.35 && thumbOppose && index.dip!=null && index.dip < 120 && index.flex > 0.4 && middle.flex < 0.35){
-    return {
-      grasp:'Pinza fina (tip pinch)',
-      icon:'🤌',
-      color:'var(--acc5)',
-      desc:'1° dedo en oposición a yema del 2° dedo, DIP flexionado',
-      detail:`Dist pulgar-índice: ${relThumbIdx.toFixed(2)} rel | DIP índice: ${index.dip}°`,
-      type:'precision'
-    };
-  }
-  // 3. PINZA LATERAL (key pinch): pulgar en aducción contra cara lateral índice
-  if(relThumbIdx < 0.4 && !thumbOppose && thumb.mcp!=null && thumb.mcp < 140 && index.pip!=null && index.pip > 120){
-    return {
-      grasp:'Pinza lateral (key pinch)',
-      icon:'🗝️',
-      color:'var(--acc3)',
-      desc:'1° dedo en aducción contra cara lateral del 2° dedo',
-      detail:`Ángulo pulgar MCP: ${thumb.mcp}° | PIP índice: ${index.pip}°`,
-      type:'precision'
-    };
-  }
-  // 4. PINZA TRÍPODE / PINZA DIGITAL: pulgar+índice+medio
-  if(relThumbIdx < 0.55 && thumbOppose && index.flex > 0.35 && middle.flex > 0.3 && ring.flex < 0.35){
-    return {
-      grasp:'Pinza trípode (digital)',
-      icon:'👌',
-      color:'#60a5fa',
-      desc:'1°, 2° y 3° dedo en oposición simultánea',
-      detail:`Flex índice: ${Math.round(index.flex*100)}% | Flex medio: ${Math.round(middle.flex*100)}%`,
-      type:'precision'
-    };
-  }
-  // 5. AGARRE CILÍNDRICO: flexión moderada-alta uniforme, todos los dedos
-  if(avgFlex4 > 0.45 && avgFlex4 < 0.78 && ring.flex > 0.3 && pinky.flex > 0.25){
-    return {
-      grasp:'Agarre cilíndrico',
-      icon:'🥤',
-      color:'var(--acc2)',
-      desc:'Flexión moderada uniforme en todos los dedos',
-      detail:`Flex promedio dedos: ${Math.round(avgFlex4*100)}% | MCP índice: ${index.mcp}°`,
-      type:'potencia'
-    };
-  }
-  // 6. AGARRE ESFÉRICO: flexión moderada con abducción palmar, dedos arqueados
-  if(avgFlex4 > 0.28 && avgFlex4 < 0.6 && relThumbIdx > 0.55){
-    return {
-      grasp:'Agarre esférico',
-      icon:'🍊',
-      color:'var(--acc3)',
-      desc:'Flexión moderada con apertura palmar amplia',
-      detail:`Flex promedio: ${Math.round(avgFlex4*100)}% | Apertura pulgar-índice: ${Math.round(relThumbIdx*100)}%`,
-      type:'potencia'
-    };
-  }
-  // 7. AGARRE DE POTENCIA (power grip): flexión profunda todos los dedos
-  if(avgFlex4 > 0.7){
-    return {
-      grasp:'Agarre de potencia',
-      icon:'✊',
-      color:'var(--acc4)',
-      desc:'Flexión profunda de todos los dedos',
-      detail:`Flex promedio: ${Math.round(avgFlex4*100)}% | MCP índice: ${index.mcp}°`,
-      type:'potencia'
-    };
-  }
-  // 8. AGARRE DE GANCHO (hook grip): dedos en flexión sin el pulgar
-  if(avgFlex4 > 0.45 && thumb.flex < 0.2){
-    return {
-      grasp:'Agarre de gancho',
-      icon:'🪝',
-      color:'#a78bfa',
-      desc:'Dedos en flexión sin participación del pulgar',
-      detail:`Flex pulgar: ${Math.round(thumb.flex*100)}% | Flex dedos: ${Math.round(avgFlex4*100)}%`,
-      type:'potencia'
-    };
-  }
-  // Default: postura de transición
+
+  // ─── INDETERMINADO ────────────────────────────────────────────────────────
   return {
-    grasp:'Postura de transición',
-    icon:'🖐️',
-    color:'var(--text2)',
-    desc:'Patrón de agarre no clasificado en categorías estándar',
-    detail:`Flex promedio: ${Math.round(avgFlex4*100)}%`,
-    type:'indeterminado'
+    grasp:'Patrón no clasificado', grupo:'—', icon:'🖐️',
+    color:'var(--text2)', key:'indeterminado',
+    anatomia:'No coincide con patrones del manual clínico',
+    desc:'El patrón detectado no se ajusta a los criterios de ningún agarre del manual clínico de TO.',
+    fuente:'—',
+    detail:`Flex promedio: ${Math.round(avgFlex4*100)}% | Apertura pulgar-índice: ${relThumbIdx.toFixed(2)}`
   };
 }
 
@@ -1433,22 +1566,43 @@ function updHand(r){
   });
   document.getElementById('spread-grid').innerHTML=spreadHtml||'<div class="mc full"><div class="mu" style="padding:5px 0;text-align:center">Sin datos</div></div>';
 
-  // Clasificación avanzada de agarre
+  // Clasificación avanzada de agarre — taxonomía clínica TO (Paredes Castro, UNAL)
   if(r.multiHandLandmarks[0]){
     const g=classifyGrasp(r.multiHandLandmarks[0]);
     if(g){
-      const typeColors={precision:'rgba(192,132,252,.1)',potencia:'rgba(248,113,113,.1)',postura:'rgba(74,222,128,.1)',indeterminado:'rgba(139,143,168,.08)'};
+      const grupoColors={
+        'Fuerza':'rgba(96,165,250,.10)',
+        'Mixto':'rgba(192,132,252,.10)',
+        'Precisión':'rgba(74,222,128,.10)',
+        'Patrón — Soltar':'rgba(74,222,128,.06)',
+        '—':'rgba(139,143,168,.07)'
+      };
+      const grupoBorder={
+        'Fuerza':'rgba(96,165,250,.35)',
+        'Mixto':'rgba(192,132,252,.35)',
+        'Precisión':'rgba(74,222,128,.35)',
+        'Patrón — Soltar':'rgba(74,222,128,.2)',
+        '—':'rgba(139,143,168,.2)'
+      };
+      const grp=g.grupo||'—';
       document.getElementById('grasp-type').innerHTML=`
-        <div style="background:${typeColors[g.type]||typeColors.indeterminado};border:1px solid var(--brd);border-radius:8px;padding:10px 12px;">
-          <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;">
-            <span style="font-size:22px;">${g.icon}</span>
-            <div>
-              <div style="font-size:13px;font-weight:600;color:${g.color};font-family:var(--mono);">${g.grasp}</div>
-              <div style="font-size:10px;color:var(--text3);font-family:var(--mono);text-transform:uppercase;letter-spacing:.5px;">${g.type}</div>
+        <div style="background:${grupoColors[grp]||grupoColors['—']};border:1px solid ${grupoBorder[grp]||grupoBorder['—']};border-radius:10px;padding:11px 13px;">
+          <div style="display:flex;align-items:center;gap:9px;margin-bottom:7px;">
+            <span style="font-size:26px;flex-shrink:0;">${g.icon}</span>
+            <div style="flex:1;">
+              <div style="font-size:13px;font-weight:600;color:${g.color};font-family:var(--mono);line-height:1.2;">${g.grasp}</div>
+              <div style="display:flex;align-items:center;gap:5px;margin-top:3px;">
+                <span style="font-size:9px;font-family:var(--mono);padding:2px 7px;border-radius:3px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);color:var(--text2);text-transform:uppercase;letter-spacing:.5px;">Grupo ${grp}</span>
+              </div>
             </div>
           </div>
-          <div style="font-size:11px;color:var(--text2);margin-bottom:4px;">${g.desc}</div>
-          <div style="font-size:10px;color:var(--text3);font-family:var(--mono);">${g.detail}</div>
+          <div style="font-size:11px;color:var(--text);margin-bottom:5px;line-height:1.55;">${g.desc}</div>
+          <div style="background:rgba(0,0,0,.2);border-radius:6px;padding:7px 9px;margin-bottom:5px;">
+            <div style="font-size:9px;color:var(--text3);font-family:var(--mono);letter-spacing:.5px;margin-bottom:3px;">ANATOMÍA CLÍNICA</div>
+            <div style="font-size:11px;color:var(--text2);line-height:1.5;">${g.anatomia}</div>
+          </div>
+          <div style="font-size:10px;color:var(--text3);font-family:var(--mono);margin-bottom:3px;">${g.detail}</div>
+          <div style="font-size:9px;color:var(--text3);font-family:var(--mono);opacity:.6;margin-top:3px;">${g.fuente||''}</div>
         </div>`;
     }
   }
@@ -1465,7 +1619,7 @@ function to(k,el){opts[k]=!opts[k];el.classList.toggle('on',opts[k]);if(mediaMod
 function xcsv(){
   const ts=new Date().toISOString().slice(0,19).replace('T',' ');
   const rows=[
-    `# ANÁLISIS BIOMECÁNICO - Analizador Postural TO v5.0`,
+    `# ANÁLISIS BIOMECÁNICO - Analizador Postural TO v6.0`,
     `# Universidad Nacional de Colombia - Terapia Ocupacional`,
     `# Fecha análisis,${ts}`,
     `# Modo,${mode} | Vista: ${view}`,
@@ -1503,15 +1657,23 @@ function xcsv(){
         rows.push(`${manoName},${sp.n},${handDistLabel(distPx(lms[sp.pts[0]],lms[sp.pts[1]]),lms)}`);
       });
     });
-    // Tipo de agarre
+    // Tipo de agarre — taxonomía clínica TO (Paredes Castro, UNAL)
     if(lHandResults.multiHandLandmarks[0]){
       const g=classifyGrasp(lHandResults.multiHandLandmarks[0]);
       if(g){
-        rows.push('','## CLASIFICACIÓN DE AGARRE');
-        rows.push(`Tipo,${g.grasp}`);
-        rows.push(`Categoría,${g.type}`);
+        rows.push('','## CLASIFICACIÓN DE AGARRE — Manual Clínico TO (UNAL)');
+        rows.push(`Agarre detectado,${g.grasp}`);
+        rows.push(`Grupo clínico,${g.grupo||'—'}`);
         rows.push(`Descripción,${g.desc}`);
-        rows.push(`Detalle,${g.detail}`);
+        rows.push(`Anatomía clínica,${g.anatomia||'—'}`);
+        rows.push(`Detalle biomecánico,${g.detail}`);
+        rows.push(`Referencia,${g.fuente||'—'}`);
+        rows.push('','## PATRONES INTEGRALES DE MIEMBRO SUPERIOR (Manual TO — UNAL)');
+        rows.push('Patrón,Componentes articulares,Descripción');
+        rows.push('Alcanzar,Hombro: flexión / abducción / aducción / extensión,Relación con el medio y los objetos. 3 niveles: superior - medio - inferior');
+        rows.push('Soltar,MCPs e IFs: extensión,Voluntario (controlado) o rudimentario (reflejo)');
+        rows.push('Lanzar,Hombro + codo simultáneos: flexión-extensión / extensión-flexión,Movimiento balístico de miembro superior');
+        rows.push('Agarrar,Muñeca + MCPs + IFs,Grupos: Fuerza (contacto palmar) · Mixtos (palma+movilización) · Precisión (dedos+oposición)');
       }
     }
   }
@@ -1544,7 +1706,7 @@ function ximg(){
 }
 function xjson(){
   const data={
-    meta:{version:'5.0',fecha:new Date().toISOString(),modo:mode,vista:view,autora:'Karen Vanessa Paredes Castro',institucion:'Universidad Nacional de Colombia'},
+    meta:{version:'6.0',fecha:new Date().toISOString(),modo:mode,vista:view,autora:'Karen Vanessa Paredes Castro',institucion:'Universidad Nacional de Colombia',referencia:'Patrones integrales — Manual Clínico de TO, UNAL'},
     poseLandmarks:lLms||null,
     handLandmarks:lHandResults?.multiHandLandmarks||null,
     handedness:lHandResults?.multiHandedness||null,
