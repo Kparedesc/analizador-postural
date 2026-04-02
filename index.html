@@ -214,6 +214,30 @@ header{display:flex;align-items:center;justify-content:space-between;padding:0 2
 footer{border-top:1px solid var(--brd);background:var(--sur);padding:9px 28px;display:flex;align-items:center;justify-content:space-between;font-size:11px;color:var(--text3);}
 .fdot{width:5px;height:5px;border-radius:50%;background:var(--acc);flex-shrink:0;margin-right:6px;}
 
+/* ── Módulo de marcha ───────────────────────────────────────────────────── */
+.gait-metric{background:var(--sur2);border:1px solid var(--brd);border-radius:8px;padding:9px 11px;margin-bottom:6px;}
+.gait-metric-title{font-family:var(--mono);font-size:9px;color:var(--text3);letter-spacing:.6px;text-transform:uppercase;margin-bottom:4px;}
+.gait-metric-val{font-size:20px;font-weight:600;font-family:var(--mono);line-height:1;}
+.gait-metric-sub{font-size:10px;color:var(--text3);margin-top:2px;}
+.gait-phase-bar{display:flex;height:16px;border-radius:4px;overflow:hidden;margin:5px 0;}
+.gait-phase-seg{display:flex;align-items:center;justify-content:center;font-size:8px;font-family:var(--mono);color:#fff;font-weight:600;letter-spacing:.3px;transition:width .4s;}
+.gait-sym-row{display:flex;align-items:center;gap:8px;margin-bottom:5px;}
+.gait-sym-lbl{font-size:10px;color:var(--text2);font-family:var(--mono);width:90px;flex-shrink:0;}
+.gait-sym-track{flex:1;height:6px;background:var(--brd);border-radius:3px;position:relative;}
+.gait-sym-fill{height:100%;border-radius:3px;transition:width .4s;}
+.gait-sym-pct{font-size:10px;color:var(--text3);font-family:var(--mono);width:36px;text-align:right;flex-shrink:0;}
+/* Goniograma canvas */
+#gonioWrap{background:var(--sur2);border:1px solid var(--brd);border-radius:9px;padding:10px;margin-top:6px;display:none;}
+#gonioCanvas{width:100%;display:block;border-radius:5px;}
+.gonio-legend{display:flex;gap:10px;flex-wrap:wrap;margin-top:6px;}
+.gonio-legend-item{display:flex;align-items:center;gap:4px;font-size:10px;color:var(--text2);font-family:var(--mono);}
+.gonio-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
+/* Comparación sesiones */
+.sesion-tab-bar{display:flex;gap:0;margin-bottom:8px;}
+.sesion-btn{flex:1;padding:5px 8px;font-family:var(--mono);font-size:10px;cursor:pointer;border:1px solid var(--brd);background:var(--sur2);color:var(--text3);transition:all .2s;text-align:center;}
+.sesion-btn:first-child{border-radius:5px 0 0 5px;}
+.sesion-btn:last-child{border-radius:0 5px 5px 0;border-left:none;}
+.sesion-btn.active{background:rgba(245,158,11,.1);border-color:var(--acc3);color:var(--acc3);}
 ::-webkit-scrollbar{width:3px;}
 ::-webkit-scrollbar-thumb{background:var(--brd);border-radius:2px;}
 @media(max-width:860px){.app{grid-template-columns:1fr;}.panel-l{border-right:none;border-bottom:1px solid var(--brd);max-height:55vh;}#hero{flex-direction:column;}}
@@ -397,8 +421,88 @@ footer{border-top:1px solid var(--brd);background:var(--sur);padding:9px 28px;di
     </div>
 
     <div class="sec" id="vsec" style="display:none">
-      <div class="sec-lbl">Velocidad angular (video)</div>
-      <div class="mgrid" id="vg"></div>
+      <div class="sec-lbl">Análisis de marcha (video)</div>
+
+      <!-- Tabs sesión base / con aditamento -->
+      <div class="sesion-tab-bar">
+        <div class="sesion-btn active" id="ses-btn-base" onclick="setSesion('base')">Sesión base</div>
+        <div class="sesion-btn" id="ses-btn-adit" onclick="setSesion('adit')">Con aditamento</div>
+        <div class="sesion-btn" id="ses-btn-comp" onclick="setSesion('comp')">Comparar</div>
+      </div>
+
+      <!-- Panel sesión base -->
+      <div id="ses-base">
+        <!-- Métricas resumen -->
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:5px;margin-bottom:8px;" id="gait-metrics-grid">
+          <div class="gait-metric"><div class="gait-metric-title">Vel. angular rodilla</div><div class="gait-metric-val g" id="gm-velRod">—</div><div class="gait-metric-sub">°/seg</div></div>
+          <div class="gait-metric"><div class="gait-metric-title">Vel. angular cadera</div><div class="gait-metric-val b" id="gm-velCad">—</div><div class="gait-metric-sub">°/seg</div></div>
+          <div class="gait-metric"><div class="gait-metric-title">Rango rodilla</div><div class="gait-metric-val p" id="gm-rangoRod">—</div><div class="gait-metric-sub">° (mín → máx)</div></div>
+          <div class="gait-metric"><div class="gait-metric-title">Rango cadera</div><div class="gait-metric-val a" id="gm-rangoCad">—</div><div class="gait-metric-sub">° (mín → máx)</div></div>
+        </div>
+
+        <!-- Fases de marcha (barra visual) -->
+        <div style="font-family:var(--mono);font-size:9px;color:var(--text3);letter-spacing:.6px;margin-bottom:4px;">FASES DE MARCHA ESTIMADAS</div>
+        <div class="gait-phase-bar" id="gait-phase-bar">
+          <div class="gait-phase-seg" style="background:var(--acc2);width:60%">APOYO</div>
+          <div class="gait-phase-seg" style="background:var(--acc5);width:40%">BALANCEO</div>
+        </div>
+        <div style="display:flex;justify-content:space-between;font-size:9px;color:var(--text3);font-family:var(--mono);margin-bottom:8px;">
+          <span id="gait-phase-apoyo-pct">Apoyo: 60%</span>
+          <span id="gait-phase-bal-pct">Balanceo: 40%</span>
+        </div>
+
+        <!-- Simetría -->
+        <div style="font-family:var(--mono);font-size:9px;color:var(--text3);letter-spacing:.6px;margin-bottom:6px;">SIMETRÍA L/D</div>
+        <div id="gait-sym-block">
+          <div class="gait-sym-row"><span class="gait-sym-lbl">Rodilla</span><div class="gait-sym-track"><div class="gait-sym-fill" id="sym-rod" style="width:0%;background:var(--acc)"></div></div><span class="gait-sym-pct" id="sym-rod-pct">—</span></div>
+          <div class="gait-sym-row"><span class="gait-sym-lbl">Cadera</span><div class="gait-sym-track"><div class="gait-sym-fill" id="sym-cad" style="width:0%;background:var(--acc2)"></div></div><span class="gait-sym-pct" id="sym-cad-pct">—</span></div>
+          <div class="gait-sym-row"><span class="gait-sym-lbl">Tobillo</span><div class="gait-sym-track"><div class="gait-sym-fill" id="sym-tob" style="width:0%;background:var(--acc5)"></div></div><span class="gait-sym-pct" id="sym-tob-pct">—</span></div>
+        </div>
+
+        <!-- Goniograma -->
+        <div style="font-family:var(--mono);font-size:9px;color:var(--text3);letter-spacing:.6px;margin-top:8px;margin-bottom:4px;">GONIOGRAMA — ÁNGULOS EN EL TIEMPO</div>
+        <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:6px;">
+          <label style="font-size:10px;color:var(--text2);display:flex;align-items:center;gap:3px;cursor:pointer;"><input type="checkbox" id="gon-rod" checked onchange="drawGoniograma()"> <span style="color:#4ade80">Rodilla</span></label>
+          <label style="font-size:10px;color:var(--text2);display:flex;align-items:center;gap:3px;cursor:pointer;"><input type="checkbox" id="gon-cad" checked onchange="drawGoniograma()"> <span style="color:#60a5fa">Cadera</span></label>
+          <label style="font-size:10px;color:var(--text2);display:flex;align-items:center;gap:3px;cursor:pointer;"><input type="checkbox" id="gon-tob" onchange="drawGoniograma()"> <span style="color:#c084fc">Tobillo</span></label>
+          <label style="font-size:10px;color:var(--text2);display:flex;align-items:center;gap:3px;cursor:pointer;"><input type="checkbox" id="gon-trunk" onchange="drawGoniograma()"> <span style="color:#f59e0b">Tronco</span></label>
+        </div>
+        <div id="gonioWrap">
+          <canvas id="gonioCanvas" height="160"></canvas>
+          <div class="gonio-legend" id="gonio-legend"></div>
+        </div>
+
+        <!-- Tabla resumen por fase -->
+        <div style="font-family:var(--mono);font-size:9px;color:var(--text3);letter-spacing:.6px;margin-top:10px;margin-bottom:5px;">TABLA DE RANGOS POR FASE</div>
+        <table class="atbl" id="gait-phase-table">
+          <thead><tr><th>Articulación</th><th style="text-align:center">Apoyo</th><th style="text-align:center">Balanceo</th><th style="text-align:right">Referencia</th></tr></thead>
+          <tbody id="gait-phase-tbody"><tr><td colspan="4" style="color:var(--text3);text-align:center;padding:8px 0;font-size:11px">Sin datos de video</td></tr></tbody>
+        </table>
+      </div>
+
+      <!-- Panel comparación -->
+      <div id="ses-adit" style="display:none">
+        <div style="font-size:11px;color:var(--acc3);background:rgba(245,158,11,.07);border:1px solid rgba(245,158,11,.25);border-radius:7px;padding:8px 10px;line-height:1.55;">
+          Carga el video con aditamento usando el mismo modo "Pose corporal" y luego presiona <strong>Guardar como sesión con aditamento</strong>.
+        </div>
+        <button class="btn b4" style="margin-top:8px;" onclick="saveGaitSesion('adit')">💾 Guardar como sesión con aditamento</button>
+        <div id="ses-adit-saved" style="display:none;margin-top:8px;">
+          <div style="font-size:10px;color:var(--acc);font-family:var(--mono);margin-bottom:5px;">✓ Sesión con aditamento guardada</div>
+          <table class="atbl" id="gait-adit-table">
+            <thead><tr><th>Articulación</th><th style="text-align:center">Apoyo</th><th style="text-align:center">Balanceo</th></tr></thead>
+            <tbody id="gait-adit-tbody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <div id="ses-comp" style="display:none">
+        <div style="font-size:11px;color:var(--text3);margin-bottom:8px;">Comparación Base vs Con aditamento. Guarda ambas sesiones primero.</div>
+        <table class="atbl" id="gait-comp-table">
+          <thead><tr><th>Articulación / Fase</th><th style="text-align:center">Base</th><th style="text-align:center">Aditamento</th><th style="text-align:right">Δ</th></tr></thead>
+          <tbody id="gait-comp-tbody"><tr><td colspan="4" style="color:var(--text3);text-align:center;padding:8px 0;font-size:11px">Guarda ambas sesiones para comparar</td></tr></tbody>
+        </table>
+      </div>
+
     </div>
 
     <div class="sec">
@@ -1013,7 +1117,18 @@ async function exFrames(){
   }
   setSt('done',`Listo — ${frames.length} frames ✓`);
   document.getElementById('vsec').style.display='block';
-  if(frames.length){recalib(frames[0].landmarks||[]);df(0);}
+  if(frames.length){
+    recalib(frames[0].landmarks||[]);
+    df(0);
+    // Calcular y mostrar métricas de marcha
+    if(mode==='pose'||mode==='combo'){
+      const gm=computeGaitMetrics();
+      if(gm){
+        gaitDataBase=gm;
+        updGaitPanel(gm);
+      }
+    }
+  }
   enExp();
 }
 
@@ -1090,10 +1205,352 @@ function a3(a,b,c){
 function distPx(a,b){return Math.hypot((a.x-b.x)*canvas.width,(a.y-b.y)*canvas.height);}
 function cAng(lms){return curJoints().map(j=>({n:j.n,mov:j.mov||'',desc:j.desc||'',posRef:j.posRef||'',ref:j.ref,refLo:j.refLo,refHi:j.refHi,L:a3(lms[j.L[0]],lms[j.L[1]],lms[j.L[2]]),R:a3(lms[j.R[0]],lms[j.R[1]],lms[j.R[2]])}));}
 function cDist(lms){return curDists().map(d=>({n:d.n,px:distPx(lms[d.p[0]],lms[d.p[1]]),label:distLabel(distPx(lms[d.p[0]],lms[d.p[1]]))}));}
+// ══════════════════════════════════════════════════════════════════════════════
+// MOTOR DE ANÁLISIS DE MARCHA
+// ══════════════════════════════════════════════════════════════════════════════
+// Landmarks sagitales usados:
+//   Cadera Izq=23, Rodilla Izq=25, Tobillo Izq=27, Pie Izq=31
+//   Cadera Der=24, Rodilla Der=26, Tobillo Der=28, Pie Der=32
+//   Hombro Izq=11, Hombro Der=12
+//   Cadera centro=(23+24)/2
+
+let gaitDataBase = null;   // sesión base guardada
+let gaitDataAdit = null;   // sesión con aditamento guardada
+let currentSesion = 'base';
+
+// Ángulo de rodilla sagital: cadera→rodilla→tobillo
+function rodillaAng(lms, side){
+  const [h,k,a] = side==='L' ? [lms[23],lms[25],lms[27]] : [lms[24],lms[26],lms[28]];
+  if(!h||!k||!a) return null;
+  return a3(h,k,a);
+}
+// Ángulo de cadera sagital: hombro→cadera→rodilla
+function caderaAng(lms, side){
+  const [s,h,k] = side==='L' ? [lms[11],lms[23],lms[25]] : [lms[12],lms[24],lms[26]];
+  if(!s||!h||!k) return null;
+  return a3(s,h,k);
+}
+// Ángulo de tobillo sagital: rodilla→tobillo→pie
+function tobilloAng(lms, side){
+  const [k,a,f] = side==='L' ? [lms[25],lms[27],lms[31]] : [lms[26],lms[28],lms[32]];
+  if(!k||!a||!f) return null;
+  return a3(k,a,f);
+}
+// Inclinación de tronco: hombros→caderas respecto a vertical
+function troncoAng(lms){
+  const sh = {x:(lms[11].x+lms[12].x)/2, y:(lms[11].y+lms[12].y)/2, z:((lms[11].z||0)+(lms[12].z||0))/2};
+  const hi = {x:(lms[23].x+lms[24].x)/2, y:(lms[23].y+lms[24].y)/2, z:((lms[23].z||0)+(lms[24].z||0))/2};
+  // Ángulo entre vector tronco y vertical pura (0,1,0)
+  const dy=hi.y-sh.y, dx=hi.x-sh.x;
+  return Math.round(Math.abs(Math.atan2(dx,dy)*180/Math.PI));
+}
+
+// Detectar fase de marcha por pie (apoyo si el pie está cerca del suelo)
+// Usamos el Y relativo del pie respecto a la cadera (normalizado)
+function detectFase(lms, side){
+  const pie = side==='L' ? lms[31] : lms[32];
+  const cad = side==='L' ? lms[23] : lms[24];
+  if(!pie||!cad) return null;
+  // En coordenadas MediaPipe Y crece hacia abajo
+  const relY = pie.y - cad.y; // positivo = pie debajo de cadera (normal)
+  // Rodilla extendida → apoyo
+  const rod = rodillaAng(lms, side);
+  if(rod==null) return null;
+  return rod > 145 ? 'apoyo' : 'balanceo';
+}
+
+// Calcular todas las métricas de marcha sobre el array frames[]
+function computeGaitMetrics(){
+  if(frames.length < 3) return null;
+
+  const series = {
+    t:[], rodL:[], rodR:[], cadL:[], cadR:[], tobL:[], tobR:[], trunk:[],
+    faseL:[], faseR:[]
+  };
+
+  frames.forEach(f=>{
+    const lms = f.landmarks;
+    if(!lms||lms.length<33) return;
+    series.t.push(f.time);
+    series.rodL.push(rodillaAng(lms,'L'));
+    series.rodR.push(rodillaAng(lms,'R'));
+    series.cadL.push(caderaAng(lms,'L'));
+    series.cadR.push(caderaAng(lms,'R'));
+    series.tobL.push(tobilloAng(lms,'L'));
+    series.tobR.push(tobilloAng(lms,'R'));
+    series.trunk.push(troncoAng(lms));
+    series.faseL.push(detectFase(lms,'L'));
+    series.faseR.push(detectFase(lms,'R'));
+  });
+
+  // Filtrar nulos para estadísticas
+  const clean = arr => arr.filter(v=>v!=null);
+  const minv  = arr => arr.length ? Math.min(...arr) : null;
+  const maxv  = arr => arr.length ? Math.max(...arr) : null;
+  const avg   = arr => arr.length ? arr.reduce((a,b)=>a+b,0)/arr.length : null;
+
+  // Velocidad angular: diferencia media absoluta entre frames consecutivos / Δt
+  function velAng(arr, times){
+    let sum=0, n=0;
+    for(let i=1;i<arr.length;i++){
+      if(arr[i]!=null&&arr[i-1]!=null){
+        const dt=(times[i]-times[i-1])||0.1;
+        sum+=Math.abs(arr[i]-arr[i-1])/dt; n++;
+      }
+    }
+    return n ? Math.round(sum/n) : null;
+  }
+
+  // Fases: % de frames en apoyo
+  const apoyoL = series.faseL.filter(f=>f==='apoyo').length;
+  const balL   = series.faseL.filter(f=>f==='balanceo').length;
+  const totalL = apoyoL+balL||1;
+  const pctApoyo = Math.round(apoyoL/totalL*100);
+  const pctBal   = 100-pctApoyo;
+
+  // Simetría: ratio min(L,R)/max(L,R)*100 para rango de cada articulación
+  function simetria(arrL, arrR){
+    const cL=clean(arrL), cR=clean(arrR);
+    if(!cL.length||!cR.length) return null;
+    const rangoL = maxv(cL)-minv(cL);
+    const rangoR = maxv(cR)-minv(cR);
+    if(!rangoL&&!rangoR) return 100;
+    const mn=Math.min(rangoL,rangoR), mx=Math.max(rangoL,rangoR);
+    return mx>0 ? Math.round(mn/mx*100) : 100;
+  }
+
+  // Rangos por fase
+  function rangoFase(angArr, faseArr, fase){
+    const vals = angArr.filter((_,i)=>faseArr[i]===fase&&angArr[i]!=null);
+    if(!vals.length) return {min:null,max:null,avg:null};
+    return {min:Math.round(minv(vals)),max:Math.round(maxv(vals)),avg:Math.round(avg(vals))};
+  }
+
+  const velRod = Math.round((velAng(series.rodL,series.t)+velAng(series.rodR,series.t))/2)||null;
+  const velCad = Math.round((velAng(series.cadL,series.t)+velAng(series.cadR,series.t))/2)||null;
+
+  const cRodL=clean(series.rodL), cRodR=clean(series.rodR);
+  const cCadL=clean(series.cadL), cCadR=clean(series.cadR);
+  const cTobL=clean(series.tobL), cTobR=clean(series.tobR);
+
+  return {
+    series,
+    velRod, velCad,
+    rangoRod: cRodL.length ? `${Math.round(minv(cRodL))}→${Math.round(maxv(cRodL))}°` : '—',
+    rangoCad: cCadL.length ? `${Math.round(minv(cCadL))}→${Math.round(maxv(cCadL))}°` : '—',
+    pctApoyo, pctBal,
+    simRod: simetria(series.rodL, series.rodR),
+    simCad: simetria(series.cadL, series.cadR),
+    simTob: simetria(series.tobL, series.tobR),
+    fases:{
+      rodL_apoyo:  rangoFase(series.rodL, series.faseL,'apoyo'),
+      rodL_bal:    rangoFase(series.rodL, series.faseL,'balanceo'),
+      rodR_apoyo:  rangoFase(series.rodR, series.faseR,'apoyo'),
+      rodR_bal:    rangoFase(series.rodR, series.faseR,'balanceo'),
+      cadL_apoyo:  rangoFase(series.cadL, series.faseL,'apoyo'),
+      cadL_bal:    rangoFase(series.cadL, series.faseL,'balanceo'),
+      tobL_apoyo:  rangoFase(series.tobL, series.faseL,'apoyo'),
+      tobL_bal:    rangoFase(series.tobL, series.faseL,'balanceo'),
+    }
+  };
+}
+
+// Actualiza el panel de marcha con las métricas calculadas
+function updGaitPanel(m){
+  if(!m) return;
+
+  // Métricas resumen
+  document.getElementById('gm-velRod').textContent = m.velRod!=null ? m.velRod : '—';
+  document.getElementById('gm-velCad').textContent = m.velCad!=null ? m.velCad : '—';
+  document.getElementById('gm-rangoRod').textContent = m.rangoRod;
+  document.getElementById('gm-rangoCad').textContent = m.rangoCad;
+
+  // Fases
+  const barApoyo = document.querySelector('#gait-phase-bar .gait-phase-seg:first-child');
+  const barBal   = document.querySelector('#gait-phase-bar .gait-phase-seg:last-child');
+  if(barApoyo){ barApoyo.style.width=m.pctApoyo+'%'; barApoyo.textContent=`APOYO ${m.pctApoyo}%`; }
+  if(barBal)  { barBal.style.width=m.pctBal+'%';     barBal.textContent=`BALANCEO ${m.pctBal}%`; }
+  document.getElementById('gait-phase-apoyo-pct').textContent=`Apoyo: ${m.pctApoyo}%`;
+  document.getElementById('gait-phase-bal-pct').textContent=`Balanceo: ${m.pctBal}%`;
+
+  // Simetría
+  function setSym(id, idPct, pct, col){
+    const el=document.getElementById(id), elP=document.getElementById(idPct);
+    if(!el||!elP) return;
+    const p=pct??0;
+    el.style.width=p+'%';
+    el.style.background=p>=90?'var(--acc)':p>=75?'var(--acc3)':'var(--acc4)';
+    elP.textContent=pct!=null?pct+'%':'—';
+    elP.style.color=p>=90?'var(--acc)':p>=75?'var(--acc3)':'var(--acc4)';
+  }
+  setSym('sym-rod','sym-rod-pct',m.simRod);
+  setSym('sym-cad','sym-cad-pct',m.simCad);
+  setSym('sym-tob','sym-tob-pct',m.simTob);
+
+  // Tabla de rangos por fase
+  const rRef = { rodilla:'0–145°', cadera:'0–120°', tobillo:'85–110°' };
+  const tbody = document.getElementById('gait-phase-tbody');
+  if(tbody) tbody.innerHTML = [
+    {label:'Rodilla izq', apoyo:m.fases.rodL_apoyo, bal:m.fases.rodL_bal, ref:rRef.rodilla},
+    {label:'Rodilla der', apoyo:m.fases.rodR_apoyo, bal:m.fases.rodR_bal, ref:rRef.rodilla},
+    {label:'Cadera izq',  apoyo:m.fases.cadL_apoyo, bal:m.fases.cadL_bal, ref:rRef.cadera},
+    {label:'Tobillo izq', apoyo:m.fases.tobL_apoyo, bal:m.fases.tobL_bal, ref:rRef.tobillo},
+  ].map(r=>{
+    const fmtFase=f=>f&&f.min!=null?`${f.min}–${f.max}°<br><span style="font-size:9px;color:var(--text3);">x̄${f.avg}°</span>`:'—';
+    return`<tr>
+      <td style="font-size:11px">${r.label}</td>
+      <td style="text-align:center;font-family:var(--mono);font-size:11px">${fmtFase(r.apoyo)}</td>
+      <td style="text-align:center;font-family:var(--mono);font-size:11px">${fmtFase(r.bal)}</td>
+      <td style="text-align:right;font-size:10px;color:var(--text3);font-family:var(--mono)">${r.ref}</td>
+    </tr>`;
+  }).join('');
+
+  // Goniograma
+  document.getElementById('gonioWrap').style.display='block';
+  drawGoniograma();
+}
+
+// Dibuja el goniograma en canvas
+function drawGoniograma(){
+  const gc=document.getElementById('gonioCanvas');
+  if(!gc||!frames.length) return;
+  const gm=computeGaitMetrics();
+  if(!gm) return;
+
+  const W=gc.offsetWidth||gc.parentElement.offsetWidth||320;
+  gc.width=W; gc.height=160;
+  const ctx2=gc.getContext('2d');
+  ctx2.clearRect(0,0,W,160);
+
+  // Fondo y grid
+  ctx2.fillStyle='#0e0f11'; ctx2.fillRect(0,0,W,160);
+  const PAD={t:12,b:28,l:32,r:10};
+  const plotW=W-PAD.l-PAD.r, plotH=160-PAD.t-PAD.b;
+
+  const times=gm.series.t;
+  const tMin=times[0]||0, tMax=times[times.length-1]||1;
+  const angMin=20, angMax=185;
+
+  function tx(t){ return PAD.l+(t-tMin)/(tMax-tMin)*plotW; }
+  function ty(a){ return PAD.t+plotH-(a-angMin)/(angMax-angMin)*plotH; }
+
+  // Grid horizontal
+  [60,90,120,150,180].forEach(a=>{
+    const y=ty(a);
+    ctx2.beginPath(); ctx2.moveTo(PAD.l,y); ctx2.lineTo(PAD.l+plotW,y);
+    ctx2.strokeStyle='rgba(42,45,53,.9)'; ctx2.lineWidth=1; ctx2.stroke();
+    ctx2.fillStyle='#555869'; ctx2.font='8px DM Mono,monospace';
+    ctx2.fillText(a+'°',2,y+3);
+  });
+
+  // Eje X (tiempo)
+  ctx2.fillStyle='#555869'; ctx2.font='8px DM Mono,monospace';
+  const steps=Math.min(5,Math.floor(tMax-tMin)+1);
+  for(let i=0;i<=steps;i++){
+    const t=tMin+i*(tMax-tMin)/steps;
+    ctx2.fillText(t.toFixed(1)+'s', tx(t)-8, 160-5);
+  }
+
+  // Curvas seleccionadas
+  const curves=[
+    {id:'gon-rod', arr:gm.series.rodL, color:'#4ade80', label:'Rodilla Izq'},
+    {id:'gon-rod', arr:gm.series.rodR, color:'#22c55e', label:'Rodilla Der', dash:[3,3]},
+    {id:'gon-cad', arr:gm.series.cadL, color:'#60a5fa', label:'Cadera Izq'},
+    {id:'gon-cad', arr:gm.series.cadR, color:'#3b82f6', label:'Cadera Der', dash:[3,3]},
+    {id:'gon-tob', arr:gm.series.tobL, color:'#c084fc', label:'Tobillo Izq'},
+    {id:'gon-trunk',arr:gm.series.trunk,color:'#f59e0b', label:'Tronco'},
+  ];
+
+  const legend=[];
+  curves.forEach(cv=>{
+    const chk=document.getElementById(cv.id);
+    if(!chk||!chk.checked) return;
+    const pts=cv.arr.map((v,i)=>v!=null?{x:tx(times[i]),y:ty(v)}:null).filter(Boolean);
+    if(pts.length<2) return;
+    ctx2.beginPath();
+    pts.forEach((p,i)=>i===0?ctx2.moveTo(p.x,p.y):ctx2.lineTo(p.x,p.y));
+    ctx2.strokeStyle=cv.color; ctx2.lineWidth=1.8;
+    if(cv.dash) ctx2.setLineDash(cv.dash); else ctx2.setLineDash([]);
+    ctx2.stroke(); ctx2.setLineDash([]);
+    legend.push(cv);
+  });
+
+  // Leyenda dinámica
+  const legEl=document.getElementById('gonio-legend');
+  if(legEl) legEl.innerHTML=legend.map(cv=>
+    `<div class="gonio-legend-item"><div class="gonio-dot" style="background:${cv.color}"></div>${cv.label}</div>`
+  ).join('');
+}
+
+// Guardar sesión (base o aditamento) para comparación
+function saveGaitSesion(tipo){
+  const m=computeGaitMetrics();
+  if(!m){alert('Procesa un video primero.');return;}
+  if(tipo==='adit'){
+    gaitDataAdit=m;
+    document.getElementById('ses-adit-saved').style.display='block';
+    // Tabla aditamento
+    const tbody=document.getElementById('gait-adit-tbody');
+    if(tbody) tbody.innerHTML=[
+      {label:'Rodilla izq — apoyo', v:m.fases.rodL_apoyo},
+      {label:'Rodilla izq — balanceo', v:m.fases.rodL_bal},
+      {label:'Cadera izq — apoyo', v:m.fases.cadL_apoyo},
+      {label:'Cadera izq — balanceo', v:m.fases.cadL_bal},
+    ].map(r=>`<tr>
+      <td style="font-size:11px">${r.label}</td>
+      <td style="text-align:center;font-family:var(--mono);font-size:11px">${r.v&&r.v.min!=null?r.v.min+'–'+r.v.max+'°':'—'}</td>
+      <td style="text-align:center;font-family:var(--mono);font-size:11px">${r.v&&r.v.avg!=null?'x̄'+r.v.avg+'°':'—'}</td>
+    </tr>`).join('');
+    updCompare();
+  } else {
+    gaitDataBase=m;
+  }
+}
+
+// Tabla de comparación base vs aditamento
+function updCompare(){
+  if(!gaitDataBase||!gaitDataAdit) return;
+  const b=gaitDataBase, a=gaitDataAdit;
+  const rows=[
+    {label:'Vel. angular rodilla (°/seg)', bv:b.velRod, av:a.velRod},
+    {label:'Vel. angular cadera (°/seg)',  bv:b.velCad, av:a.velCad},
+    {label:'Simetría rodilla (%)',          bv:b.simRod, av:a.simRod},
+    {label:'Simetría cadera (%)',           bv:b.simCad, av:a.simCad},
+    {label:'Simetría tobillo (%)',          bv:b.simTob, av:a.simTob},
+    {label:'Fase apoyo (%)',               bv:b.pctApoyo,av:a.pctApoyo},
+    {label:'Fase balanceo (%)',            bv:b.pctBal,  av:a.pctBal},
+  ];
+  const tbody=document.getElementById('gait-comp-tbody');
+  if(tbody) tbody.innerHTML=rows.map(r=>{
+    const delta=(r.bv!=null&&r.av!=null)?r.av-r.bv:null;
+    const col=delta==null?'var(--text3)':Math.abs(delta)<5?'var(--acc)':Math.abs(delta)<15?'var(--acc3)':'var(--acc4)';
+    return`<tr>
+      <td style="font-size:11px">${r.label}</td>
+      <td style="text-align:center;font-family:var(--mono);font-size:11px">${r.bv??'—'}</td>
+      <td style="text-align:center;font-family:var(--mono);font-size:11px">${r.av??'—'}</td>
+      <td style="text-align:right;font-family:var(--mono);font-size:11px;color:${col}">${delta!=null?(delta>0?'+':'')+Math.round(delta):'—'}</td>
+    </tr>`;
+  }).join('');
+}
+
+function setSesion(s){
+  currentSesion=s;
+  ['base','adit','comp'].forEach(x=>{
+    document.getElementById('ses-btn-'+x).classList.toggle('active',x===s);
+    document.getElementById('ses-'+x).style.display=x===s?'block':'none';
+  });
+  if(s==='comp') updCompare();
+}
+
+// Cálculo de velocidad angular (legacy — se mantiene para compatibilidad)
 function cVel(){
   if(frames.length<2)return;
-  const a=frames[frames.length-2],b=frames[frames.length-1],dt=(b.time-a.time)||0.001;
-  velH.push({time:b.time,vels:VJ.map(j=>{const p1=a.landmarks[j.id],p2=b.landmarks[j.id];return{id:j.id,n:j.n,v:Math.round(Math.hypot((p2.x-p1.x)*canvas.width,(p2.y-p1.y)*canvas.height)/dt)};})});
+  const a=frames[frames.length-2],b=frames[frames.length-1];
+  const dt=(b.time-a.time)||0.001;
+  velH.push({time:b.time,vels:VJ.map(j=>{
+    const p1=a.landmarks[j.id],p2=b.landmarks[j.id];
+    return{id:j.id,n:j.n,v:Math.round(Math.hypot((p2.x-p1.x)*canvas.width,(p2.y-p1.y)*canvas.height)/dt)};
+  })});
 }
 
 // ══════════════════════════════════════════════════════════════════════════════
@@ -1618,83 +2075,158 @@ function to(k,el){opts[k]=!opts[k];el.classList.toggle('on',opts[k]);if(mediaMod
 // ══════════════════════════════════════════════════════════════════════════════
 function xcsv(){
   const ts=new Date().toISOString().slice(0,19).replace('T',' ');
+  // Envuelve en comillas si el valor contiene coma, punto y coma o salto de línea
+  const q=v=>{const s=String(v??'');return s.includes(',')||s.includes(';')||s.includes('\n')?`"${s.replace(/"/g,'""')}"`:s;};
+  const row=(...cols)=>cols.map(q).join(',');
+
   const rows=[
-    `# ANÁLISIS BIOMECÁNICO - Analizador Postural TO v6.0`,
-    `# Universidad Nacional de Colombia - Terapia Ocupacional`,
-    `# Fecha análisis,${ts}`,
-    `# Modo,${mode} | Vista: ${view}`,
-    ``
+    '\uFEFF',  // BOM UTF-8 para Excel
+    row('# ANÁLISIS BIOMECÁNICO - Analizador Postural TO v6.0'),
+    row('# Universidad Nacional de Colombia - Terapia Ocupacional'),
+    row('# Fecha análisis',ts),
+    row('# Modo',`${mode} | Vista: ${view}`),
+    ''
   ];
+
+  // ── Ángulos articulares posturales ────────────────────────────────────────
   if(lAng){
-    rows.push('## ÁNGULOS ARTICULARES POSTURALES');
-    rows.push('Articulación,Movimiento medido,Lado Izq (°),Lado Der (°),Referencia (°),Posición de referencia,Delta Asim. (°),Estado');
+    rows.push(row('## ÁNGULOS ARTICULARES POSTURALES'));
+    rows.push(row('Articulación','Movimiento medido','Lado Izq (°)','Lado Der (°)','Referencia (°)','Posición de referencia','Delta Asim. (°)','Estado'));
     lAng.forEach(a=>{
       const diff=(a.L!=null&&a.R!=null)?Math.abs(a.L-a.R):'';
       const margin=(a.refHi-a.refLo)*0.15||5;
       const stateL=a.L!=null?(a.L>=a.refLo-margin&&a.L<=a.refHi+margin?'Normal':a.L>=a.refLo-margin*3&&a.L<=a.refHi+margin*3?'Leve alteración':'Alteración'):'Sin dato';
-      rows.push(`${a.n},${a.mov||''},${a.L??''},${a.R??''},${a.ref},${a.posRef||''},${diff},${stateL}`);
+      rows.push(row(a.n, a.mov||'', a.L??'', a.R??'', a.ref, a.posRef||'', diff, stateL));
     });
   }
+
+  // ── Ángulos de dedos ──────────────────────────────────────────────────────
   if(lHandResults?.multiHandLandmarks?.length){
-    rows.push('','## ÁNGULOS DE DEDOS (MCP / PIP / DIP)');
-    rows.push('Mano,Dedo,Articulación,Movimiento medido,Ángulo (°),Rango referencia (°)');
+    rows.push('', row('## ÁNGULOS DE DEDOS (MCP / PIP / DIP)'));
+    rows.push(row('Mano','Dedo','Articulación','Movimiento medido','Ángulo (°)','Rango referencia (°)'));
     lHandResults.multiHandLandmarks.forEach((lms,hi)=>{
       const label=lHandResults.multiHandedness[hi]?.label||'?';
       const manoName=realSide(label)==='Left'?'Izquierda (paciente)':'Derecha (paciente)';
       FINGER_ANGLES_BY_FINGER.forEach(fingerDef=>{
         fingerDef.joints.forEach(jt=>{
           const ang=a3(lms[jt.pts[0]],lms[jt.pts[1]],lms[jt.pts[2]]);
-          rows.push(`${manoName},${fingerDef.finger},${jt.n},${jt.mov||''},${ang??''},${jt.ref||''}`);
+          rows.push(row(manoName, fingerDef.finger, jt.n, jt.mov||'', ang??'', jt.ref||''));
         });
       });
     });
-    rows.push('','## APERTURA ENTRE DEDOS');
-    rows.push('Mano,Par de dedos,Distancia');
+    rows.push('', row('## APERTURA ENTRE DEDOS'));
+    rows.push(row('Mano','Par de dedos','Distancia'));
     lHandResults.multiHandLandmarks.forEach((lms,hi)=>{
       const label=lHandResults.multiHandedness[hi]?.label||'?';
       const manoName=realSide(label)==='Left'?'Izquierda (paciente)':'Derecha (paciente)';
       SPREAD_PAIRS.forEach(sp=>{
-        rows.push(`${manoName},${sp.n},${handDistLabel(distPx(lms[sp.pts[0]],lms[sp.pts[1]]),lms)}`);
+        rows.push(row(manoName, sp.n, handDistLabel(distPx(lms[sp.pts[0]],lms[sp.pts[1]]),lms)));
       });
     });
-    // Tipo de agarre — taxonomía clínica TO (Paredes Castro, UNAL)
     if(lHandResults.multiHandLandmarks[0]){
       const g=classifyGrasp(lHandResults.multiHandLandmarks[0]);
       if(g){
-        rows.push('','## CLASIFICACIÓN DE AGARRE — Manual Clínico TO (UNAL)');
-        rows.push(`Agarre detectado,${g.grasp}`);
-        rows.push(`Grupo clínico,${g.grupo||'—'}`);
-        rows.push(`Descripción,${g.desc}`);
-        rows.push(`Anatomía clínica,${g.anatomia||'—'}`);
-        rows.push(`Detalle biomecánico,${g.detail}`);
-        rows.push(`Referencia,${g.fuente||'—'}`);
-        rows.push('','## PATRONES INTEGRALES DE MIEMBRO SUPERIOR (Manual TO — UNAL)');
-        rows.push('Patrón,Componentes articulares,Descripción');
-        rows.push('Alcanzar,Hombro: flexión / abducción / aducción / extensión,Relación con el medio y los objetos. 3 niveles: superior - medio - inferior');
-        rows.push('Soltar,MCPs e IFs: extensión,Voluntario (controlado) o rudimentario (reflejo)');
-        rows.push('Lanzar,Hombro + codo simultáneos: flexión-extensión / extensión-flexión,Movimiento balístico de miembro superior');
-        rows.push('Agarrar,Muñeca + MCPs + IFs,Grupos: Fuerza (contacto palmar) · Mixtos (palma+movilización) · Precisión (dedos+oposición)');
+        rows.push('', row('## CLASIFICACIÓN DE AGARRE — Manual Clínico TO (UNAL)'));
+        rows.push(row('Campo','Valor'));
+        rows.push(row('Agarre detectado', g.grasp));
+        rows.push(row('Grupo clínico', g.grupo||'—'));
+        rows.push(row('Descripción', g.desc));
+        rows.push(row('Anatomía clínica', g.anatomia||'—'));
+        rows.push(row('Detalle biomecánico', g.detail));
+        rows.push(row('Referencia', g.fuente||'—'));
+        rows.push('', row('## PATRONES INTEGRALES DE MIEMBRO SUPERIOR (Manual TO — UNAL)'));
+        rows.push(row('Patrón','Componentes articulares','Descripción'));
+        rows.push(row('Alcanzar','Hombro: flexión / abducción / aducción / extensión','Relación con el medio y los objetos. 3 niveles: superior - medio - inferior'));
+        rows.push(row('Soltar','MCPs e IFs: extensión','Voluntario (controlado) o rudimentario (reflejo)'));
+        rows.push(row('Lanzar','Hombro + codo simultáneos: flexión-extensión / extensión-flexión','Movimiento balístico de miembro superior'));
+        rows.push(row('Agarrar','Muñeca + MCPs + IFs','Grupos: Fuerza (contacto palmar) - Mixtos (palma+movilización) - Precisión (dedos+oposición)'));
       }
     }
   }
+
+  // ── Distancias segmentarias ───────────────────────────────────────────────
   if(lDist){
-    rows.push('','## DISTANCIAS SEGMENTARIAS');
-    rows.push('Segmento,Valor');
-    lDist.forEach(d=>rows.push(`${d.n},${d.label}`));
+    rows.push('', row('## DISTANCIAS SEGMENTARIAS'));
+    rows.push(row('Segmento','Valor'));
+    lDist.forEach(d=>rows.push(row(d.n, d.label)));
   }
-  if(heightCm) rows.push('',`## CALIBRACIÓN`,`Altura paciente (cm),${heightCm}`,`px/cm pose,${pxPerCm?pxPerCm.toFixed(2):'sin calibrar'}`,`px/cm mano (objeto),${handPxPerCm?handPxPerCm.toFixed(2):'sin calibrar'}`,`Objeto referencia mano,${handRefCm?handRefCm+' cm':'no usado'}`);
+
+  // ── Análisis de marcha (solo video) ──────────────────────────────────────
+  if(frames.length>2 && (mode==='pose'||mode==='combo')){
+    const gm=computeGaitMetrics();
+    if(gm){
+      rows.push('', row('## ANÁLISIS DE MARCHA'));
+      rows.push(row('Métrica','Valor','Unidad','Referencia'));
+      rows.push(row('Velocidad angular rodilla', gm.velRod??'—', '°/seg', '—'));
+      rows.push(row('Velocidad angular cadera',  gm.velCad??'—', '°/seg', '—'));
+      rows.push(row('Rango angular rodilla', gm.rangoRod, '°', '0–145°'));
+      rows.push(row('Rango angular cadera',  gm.rangoCad, '°', '0–120°'));
+      rows.push(row('Fase de apoyo estimada',    gm.pctApoyo+'%',  '%', '~60%'));
+      rows.push(row('Fase de balanceo estimada', gm.pctBal+'%',    '%', '~40%'));
+      rows.push(row('Simetría rodilla L/D',  gm.simRod!=null?gm.simRod+'%':'—', '%', '≥90% simétrico'));
+      rows.push(row('Simetría cadera L/D',   gm.simCad!=null?gm.simCad+'%':'—', '%', '≥90% simétrico'));
+      rows.push(row('Simetría tobillo L/D',  gm.simTob!=null?gm.simTob+'%':'—', '%', '≥90% simétrico'));
+      rows.push('', row('## RANGOS POR FASE DE MARCHA'));
+      rows.push(row('Articulación','Fase','Mín (°)','Máx (°)','Promedio (°)','Referencia'));
+      const fases=gm.fases;
+      const frow=(lbl,f,ref)=>f&&f.min!=null?rows.push(row(lbl,'',f.min,f.max,f.avg,ref)):rows.push(row(lbl,'','—','—','—',ref));
+      rows.push(row('Rodilla izquierda','Apoyo',fases.rodL_apoyo?.min??'—',fases.rodL_apoyo?.max??'—',fases.rodL_apoyo?.avg??'—','0–145°'));
+      rows.push(row('Rodilla izquierda','Balanceo',fases.rodL_bal?.min??'—',fases.rodL_bal?.max??'—',fases.rodL_bal?.avg??'—','0–145°'));
+      rows.push(row('Rodilla derecha',  'Apoyo',fases.rodR_apoyo?.min??'—',fases.rodR_apoyo?.max??'—',fases.rodR_apoyo?.avg??'—','0–145°'));
+      rows.push(row('Rodilla derecha',  'Balanceo',fases.rodR_bal?.min??'—',fases.rodR_bal?.max??'—',fases.rodR_bal?.avg??'—','0–145°'));
+      rows.push(row('Cadera izquierda', 'Apoyo',fases.cadL_apoyo?.min??'—',fases.cadL_apoyo?.max??'—',fases.cadL_apoyo?.avg??'—','0–120°'));
+      rows.push(row('Cadera izquierda', 'Balanceo',fases.cadL_bal?.min??'—',fases.cadL_bal?.max??'—',fases.cadL_bal?.avg??'—','0–120°'));
+      rows.push(row('Tobillo izquierdo','Apoyo',fases.tobL_apoyo?.min??'—',fases.tobL_apoyo?.max??'—',fases.tobL_apoyo?.avg??'—','85–110°'));
+      rows.push(row('Tobillo izquierdo','Balanceo',fases.tobL_bal?.min??'—',fases.tobL_bal?.max??'—',fases.tobL_bal?.avg??'—','85–110°'));
+
+      // Serie temporal para goniograma en Excel
+      rows.push('', row('## SERIE TEMPORAL (goniograma)'));
+      rows.push(row('Tiempo (s)','Rodilla Izq (°)','Rodilla Der (°)','Cadera Izq (°)','Cadera Der (°)','Tobillo Izq (°)','Tobillo Der (°)','Tronco (°)','Fase Izq','Fase Der'));
+      gm.series.t.forEach((_,i)=>{
+        rows.push(row(
+          gm.series.t[i].toFixed(2),
+          gm.series.rodL[i]??'', gm.series.rodR[i]??'',
+          gm.series.cadL[i]??'', gm.series.cadR[i]??'',
+          gm.series.tobL[i]??'', gm.series.tobR[i]??'',
+          gm.series.trunk[i]??'',
+          gm.series.faseL[i]??'', gm.series.faseR[i]??''
+        ));
+      });
+    }
+  }
+
+  // ── Calibración ──────────────────────────────────────────────────────────
+  if(heightCm){
+    rows.push('', row('## CALIBRACIÓN'));
+    rows.push(row('Campo','Valor'));
+    rows.push(row('Altura paciente (cm)', heightCm));
+    rows.push(row('px/cm pose', pxPerCm?pxPerCm.toFixed(2):'sin calibrar'));
+    rows.push(row('px/cm mano (objeto)', handPxPerCm?handPxPerCm.toFixed(2):'sin calibrar'));
+    rows.push(row('Objeto referencia mano', handRefCm?handRefCm+' cm':'no usado'));
+  }
+
+  // ── Condición de evaluación ───────────────────────────────────────────────
+  rows.push('', row('## CONDICIÓN DE EVALUACIÓN'));
+  rows.push(row('Campo','Valor'));
   if(aditMode){
     const desc=document.getElementById('adit-desc').value||'No especificado';
-    rows.push('','## CONDICIÓN DE EVALUACIÓN',`Tipo,Con aditamento / ayuda técnica`,`Descripción aditamento,${desc}`,`Análisis parcial activo,${partialMode?'Sí':'No'}`);
+    rows.push(row('Tipo','Con aditamento / ayuda técnica'));
+    rows.push(row('Descripción aditamento', desc));
+    rows.push(row('Análisis parcial activo', partialMode?'Sí':'No'));
   } else {
-    rows.push('','## CONDICIÓN DE EVALUACIÓN','Tipo,Sin aditamento (evaluación base)');
+    rows.push(row('Tipo','Sin aditamento (evaluación base)'));
   }
-  if(lastPoseConf!=null) rows.push('','## CONFIANZA DE DETECCIÓN',`Pose (%),${Math.round(lastPoseConf*100)}`);
-  if(lastHandConf!=null) rows.push(`Mano (%),${Math.round(lastHandConf*100)}`);
-  rows.push(`Corrección espejo,${mirrorCorrection?'Activa (foto frontal)':'Inactiva'}`)
 
+  // ── Confianza ─────────────────────────────────────────────────────────────
+  rows.push('', row('## CONFIANZA DE DETECCIÓN'));
+  rows.push(row('Sensor','Confianza (%)'));
+  if(lastPoseConf!=null) rows.push(row('Pose', Math.round(lastPoseConf*100)));
+  if(lastHandConf!=null) rows.push(row('Mano', Math.round(lastHandConf*100)));
+  rows.push(row('Corrección espejo', mirrorCorrection?'Activa (foto frontal)':'Inactiva'));
+
+  const blob=new Blob([rows.join('\r\n')],{type:'text/csv;charset=utf-8'});
   const a=document.createElement('a');
-  a.href=URL.createObjectURL(new Blob([rows.join('\n')],{type:'text/csv;charset=utf-8'}));
+  a.href=URL.createObjectURL(blob);
   a.download=`analisis_biomecánico_${ts.slice(0,10)}_UNAL.csv`;
   a.click();
 }
