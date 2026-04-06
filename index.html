@@ -6,343 +6,544 @@
 <meta name="author" content="Karen Vanessa Paredes Castro">
 <meta name="description" content="Analizador postural y de mano con MediaPipe para Terapia Ocupacional. Universidad Nacional de Colombia.">
 <title>Analizador Postural · TO — Karen Paredes · UNAL</title>
-<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
-:root{
-  --bg:#080a0c;--sur:#0f1114;--sur2:#161a1e;--sur3:#1d2127;--brd:#252930;
-  --acc:#4ade80;--acc2:#60a5fa;--acc3:#f59e0b;--acc4:#f87171;--acc5:#c084fc;
-  --text:#dde1ea;--text2:#7c8194;--text3:#454959;
-  --mono:'DM Mono',monospace;--sans:'DM Sans',sans-serif;
-  --r:8px;--panel:340px;
-}
-*{box-sizing:border-box;margin:0;padding:0;}
-body{background:var(--bg);color:var(--text);font-family:var(--sans);min-height:100vh;overflow-x:hidden;}
+/* ══════════════════════════════════════════════════════════════════════
+   ANALIZADOR POSTURAL · TO — Karen Paredes · UNAL 2026
+   Design system inspired by Complete Anatomy, Visible Body, Epic Hyperdrive
+   Palette: deep navy slate · teal accent · warm data colors
+══════════════════════════════════════════════════════════════════════ */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
 
-/* ── HEADER ─────────────────────────────────────────────────────────────── */
+:root{
+  /* Surfaces — deep navy, not pure black */
+  --bg:    #0c0e14;
+  --sur:   #12151f;
+  --sur2:  #181c27;
+  --sur3:  #1e2230;
+  --brd:   #252b3b;
+  --brd2:  #2e3549;
+
+  /* Brand — clinical teal */
+  --teal:  #2dd4bf;
+  --teal2: #14b8a6;
+  --blue:  #60a5fa;
+  --blue2: #3b82f6;
+
+  /* Semantic data colors */
+  --ok:    #34d399;  /* in-range */
+  --warn:  #fb923c;  /* marginal */
+  --alert: #f87171;  /* out-of-range */
+  --info:  #a78bfa;  /* neutral info */
+  --gold:  #fbbf24;  /* gait / marcha */
+
+  /* Text */
+  --text:  #e2e8f0;
+  --text2: #64748b;
+  --text3: #374151;
+
+  /* Legacy aliases for existing JS references */
+  --acc:   var(--ok);
+  --acc2:  var(--blue);
+  --acc3:  var(--gold);
+  --acc4:  var(--alert);
+  --acc5:  var(--info);
+  --acc6:  var(--teal);
+
+  --sans:  'Inter', system-ui, sans-serif;
+  --mono:  'JetBrains Mono', 'DM Mono', monospace;
+  --panel: 310px;
+  --radius: 10px;
+  --radius-sm: 6px;
+}
+
+*{box-sizing:border-box;margin:0;padding:0;}
+html{font-size:14px;}
+body{
+  background:var(--bg);color:var(--text);font-family:var(--sans);
+  min-height:100vh;overflow-x:hidden;
+  -webkit-font-smoothing:antialiased;
+}
+
+/* ── HEADER ─────────────────────────────────────────────────────────── */
 header{
   display:flex;align-items:center;justify-content:space-between;
-  padding:0 24px;height:52px;
-  border-bottom:1px solid var(--brd);background:var(--sur);
+  padding:0 18px;height:50px;
+  border-bottom:1px solid var(--brd);
+  background:rgba(18,21,31,.95);
+  backdrop-filter:blur(10px);
   position:sticky;top:0;z-index:100;
 }
 .logo{display:flex;align-items:center;gap:10px;}
 .logo-mark{
-  width:28px;height:28px;border-radius:6px;flex-shrink:0;
-  background:linear-gradient(135deg,var(--acc) 0%,var(--acc2) 100%);
+  width:28px;height:28px;border-radius:7px;flex-shrink:0;
+  background:linear-gradient(135deg,var(--teal),var(--blue2));
   display:flex;align-items:center;justify-content:center;font-size:14px;
+  box-shadow:0 0 16px rgba(45,212,191,.25);
 }
-.logo-text{font-size:13px;font-weight:600;letter-spacing:-.2px;}
+.logo-text{font-size:13px;font-weight:600;color:var(--text);letter-spacing:-.2px;}
 .logo-sub{font-size:10px;color:var(--text3);font-family:var(--mono);margin-top:1px;}
 .hdr-r{display:flex;align-items:center;gap:8px;}
 .author-chip{
-  display:flex;align-items:center;gap:6px;
+  display:flex;align-items:center;gap:5px;
   background:var(--sur2);border:1px solid var(--brd);border-radius:20px;
-  padding:3px 10px 3px 5px;
+  padding:3px 10px 3px 4px;
 }
 .av{
-  width:19px;height:19px;border-radius:50%;flex-shrink:0;
-  background:linear-gradient(135deg,#4f46e5,#0ea5e9);
+  width:18px;height:18px;border-radius:50%;flex-shrink:0;
+  background:linear-gradient(135deg,#7c3aed,#0ea5e9);
   display:flex;align-items:center;justify-content:center;
-  font-size:8px;font-weight:700;color:#fff;
+  font-size:7px;font-weight:700;color:#fff;
 }
 .author-name{font-size:10px;color:var(--text2);}
 .badge-h{
-  font-family:var(--mono);font-size:10px;color:var(--acc);
-  border:1px solid rgba(74,222,128,.3);border-radius:4px;padding:2px 7px;
+  font-family:var(--mono);font-size:9px;color:var(--teal);
+  border:1px solid rgba(45,212,191,.3);border-radius:4px;padding:2px 6px;
 }
 
-/* ── HERO ────────────────────────────────────────────────────────────────── */
+/* ── HERO ────────────────────────────────────────────────────────────── */
 #hero{
-  background:var(--sur);border-bottom:1px solid var(--brd);
-  padding:12px 24px;display:flex;align-items:flex-start;
-  justify-content:space-between;gap:16px;
+  background:linear-gradient(180deg,rgba(20,184,166,.04) 0%,transparent 100%);
+  border-bottom:1px solid var(--brd);
+  padding:14px 18px;display:flex;align-items:flex-start;
+  justify-content:space-between;gap:14px;
 }
 .hero-l{flex:1;}
-.hero-title{font-size:16px;font-weight:600;margin-bottom:3px;}
-.hero-title span{color:var(--acc);}
-.hero-desc{font-size:11.5px;color:var(--text2);line-height:1.6;max-width:480px;}
+.hero-title{font-size:16px;font-weight:700;margin-bottom:3px;letter-spacing:-.3px;}
+.hero-title span{
+  background:linear-gradient(90deg,var(--teal),var(--blue));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+}
+.hero-desc{font-size:12px;color:var(--text2);line-height:1.6;max-width:460px;}
 .hero-tags{display:flex;gap:4px;flex-wrap:wrap;margin-top:6px;}
-.tag{font-family:var(--mono);font-size:9px;background:var(--sur2);border:1px solid var(--brd);border-radius:3px;padding:2px 6px;color:var(--text3);}
-.tag.g{border-color:rgba(74,222,128,.35);color:var(--acc);}
-.tag.b{border-color:rgba(96,165,250,.35);color:var(--acc2);}
-.tag.p{border-color:rgba(192,132,252,.35);color:var(--acc5);}
-.tag.o{border-color:rgba(245,158,11,.35);color:var(--acc3);}
+.tag{font-size:9px;background:var(--sur2);border:1px solid var(--brd);border-radius:4px;padding:2px 6px;color:var(--text2);font-family:var(--mono);}
+.tag.g{border-color:rgba(52,211,153,.3);color:var(--ok);background:rgba(52,211,153,.06);}
+.tag.b{border-color:rgba(96,165,250,.3);color:var(--blue);background:rgba(96,165,250,.06);}
+.tag.p{border-color:rgba(167,139,250,.3);color:var(--info);background:rgba(167,139,250,.06);}
+.tag.o{border-color:rgba(251,191,36,.3);color:var(--gold);background:rgba(251,191,36,.06);}
 .author-card{
-  background:var(--sur2);border:1px solid var(--brd);border-radius:10px;
-  padding:10px 12px;min-width:185px;flex-shrink:0;
+  background:var(--sur2);border:1px solid var(--brd);border-radius:var(--radius);
+  padding:10px 12px;min-width:178px;flex-shrink:0;
 }
 .ac-top{display:flex;align-items:center;gap:8px;margin-bottom:7px;}
 .ac-av{
   width:32px;height:32px;border-radius:50%;flex-shrink:0;
-  background:linear-gradient(135deg,#4f46e5,#0ea5e9);
+  background:linear-gradient(135deg,#7c3aed,#0ea5e9);
   display:flex;align-items:center;justify-content:center;
-  font-size:11px;font-weight:700;color:#fff;border:2px solid var(--brd);
+  font-size:11px;font-weight:700;color:#fff;
+  box-shadow:0 0 0 2px var(--sur2),0 0 0 3px var(--brd);
 }
-.ac-name{font-size:11px;font-weight:600;line-height:1.3;}
-.ac-role{font-size:10px;color:var(--acc2);margin-top:1px;}
+.ac-name{font-size:11px;font-weight:600;line-height:1.3;color:var(--text);}
+.ac-role{font-size:10px;color:var(--teal);margin-top:1px;}
 .ac-div{height:1px;background:var(--brd);margin:6px 0;}
 .ac-inst{display:flex;align-items:center;gap:5px;font-size:10px;color:var(--text2);}
-.ac-dot{width:4px;height:4px;border-radius:50%;background:var(--acc);flex-shrink:0;}
+.ac-dot{width:4px;height:4px;border-radius:50%;background:var(--teal);flex-shrink:0;}
 .ac-year{font-family:var(--mono);font-size:9px;color:var(--text3);margin-top:3px;}
-.hero-close{background:none;border:none;color:var(--text3);cursor:pointer;font-size:14px;padding:2px;align-self:flex-start;transition:color .2s;}
-.hero-close:hover{color:var(--text);}
-
-/* ── MODE BAR ────────────────────────────────────────────────────────────── */
-.mode-bar{
-  display:flex;align-items:center;flex-wrap:wrap;gap:6px;
-  background:var(--sur);border-bottom:1px solid var(--brd);padding:7px 24px;
+.hero-close{
+  background:none;border:none;color:var(--text3);cursor:pointer;
+  font-size:14px;padding:3px;align-self:flex-start;transition:color .15s;
+  border-radius:4px;
 }
-.mode-lbl{font-family:var(--mono);font-size:10px;color:var(--text3);letter-spacing:.7px;margin-right:2px;}
-.mode-btn{
-  padding:5px 14px;font-family:var(--mono);font-size:11px;cursor:pointer;
-  border:1px solid var(--brd);background:var(--sur2);color:var(--text2);
-  transition:all .15s;letter-spacing:.3px;border-radius:0;
-}
-.mode-btn:first-of-type{border-radius:6px 0 0 6px;}
-.mode-btn:nth-of-type(2){border-left:none;}
-.mode-btn:nth-of-type(3){border-left:none;border-radius:0 6px 6px 0;}
-.mode-btn.am{background:rgba(74,222,128,.08);border-color:rgba(74,222,128,.5);color:var(--acc);}
-.mode-btn.bm{background:rgba(192,132,252,.08);border-color:rgba(192,132,252,.5);color:var(--acc5);}
-.mode-btn.cm{background:rgba(96,165,250,.08);border-color:rgba(96,165,250,.5);color:var(--acc2);}
-.view-sub{display:flex;gap:0;margin-left:8px;}
-.view-btn{padding:5px 11px;font-family:var(--mono);font-size:10px;cursor:pointer;border:1px solid var(--brd);background:var(--sur2);color:var(--text3);transition:all .15s;}
-.view-btn:first-child{border-radius:5px 0 0 5px;}
-.view-btn:last-child{border-radius:0 5px 5px 0;border-left:none;}
-.view-btn.vf{background:rgba(74,222,128,.07);border-color:rgba(74,222,128,.45);color:var(--acc);}
-.view-btn.vs{background:rgba(96,165,250,.07);border-color:rgba(96,165,250,.45);color:var(--acc2);}
-.hand-sub{display:flex;gap:0;margin-left:8px;}
-.hand-btn{padding:5px 11px;font-family:var(--mono);font-size:10px;cursor:pointer;border:1px solid var(--brd);background:var(--sur2);color:var(--text3);transition:all .15s;}
-.hand-btn:first-child{border-radius:5px 0 0 5px;}
-.hand-btn:last-child{border-radius:0 5px 5px 0;border-left:none;}
-.hand-btn.hb{background:rgba(192,132,252,.07);border-color:rgba(192,132,252,.45);color:var(--acc5);}
-.mode-desc{font-size:11px;color:var(--text3);font-style:italic;margin-left:8px;}
+.hero-close:hover{color:var(--text);background:var(--sur3);}
 
-/* ── APP LAYOUT ─────────────────────────────────────────────────────────── */
-.app{display:grid;grid-template-columns:var(--panel) 1fr;min-height:calc(100vh - 52px);}
+/* ── APP LAYOUT ─────────────────────────────────────────────────────── */
+.app{display:grid;grid-template-columns:var(--panel) 1fr;min-height:calc(100vh - 50px);}
 
-/* ── LEFT PANEL ─────────────────────────────────────────────────────────── */
+/* ── LEFT PANEL ─────────────────────────────────────────────────────── */
 .panel-l{
   border-right:1px solid var(--brd);background:var(--sur);
   display:flex;flex-direction:column;overflow-y:auto;
 }
 
-/* Zone dividers */
-.zone-header{
-  padding:10px 16px 8px;
-  display:flex;align-items:center;gap:8px;
-  border-bottom:1px solid var(--brd);
-  background:var(--sur2);
-  position:sticky;top:0;z-index:5;
+/* Mode cards */
+.mode-selector{padding:14px 12px 12px;border-bottom:1px solid var(--brd);}
+.mode-selector-lbl{
+  font-size:10px;font-weight:600;color:var(--text3);
+  letter-spacing:.5px;text-transform:uppercase;margin-bottom:9px;
 }
-.zone-label{
-  font-family:var(--mono);font-size:9px;color:var(--text3);
-  letter-spacing:1.2px;text-transform:uppercase;
-  display:flex;align-items:center;gap:6px;flex:1;
+.mode-cards{display:grid;grid-template-columns:1fr 1fr;gap:6px;}
+.mcard{
+  padding:10px 10px 9px;border-radius:var(--radius);
+  border:1.5px solid var(--brd);background:var(--sur2);
+  cursor:pointer;transition:all .15s;display:flex;flex-direction:column;gap:4px;
+  position:relative;overflow:hidden;
 }
-.zone-label::before{content:'';width:14px;height:1px;background:var(--brd);}
-.zone-num{
-  font-family:var(--mono);font-size:9px;
-  color:var(--text3);background:var(--sur3);
-  border:1px solid var(--brd);border-radius:3px;
-  padding:1px 5px;
+.mcard::before{
+  content:'';position:absolute;inset:0;opacity:0;transition:opacity .15s;
+  background:linear-gradient(135deg,rgba(45,212,191,.06),transparent);
+}
+.mcard:hover{border-color:var(--brd2);background:var(--sur3);}
+.mcard.active-pose   {border-color:rgba(52,211,153,.45);  background:rgba(52,211,153,.07);}
+.mcard.active-sagital{border-color:rgba(96,165,250,.45);  background:rgba(96,165,250,.07);}
+.mcard.active-gait   {border-color:rgba(251,191,36,.45);  background:rgba(251,191,36,.07);}
+.mcard.active-hand   {border-color:rgba(167,139,250,.45); background:rgba(167,139,250,.07);}
+.mcard-icon{font-size:18px;line-height:1;margin-bottom:1px;}
+.mcard-name{font-size:11.5px;font-weight:600;color:var(--text);line-height:1.2;}
+.mcard-desc{font-size:9px;color:var(--text2);line-height:1.4;font-family:var(--mono);}
+.mcard.active-pose    .mcard-name{color:var(--ok);}
+.mcard.active-sagital .mcard-name{color:var(--blue);}
+.mcard.active-gait    .mcard-name{color:var(--gold);}
+.mcard.active-hand    .mcard-name{color:var(--info);}
+
+/* Active dot indicator on card */
+.mcard.active-pose::after,.mcard.active-sagital::after,
+.mcard.active-gait::after,.mcard.active-hand::after{
+  content:'';position:absolute;top:8px;right:8px;
+  width:6px;height:6px;border-radius:50%;
+}
+.mcard.active-pose::after   {background:var(--ok);}
+.mcard.active-sagital::after{background:var(--blue);}
+.mcard.active-gait::after   {background:var(--gold);}
+.mcard.active-hand::after   {background:var(--info);}
+
+/* Hand selector */
+.hand-selector{display:flex;gap:3px;margin-top:8px;}
+.hsel-btn{
+  flex:1;padding:5px 4px;font-family:var(--mono);font-size:9px;cursor:pointer;
+  border:1.5px solid var(--brd);background:var(--sur3);color:var(--text2);
+  transition:all .15s;border-radius:var(--radius-sm);text-align:center;font-weight:500;
+}
+.hsel-btn:hover{border-color:var(--brd2);color:var(--text);}
+.hsel-btn.active{
+  background:rgba(167,139,250,.1);border-color:rgba(167,139,250,.5);
+  color:var(--info);font-weight:600;
 }
 
-.sec{padding:12px 16px;border-bottom:1px solid var(--brd);}
+/* Mirror row */
+.mirror-row{
+  display:flex;align-items:center;gap:7px;margin-top:7px;
+  padding:7px 9px;background:var(--sur3);border-radius:var(--radius-sm);
+  border:1px solid var(--brd);
+}
+.mirror-row-lbl{font-size:10px;color:var(--text2);flex:1;font-weight:500;}
+.mirror-badge{font-family:var(--mono);font-size:9px;color:var(--gold);}
+
+/* Gait note */
+.gait-info-banner{
+  background:rgba(251,191,36,.05);border:1px solid rgba(251,191,36,.2);
+  border-radius:var(--radius-sm);padding:8px 10px;margin-top:8px;
+  font-size:10.5px;color:var(--gold);line-height:1.55;
+}
+.gait-info-banner strong{color:var(--gold);}
+
+/* Sections */
+.sec{padding:12px 12px 11px;border-bottom:1px solid var(--brd);}
 .sec-lbl{
-  font-family:var(--mono);font-size:9px;color:var(--text3);
-  letter-spacing:.9px;text-transform:uppercase;margin-bottom:8px;
-  display:flex;align-items:center;gap:5px;
+  font-size:10px;font-weight:600;color:var(--text2);
+  letter-spacing:.3px;text-transform:uppercase;margin-bottom:8px;
+  display:flex;align-items:center;gap:7px;
 }
-.sec-lbl::before{content:'//';color:var(--brd);font-size:9px;}
+.sec-lbl::before{
+  content:'';width:3px;height:12px;border-radius:2px;
+  background:linear-gradient(180deg,var(--teal),var(--blue));
+  flex-shrink:0;
+}
 
-/* ── Calibration ─────────────────────────────────────────────────────────── */
+/* Calibration */
 .calib-row{display:flex;align-items:center;gap:7px;margin-bottom:5px;}
 .calib-input{
-  flex:1;background:var(--sur3);border:1px solid var(--brd);border-radius:6px;
-  padding:7px 9px;color:var(--text);font-family:var(--mono);font-size:13px;
-  outline:none;transition:border-color .15s;
+  flex:1;background:var(--sur3);border:1.5px solid var(--brd);border-radius:var(--radius-sm);
+  padding:7px 10px;color:var(--text);font-family:var(--mono);font-size:13px;
+  outline:none;transition:border-color .15s,box-shadow .15s;
 }
-.calib-input:focus{border-color:var(--acc2);}
-.calib-unit{font-family:var(--mono);font-size:12px;color:var(--text3);}
-.calib-st{font-size:11px;color:var(--text3);font-family:var(--mono);}
-.calib-st.ok{color:var(--acc);}
+.calib-input:focus{
+  border-color:var(--teal);
+  box-shadow:0 0 0 3px rgba(45,212,191,.1);
+}
+.calib-unit{font-family:var(--mono);font-size:11px;color:var(--text2);font-weight:500;}
+.calib-st{font-size:10px;color:var(--text3);font-family:var(--mono);}
+.calib-st.ok{color:var(--ok);}
 
-/* ── Upload ──────────────────────────────────────────────────────────────── */
+/* Upload */
 .upload-area{
-  border:1.5px dashed var(--brd);border-radius:10px;
-  padding:16px 14px;text-align:center;cursor:pointer;
+  border:2px dashed var(--brd);border-radius:var(--radius);
+  padding:16px 12px;text-align:center;cursor:pointer;
   transition:all .2s;background:var(--sur2);
 }
-.upload-area:hover,.upload-area.drag{border-color:var(--acc);background:rgba(74,222,128,.03);}
-.upload-icon{font-size:18px;margin-bottom:4px;}
-.upload-title{font-size:12px;font-weight:500;margin-bottom:2px;}
-.upload-sub{font-size:11px;color:var(--text2);}
-.upload-types{display:flex;gap:4px;justify-content:center;margin-top:6px;flex-wrap:wrap;}
-.tb{font-family:var(--mono);font-size:10px;background:var(--sur);border:1px solid var(--brd);border-radius:3px;padding:1px 5px;color:var(--text2);}
-#fi{display:none;}
-.sbar{display:none;align-items:center;gap:7px;padding:7px 10px;border-radius:7px;font-size:11px;margin-top:7px;background:var(--sur2);border:1px solid var(--brd);}
-.sdot{width:6px;height:6px;border-radius:50%;flex-shrink:0;}
-.sdot.loading{background:var(--acc3);animation:pulse 1s infinite;}
-.sdot.done{background:var(--acc);}
-.sdot.error{background:var(--acc4);}
-@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
-
-/* ── Toggles & controls ─────────────────────────────────────────────────── */
-.ctrl{display:flex;align-items:center;justify-content:space-between;margin-bottom:7px;}
-.ctrl-lbl{font-size:12px;color:var(--text2);}
-.tog{
-  position:relative;width:28px;height:15px;background:var(--brd);
-  border-radius:8px;cursor:pointer;transition:background .2s;flex-shrink:0;
+.upload-area:hover,.upload-area.drag{
+  border-color:var(--teal);background:rgba(45,212,191,.04);
+  box-shadow:0 0 20px rgba(45,212,191,.05);
 }
-.tog.on{background:var(--acc);}
-.tog::after{content:'';position:absolute;top:2px;left:2px;width:11px;height:11px;border-radius:50%;background:#fff;transition:transform .2s;}
+.upload-icon{font-size:22px;margin-bottom:6px;}
+.upload-title{font-size:12px;font-weight:600;color:var(--text);margin-bottom:2px;}
+.upload-sub{font-size:10px;color:var(--text2);}
+.upload-types{display:flex;gap:4px;justify-content:center;margin-top:7px;flex-wrap:wrap;}
+.tb{
+  font-family:var(--mono);font-size:9px;
+  background:var(--sur3);border:1px solid var(--brd);
+  border-radius:3px;padding:2px 6px;color:var(--text2);
+}
+#fi{display:none;}
+.sbar{
+  display:none;align-items:center;gap:7px;padding:7px 10px;
+  border-radius:var(--radius-sm);font-size:10px;margin-top:7px;
+  background:var(--sur2);border:1px solid var(--brd);
+}
+.sdot{width:7px;height:7px;border-radius:50%;flex-shrink:0;}
+.sdot.loading{background:var(--gold);animation:pulse 1s infinite;}
+.sdot.done{background:var(--ok);}
+.sdot.error{background:var(--alert);}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.25}}
+
+/* Alert */
+.alert-box{display:none;padding:8px 10px;border-radius:var(--radius-sm);font-size:10px;margin-top:7px;border:1px solid;}
+.alert-box.warn{background:rgba(251,191,36,.06);border-color:rgba(251,191,36,.25);color:var(--gold);}
+.alert-box.vis{display:block;}
+
+/* Toggles */
+.ctrl{display:flex;align-items:center;justify-content:space-between;margin-bottom:7px;}
+.ctrl:last-child{margin-bottom:0;}
+.ctrl-lbl{font-size:11px;color:var(--text2);font-weight:500;}
+.tog{
+  position:relative;width:28px;height:15px;
+  background:var(--brd2);border-radius:10px;
+  cursor:pointer;transition:background .2s;flex-shrink:0;
+}
+.tog.on{background:var(--teal2);}
+.tog::after{
+  content:'';position:absolute;top:2px;left:2px;
+  width:11px;height:11px;border-radius:50%;background:#fff;
+  transition:transform .2s;box-shadow:0 1px 3px rgba(0,0,0,.3);
+}
 .tog.on::after{transform:translateX(13px);}
 
-/* Confidence indicator */
-.conf-bar{height:3px;border-radius:2px;background:var(--brd);margin-top:5px;overflow:hidden;}
-.conf-fill{height:100%;border-radius:2px;transition:width .5s;}
-
-/* ── Result Tabs ─────────────────────────────────────────────────────────── */
-.tab-bar{display:flex;border-bottom:1px solid var(--brd);margin-bottom:10px;}
-.tab{
-  padding:6px 12px;font-family:var(--mono);font-size:10px;cursor:pointer;
-  color:var(--text3);border-bottom:2px solid transparent;transition:all .15s;letter-spacing:.4px;
+/* Buttons */
+.btn{
+  width:100%;padding:8px 12px;border-radius:var(--radius-sm);
+  border:1.5px solid rgba(45,212,191,.4);
+  background:rgba(45,212,191,.06);color:var(--teal);
+  font-family:var(--mono);font-size:10px;font-weight:500;
+  cursor:pointer;transition:all .15s;margin-top:5px;
 }
-.tab.active-g{color:var(--acc);border-bottom-color:var(--acc);}
-.tab.active-p{color:var(--acc5);border-bottom-color:var(--acc5);}
-.tab.active-b{color:var(--acc2);border-bottom-color:var(--acc2);}
-.tab-content{display:none;}
-.tab-content.show{display:block;}
+.btn:hover{background:rgba(45,212,191,.12);border-color:rgba(45,212,191,.6);}
+.btn:disabled{opacity:.3;cursor:not-allowed;}
+.btn.b2{border-color:rgba(96,165,250,.4);color:var(--blue);background:rgba(96,165,250,.05);}
+.btn.b2:hover{background:rgba(96,165,250,.11);border-color:rgba(96,165,250,.6);}
+.btn.b3{border-color:rgba(167,139,250,.4);color:var(--info);background:rgba(167,139,250,.05);}
+.btn.b3:hover{background:rgba(167,139,250,.11);}
+.btn.b4{border-color:rgba(251,191,36,.4);color:var(--gold);background:rgba(251,191,36,.05);}
+.btn.b4:hover{background:rgba(251,191,36,.11);}
+.export-grid{display:grid;grid-template-columns:1fr 1fr;gap:4px;}
+.export-grid .btn{margin-top:0;font-size:9px;padding:6px 5px;}
+.export-grid .btn.full{grid-column:1/-1;}
 
-/* ── Angle table ─────────────────────────────────────────────────────────── */
+/* ── RESULTS TABS ────────────────────────────────────────────────────── */
+.rtab-bar{
+  display:flex;border-bottom:1px solid var(--brd);
+  background:var(--sur);
+}
+.rtab{
+  padding:9px 14px;font-family:var(--mono);font-size:10px;cursor:pointer;
+  color:var(--text3);border-bottom:2px solid transparent;
+  transition:all .15s;flex:1;text-align:center;font-weight:500;
+  letter-spacing:.3px;
+}
+.rtab:hover{color:var(--text2);background:rgba(255,255,255,.02);}
+.rtab.ractive-g{color:var(--ok);border-bottom-color:var(--ok);background:rgba(52,211,153,.04);}
+.rtab.ractive-b{color:var(--blue);border-bottom-color:var(--blue);background:rgba(96,165,250,.04);}
+.rtab.ractive-p{color:var(--info);border-bottom-color:var(--info);background:rgba(167,139,250,.04);}
+.rtab.ractive-o{color:var(--gold);border-bottom-color:var(--gold);background:rgba(251,191,36,.04);}
+.rtab-content{display:none;}
+.rtab-content.show{display:block;}
+
+/* Angle table */
 .atbl{width:100%;border-collapse:collapse;font-size:11px;}
-.atbl th{font-family:var(--mono);font-size:9px;color:var(--text3);letter-spacing:.6px;padding:0 0 5px;border-bottom:1px solid var(--brd);text-align:left;}
-.atbl td{padding:5px 0;border-bottom:1px solid rgba(37,41,48,.6);color:var(--text2);}
-.atbl td[title]{border-bottom-style:dashed;border-bottom-color:var(--acc2);opacity:.9;}
-.atbl td[title]:hover{opacity:1;background:rgba(96,165,250,.03);}
-.mov-label{font-size:9px;color:var(--acc2);font-family:var(--mono);display:block;margin-top:1px;letter-spacing:.2px;}
-.ref-range{font-family:var(--mono);font-size:9px;color:var(--text3);}
+.atbl th{
+  font-family:var(--mono);font-size:8.5px;color:var(--text3);
+  letter-spacing:.5px;padding:0 0 6px;border-bottom:1px solid var(--brd);
+  text-align:left;text-transform:uppercase;font-weight:500;
+}
+.atbl td{
+  padding:6px 0;border-bottom:1px solid rgba(37,43,59,.6);
+  color:var(--text2);font-size:11px;
+}
+.atbl td[title]{cursor:help;}
+.mov-label{
+  font-size:9px;color:var(--teal);font-family:var(--mono);
+  display:block;margin-top:1px;opacity:.8;
+}
+.ref-range{font-family:var(--mono);font-size:8px;color:var(--text3);}
 .pos-label{font-size:8px;color:var(--text3);font-family:var(--mono);display:block;margin-top:1px;}
-.adot{display:inline-block;width:5px;height:5px;border-radius:50%;margin-right:4px;vertical-align:middle;}
-.asym-badge{font-family:var(--mono);font-size:9px;padding:1px 5px;border-radius:3px;margin-left:4px;}
-.asym-ok{background:rgba(74,222,128,.12);color:var(--acc);}
-.asym-warn{background:rgba(245,158,11,.12);color:var(--acc3);}
-.asym-bad{background:rgba(248,113,113,.12);color:var(--acc4);}
+.adot{display:inline-block;width:5px;height:5px;border-radius:50%;margin-right:5px;vertical-align:middle;}
+.asym-badge{
+  font-family:var(--mono);font-size:8.5px;
+  padding:2px 5px;border-radius:4px;margin-left:3px;font-weight:600;
+}
+.asym-ok  {background:rgba(52,211,153,.12); color:var(--ok);}
+.asym-warn{background:rgba(251,191,36,.12); color:var(--gold);}
+.asym-bad {background:rgba(248,113,113,.12);color:var(--alert);}
 
-/* ── Metric grid ─────────────────────────────────────────────────────────── */
-.mgrid{display:grid;grid-template-columns:1fr 1fr;gap:5px;}
-.mc{background:var(--sur2);border:1px solid var(--brd);border-radius:7px;padding:8px 10px;}
+/* Metric cards */
+.mgrid{display:grid;grid-template-columns:1fr 1fr;gap:6px;}
+.mc{
+  background:var(--sur2);border:1px solid var(--brd);
+  border-radius:var(--radius);padding:9px 10px;
+}
 .mc.full{grid-column:1/-1;}
-.mn{font-size:9px;color:var(--text3);font-family:var(--mono);margin-bottom:2px;}
-.mv{font-size:16px;font-weight:600;font-family:var(--mono);color:var(--text);line-height:1;}
-.mv.g{color:var(--acc)}.mv.b{color:var(--acc2)}.mv.a{color:var(--acc3)}.mv.r{color:var(--acc4)}.mv.p{color:var(--acc5)}
-.mu{font-size:9px;color:var(--text3);margin-top:2px;}
+.mn{
+  font-size:9px;color:var(--text3);font-family:var(--mono);
+  margin-bottom:3px;text-transform:uppercase;letter-spacing:.4px;font-weight:500;
+}
+.mv{font-size:16px;font-weight:700;font-family:var(--mono);color:var(--text);line-height:1;}
+.mv.g{color:var(--ok)}
+.mv.b{color:var(--blue)}
+.mv.a{color:var(--gold)}
+.mv.r{color:var(--alert)}
+.mv.p{color:var(--info)}
+.mu{font-size:9px;color:var(--text3);margin-top:3px;}
 
 /* Symmetry bars */
 .sb{margin-bottom:8px;}
-.sl{font-size:10px;color:var(--text3);font-family:var(--mono);margin-bottom:3px;display:flex;justify-content:space-between;}
-.st{height:4px;background:var(--brd);border-radius:2px;position:relative;}
-.sf{height:100%;border-radius:2px;transition:width .5s;}
-.sc{position:absolute;top:-2px;left:50%;width:1px;height:8px;background:var(--text3);}
+.sl{
+  font-size:10px;color:var(--text2);font-family:var(--mono);
+  margin-bottom:4px;display:flex;justify-content:space-between;font-weight:500;
+}
+.st{height:5px;background:var(--sur3);border-radius:3px;position:relative;overflow:hidden;}
+.sf{height:100%;border-radius:3px;transition:width .5s;}
+.sc{position:absolute;top:-2px;left:50%;width:1px;height:9px;background:var(--brd2);}
 
-/* ── Hand panel ──────────────────────────────────────────────────────────── */
+/* Hand panel */
 .finger-section{margin-bottom:10px;}
-.finger-section-title{font-size:9px;color:var(--text3);font-family:var(--mono);letter-spacing:.5px;margin-bottom:5px;text-transform:uppercase;}
+.finger-section-title{
+  font-size:9px;color:var(--text2);font-family:var(--mono);
+  letter-spacing:.5px;margin-bottom:5px;text-transform:uppercase;font-weight:600;
+}
 .finger-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:4px;}
-.fc{background:var(--sur2);border:1px solid var(--brd);border-radius:7px;padding:6px 8px;}
-.fn{font-size:8px;color:var(--text3);font-family:var(--mono);margin-bottom:2px;}
-.fv{font-size:13px;font-weight:600;font-family:var(--mono);line-height:1;}
-.fu{font-size:8px;color:var(--text3);margin-top:1px;}
-.grasp-visual{display:flex;gap:10px;align-items:flex-start;margin-bottom:8px;}
-.grasp-icon-wrap{width:54px;height:54px;border-radius:8px;background:var(--sur2);border:1px solid var(--brd);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:28px;}
-.grasp-detail{flex:1;}
-.quality-bar{display:flex;gap:4px;margin-top:6px;}
-.qb{flex:1;height:4px;border-radius:2px;background:var(--brd);transition:background .4s;}
-.qb.on{background:var(--acc);}
-.qb.warn{background:var(--acc3);}
-.qb.bad{background:var(--acc4);}
+.fc{
+  background:var(--sur2);border:1px solid var(--brd);
+  border-radius:var(--radius-sm);padding:6px 8px;
+}
+.fn{font-size:7.5px;color:var(--text3);font-family:var(--mono);margin-bottom:2px;font-weight:500;}
+.fv{font-size:13px;font-weight:700;font-family:var(--mono);line-height:1;}
+.fu{font-size:7.5px;color:var(--text3);margin-top:2px;}
 
-/* ── Buttons ─────────────────────────────────────────────────────────────── */
-.btn{width:100%;padding:8px;border-radius:7px;border:1px solid var(--acc);background:rgba(74,222,128,.06);color:var(--acc);font-family:var(--mono);font-size:11px;cursor:pointer;transition:all .2s;margin-top:5px;}
-.btn:hover{background:rgba(74,222,128,.13);}
-.btn:disabled{opacity:.3;cursor:not-allowed;}
-.btn.b2{border-color:var(--acc2);color:var(--acc2);background:rgba(96,165,250,.04);}
-.btn.b2:hover{background:rgba(96,165,250,.11);}
-.btn.b3{border-color:var(--acc5);color:var(--acc5);background:rgba(192,132,252,.04);}
-.btn.b3:hover{background:rgba(192,132,252,.11);}
-.btn.b4{border-color:var(--acc3);color:var(--acc3);background:rgba(245,158,11,.04);}
-.btn.b4:hover{background:rgba(245,158,11,.11);}
-
-/* ── Export group ────────────────────────────────────────────────────────── */
-.export-grid{display:grid;grid-template-columns:1fr 1fr;gap:5px;}
-.export-grid .btn{margin-top:0;font-size:10px;padding:7px 6px;}
-.export-grid .btn.full{grid-column:1/-1;}
-
-/* ── Gait module ─────────────────────────────────────────────────────────── */
-.gait-metric{background:var(--sur2);border:1px solid var(--brd);border-radius:8px;padding:9px 11px;margin-bottom:6px;}
-.gait-metric-title{font-family:var(--mono);font-size:9px;color:var(--text3);letter-spacing:.6px;text-transform:uppercase;margin-bottom:4px;}
-.gait-metric-val{font-size:20px;font-weight:600;font-family:var(--mono);line-height:1;}
-.gait-metric-sub{font-size:10px;color:var(--text3);margin-top:2px;}
-.gait-phase-bar{display:flex;height:16px;border-radius:4px;overflow:hidden;margin:5px 0;}
-.gait-phase-seg{display:flex;align-items:center;justify-content:center;font-size:8px;font-family:var(--mono);color:#fff;font-weight:600;letter-spacing:.3px;transition:width .4s;}
+/* Gait metrics */
+.gait-metric{
+  background:var(--sur2);border:1px solid var(--brd);
+  border-radius:var(--radius);padding:9px 11px;margin-bottom:6px;
+}
+.gait-metric-title{
+  font-family:var(--mono);font-size:9px;color:var(--text2);
+  letter-spacing:.4px;text-transform:uppercase;margin-bottom:4px;font-weight:500;
+}
+.gait-metric-val{font-size:20px;font-weight:700;font-family:var(--mono);line-height:1;}
+.gait-metric-sub{font-size:9px;color:var(--text3);margin-top:3px;}
+.gait-phase-bar{display:flex;height:16px;border-radius:6px;overflow:hidden;margin:6px 0;}
+.gait-phase-seg{
+  display:flex;align-items:center;justify-content:center;
+  font-size:8px;font-family:var(--mono);color:#fff;
+  font-weight:700;letter-spacing:.3px;transition:width .4s;
+}
 .gait-sym-row{display:flex;align-items:center;gap:8px;margin-bottom:5px;}
-.gait-sym-lbl{font-size:10px;color:var(--text2);font-family:var(--mono);width:90px;flex-shrink:0;}
-.gait-sym-track{flex:1;height:6px;background:var(--brd);border-radius:3px;position:relative;}
+.gait-sym-lbl{font-size:10px;color:var(--text2);font-family:var(--mono);width:80px;flex-shrink:0;font-weight:500;}
+.gait-sym-track{flex:1;height:5px;background:var(--sur3);border-radius:3px;}
 .gait-sym-fill{height:100%;border-radius:3px;transition:width .4s;}
 .gait-sym-pct{font-size:10px;color:var(--text3);font-family:var(--mono);width:36px;text-align:right;flex-shrink:0;}
-#gonioWrap{background:var(--sur2);border:1px solid var(--brd);border-radius:9px;padding:10px;margin-top:6px;display:none;}
+#gonioWrap{
+  background:var(--sur2);border:1px solid var(--brd);
+  border-radius:var(--radius);padding:10px;margin-top:6px;display:none;
+}
 #gonioCanvas{width:100%;display:block;border-radius:5px;}
 .gonio-legend{display:flex;gap:10px;flex-wrap:wrap;margin-top:6px;}
-.gonio-legend-item{display:flex;align-items:center;gap:4px;font-size:10px;color:var(--text2);font-family:var(--mono);}
+.gonio-legend-item{display:flex;align-items:center;gap:4px;font-size:9.5px;color:var(--text2);font-family:var(--mono);}
 .gonio-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
-.sesion-tab-bar{display:flex;gap:0;margin-bottom:8px;}
-.sesion-btn{flex:1;padding:5px 8px;font-family:var(--mono);font-size:10px;cursor:pointer;border:1px solid var(--brd);background:var(--sur2);color:var(--text3);transition:all .2s;text-align:center;}
-.sesion-btn:first-child{border-radius:5px 0 0 5px;}
-.sesion-btn:last-child{border-radius:0 5px 5px 0;border-left:none;}
-.sesion-btn.active{background:rgba(245,158,11,.09);border-color:rgba(245,158,11,.4);color:var(--acc3);}
+.sesion-tab-bar{display:flex;gap:0;margin-bottom:10px;}
+.sesion-btn{
+  flex:1;padding:5px 7px;font-family:var(--mono);font-size:9.5px;cursor:pointer;
+  border:1px solid var(--brd);background:var(--sur2);color:var(--text3);
+  transition:all .15s;text-align:center;font-weight:500;
+}
+.sesion-btn:first-child{border-radius:var(--radius-sm) 0 0 var(--radius-sm);}
+.sesion-btn:last-child{border-radius:0 var(--radius-sm) var(--radius-sm) 0;border-left:none;}
+.sesion-btn:not(:first-child):not(:last-child){border-left:none;}
+.sesion-btn.active{
+  background:rgba(251,191,36,.08);border-color:rgba(251,191,36,.4);
+  color:var(--gold);font-weight:600;
+}
 
-/* Alert */
-.alert-box{display:none;padding:8px 10px;border-radius:7px;font-size:11px;margin-top:7px;border:1px solid;}
-.alert-box.warn{background:rgba(245,158,11,.07);border-color:rgba(245,158,11,.28);color:var(--acc3);}
-.alert-box.error-box{background:rgba(248,113,113,.07);border-color:rgba(248,113,113,.28);color:var(--acc4);}
-.alert-box.vis{display:block;}
+/* Section sublabel */
+.sub-lbl{
+  font-size:9px;color:var(--text3);font-family:var(--mono);
+  margin-bottom:7px;letter-spacing:.5px;text-transform:uppercase;font-weight:500;
+}
 
-/* ── Right panel ─────────────────────────────────────────────────────────── */
+/* Right panel */
 .panel-r{display:flex;flex-direction:column;background:var(--bg);overflow:hidden;}
-.cvwrap{flex:1;display:flex;align-items:center;justify-content:center;padding:16px;min-height:360px;position:relative;}
-#cv{border-radius:10px;max-width:100%;max-height:58vh;display:block;}
-.ph{display:flex;flex-direction:column;align-items:center;gap:9px;color:var(--text3);text-align:center;}
-.phg{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;width:52px;height:52px;opacity:.12;margin-bottom:4px;}
-.phg div{background:var(--brd);border-radius:2px;}
+.cvwrap{
+  flex:1;display:flex;align-items:center;justify-content:center;
+  padding:14px;min-height:360px;position:relative;
+}
+#cv{
+  border-radius:var(--radius);max-width:100%;max-height:56vh;
+  display:block;box-shadow:0 0 40px rgba(0,0,0,.4);
+}
+.ph{
+  display:flex;flex-direction:column;align-items:center;gap:12px;
+  color:var(--text3);text-align:center;
+}
+.ph-grid{
+  display:grid;grid-template-columns:repeat(3,1fr);gap:3px;
+  width:54px;height:54px;opacity:.08;
+}
+.ph-grid div{background:var(--brd2);border-radius:3px;}
+.ph-title{font-size:14px;font-weight:600;color:var(--text2);}
+.ph-sub{font-size:11px;color:var(--text3);}
 
 /* Confidence overlay */
-.conf-overlay{position:absolute;top:24px;right:24px;background:rgba(8,10,12,.88);border:1px solid var(--brd);border-radius:8px;padding:6px 10px;font-family:var(--mono);font-size:10px;display:none;gap:6px;flex-direction:column;}
+.conf-overlay{
+  position:absolute;top:20px;right:20px;
+  background:rgba(12,14,20,.92);border:1px solid var(--brd);
+  border-radius:var(--radius-sm);padding:6px 10px;
+  font-family:var(--mono);font-size:9.5px;
+  display:none;gap:5px;flex-direction:column;
+  backdrop-filter:blur(8px);
+}
 .conf-overlay.vis{display:flex;}
 .co-row{display:flex;align-items:center;gap:6px;}
 .co-dot{width:5px;height:5px;border-radius:50%;flex-shrink:0;}
 
 /* Video bar */
-.vbar{padding:10px 16px;border-top:1px solid var(--brd);background:var(--sur);display:none;flex-direction:column;gap:5px;}
+.vbar{
+  padding:10px 14px;border-top:1px solid var(--brd);
+  background:var(--sur);display:none;flex-direction:column;gap:6px;
+}
 .vbar.vis{display:flex;}
-#sk{width:100%;height:3px;appearance:none;background:var(--brd);border-radius:2px;cursor:pointer;outline:none;}
-#sk::-webkit-slider-thumb{appearance:none;width:10px;height:10px;border-radius:50%;background:var(--acc);cursor:pointer;}
+#sk{
+  width:100%;height:3px;appearance:none;
+  background:var(--brd2);border-radius:2px;cursor:pointer;outline:none;
+}
+#sk::-webkit-slider-thumb{
+  appearance:none;width:12px;height:12px;border-radius:50%;
+  background:var(--teal);cursor:pointer;
+  box-shadow:0 0 6px rgba(45,212,191,.4);
+}
 .vc{display:flex;align-items:center;gap:7px;}
-.vcb{background:none;border:1px solid var(--brd);color:var(--text2);border-radius:5px;padding:4px 9px;font-family:var(--mono);font-size:10px;cursor:pointer;transition:all .15s;}
-.vcb:hover{border-color:var(--acc2);color:var(--acc2);}
-.td{font-family:var(--mono);font-size:10px;color:var(--text3);margin-left:auto;}
+.vcb{
+  background:none;border:1px solid var(--brd);color:var(--text2);
+  border-radius:var(--radius-sm);padding:4px 10px;
+  font-family:var(--mono);font-size:9.5px;cursor:pointer;
+  transition:all .15s;font-weight:500;
+}
+.vcb:hover{border-color:var(--teal);color:var(--teal);}
+.td{font-family:var(--mono);font-size:9.5px;color:var(--text3);margin-left:auto;}
 
 /* Footer */
-footer{border-top:1px solid var(--brd);background:var(--sur);padding:9px 24px;display:flex;align-items:center;justify-content:space-between;font-size:11px;color:var(--text3);}
-.fdot{width:5px;height:5px;border-radius:50%;background:var(--acc);flex-shrink:0;margin-right:6px;}
+footer{
+  border-top:1px solid var(--brd);background:var(--sur);
+  padding:9px 18px;display:flex;align-items:center;
+  justify-content:space-between;font-size:10px;color:var(--text3);
+}
+.fdot{width:5px;height:5px;border-radius:50%;background:var(--teal);flex-shrink:0;margin-right:6px;}
 
 /* Scrollbar */
-::-webkit-scrollbar{width:3px;}
-::-webkit-scrollbar-thumb{background:var(--brd);border-radius:2px;}
+::-webkit-scrollbar{width:4px;}
+::-webkit-scrollbar-thumb{background:var(--brd2);border-radius:2px;}
+::-webkit-scrollbar-track{background:transparent;}
 
 /* Responsive */
-@media(max-width:860px){
+@media(max-width:900px){
   .app{grid-template-columns:1fr;}
-  .panel-l{border-right:none;border-bottom:1px solid var(--brd);max-height:55vh;}
+  .panel-l{border-right:none;border-bottom:1px solid var(--brd);max-height:58vh;}
   #hero{flex-direction:column;}
 }
 </style>
@@ -354,29 +555,26 @@ footer{border-top:1px solid var(--brd);background:var(--sur);padding:9px 24px;di
     <div class="logo-mark">🦴</div>
     <div>
       <div class="logo-text">Analizador Postural · TO</div>
-      <div class="logo-sub">MediaPipe Pose + Hands · Análisis biomecánico v6.0</div>
+      <div class="logo-sub">MediaPipe · UNAL · v6.0</div>
     </div>
   </div>
   <div class="hdr-r">
     <div class="author-chip"><div class="av">KP</div><span class="author-name">Karen Paredes · UNAL</span></div>
-    <div class="badge-h">v6.0 · 2026</div>
+    <div class="badge-h">v6.0</div>
   </div>
 </header>
 
 <div id="hero">
   <div class="hero-l">
     <div class="hero-title">Análisis postural y de mano <span>asistido por IA</span></div>
-    <div class="hero-desc">Herramienta para valoración de ayudas técnicas en Terapia Ocupacional. Analiza postura corporal, mano y combinado desde imágenes o videos con detección de confianza, clasificación avanzada de agarre y exportación clínica.</div>
+    <div class="hero-desc">Herramienta para valoración de ayudas técnicas en Terapia Ocupacional. Analiza postura corporal, marcha y mano desde imágenes o videos.</div>
     <div class="hero-tags">
-      <span class="tag g">Pose corporal</span>
+      <span class="tag g">Pose frontal</span>
+      <span class="tag b">Pose sagital</span>
+      <span class="tag o">Análisis de marcha</span>
       <span class="tag p">Análisis de mano</span>
-      <span class="tag b">Modo combinado</span>
-      <span class="tag">Vista frontal / sagital</span>
-      <span class="tag">Calibración en cm</span>
-      <span class="tag">Exportar CSV</span>
-      <span class="tag o">11 tipos de agarre (Manual TO)</span>
-      <span class="tag o">3 grupos: Fuerza · Mixto · Precisión</span>
-      <span class="tag o">Patrones integrales MMSS</span>
+      <span class="tag">Calibración cm</span>
+      <span class="tag o">11 tipos de agarre · Manual TO</span>
     </div>
   </div>
   <div class="author-card">
@@ -391,191 +589,207 @@ footer{border-top:1px solid var(--brd);background:var(--sur);padding:9px 24px;di
   <button class="hero-close" onclick="document.getElementById('hero').style.display='none'">✕</button>
 </div>
 
-<!-- MODE BAR -->
-<div class="mode-bar">
-  <span class="mode-lbl">MODO //</span>
-  <button class="mode-btn am" id="btn-pose" onclick="setMode('pose')">Pose corporal</button>
-  <button class="mode-btn" id="btn-hand" onclick="setMode('hand')">Análisis de mano</button>
-  <button class="mode-btn" id="btn-combo" onclick="setMode('combo')">Combinado</button>
-
-  <div class="view-sub" id="view-sub">
-    <button class="view-btn vf" id="btn-frontal" onclick="setView('frontal')">Frontal</button>
-    <button class="view-btn" id="btn-sagital" onclick="setView('sagital')">Sagital</button>
-  </div>
-  <div class="hand-sub" id="hand-sub" style="display:none">
-    <button class="hand-btn hb" id="btn-ambas" onclick="setHand('ambas')">Ambas manos</button>
-    <button class="hand-btn" id="btn-izq" onclick="setHand('izq')">Mano izquierda (paciente)</button>
-    <button class="hand-btn" id="btn-der" onclick="setHand('der')">Mano derecha (paciente)</button>
-  </div>
-  <div style="display:flex;align-items:center;gap:6px;margin-left:12px;" id="mirror-wrap" style="display:none">
-    <span style="font-family:var(--mono);font-size:10px;color:var(--text3);">Corregir espejo</span>
-    <div class="tog on" id="tmirror" onclick="toggleMirror(this)" title="Activo: corrige lateralidad para foto frontal del paciente. Desactivar si usas foto desde atrás o selfie."></div>
-    <span style="font-family:var(--mono);font-size:9px;color:var(--acc3);" id="mirror-lbl">Foto frontal</span>
-  </div>
-  <span class="mode-desc" id="mode-desc">Valgo/varo · Simetría · Alcance funcional</span>
-</div>
-
 <div class="app">
   <div class="panel-l">
 
-    <!-- ═══════════════════════════════════════════════════════════════════ -->
-    <!-- ZONA 1 · CONFIGURACIÓN                                             -->
-    <!-- ═══════════════════════════════════════════════════════════════════ -->
-    <div class="zone-header">
-      <span class="zone-label">Configuración</span>
-      <span class="zone-num">01</span>
-    </div>
-
-    <!-- Cargar archivo -->
-    <div class="sec">
-      <div class="sec-lbl">Archivo</div>
-      <div class="upload-area" id="ua" onclick="document.getElementById('fi').click()">
-        <div class="upload-icon">📁</div>
-        <div class="upload-title">Arrastra o haz clic aquí</div>
-        <div class="upload-sub">Imagen o video (máx. 10 seg recomendado)</div>
-        <div class="upload-types"><span class="tb">JPG</span><span class="tb">PNG</span><span class="tb">MP4</span><span class="tb">WEBM</span></div>
+    <!-- 1. Selector de modo -->
+    <div class="mode-selector">
+      <div class="mode-selector-lbl">¿Qué vas a evaluar?</div>
+      <div class="mode-cards">
+        <div class="mcard active-pose" id="mcard-pose" onclick="selectMode('pose')">
+          <div class="mcard-icon">🧍</div>
+          <div class="mcard-name">Pose frontal</div>
+          <div class="mcard-desc">Imagen/video · Simetría L/D</div>
+        </div>
+        <div class="mcard" id="mcard-sagital" onclick="selectMode('sagital')">
+          <div class="mcard-icon">🚶</div>
+          <div class="mcard-name">Pose sagital</div>
+          <div class="mcard-desc">Imagen/video · Ángulos laterales</div>
+        </div>
+        <div class="mcard" id="mcard-gait" onclick="selectMode('gait')">
+          <div class="mcard-icon">🎞</div>
+          <div class="mcard-name">Marcha</div>
+          <div class="mcard-desc">Video sagital · Fases y rangos</div>
+        </div>
+        <div class="mcard" id="mcard-hand" onclick="selectMode('hand')">
+          <div class="mcard-icon">✋</div>
+          <div class="mcard-name">Mano</div>
+          <div class="mcard-desc">Imagen · MCP, PIP, DIP, agarre</div>
+        </div>
       </div>
-      <input type="file" id="fi" accept="image/*,video/*">
-      <div class="sbar" id="sbar"><div class="sdot" id="sdot"></div><span id="stxt">—</span></div>
-      <div class="alert-box warn" id="alert-conf">⚠ Confianza baja en algunos landmarks. Revisa la iluminación o encuadre.</div>
+
+      <!-- Selector de mano -->
+      <div id="hand-selector-wrap" style="display:none">
+        <div style="font-family:var(--mono);font-size:9px;color:var(--text3);letter-spacing:.8px;text-transform:uppercase;margin-top:8px;margin-bottom:4px;">Seleccionar mano</div>
+        <div class="hand-selector">
+          <button class="hsel-btn active" id="hsel-ambas" onclick="setHand('ambas')">Ambas</button>
+          <button class="hsel-btn" id="hsel-izq" onclick="setHand('izq')">Izq (pcte)</button>
+          <button class="hsel-btn" id="hsel-der" onclick="setHand('der')">Der (pcte)</button>
+        </div>
+        <div class="mirror-row" id="mirror-wrap">
+          <span class="mirror-row-lbl">Corregir espejo (foto frontal)</span>
+          <span class="mirror-badge" id="mirror-lbl">Activo</span>
+          <div class="tog on" id="tmirror" onclick="toggleMirror(this)"></div>
+        </div>
+      </div>
+
+      <!-- Nota marcha -->
+      <div id="gait-mode-note" style="display:none;margin-top:7px;" class="gait-info-banner">
+        📹 <strong>Solo videos sagitales.</strong> Graba al paciente de perfil capturando todo el cuerpo durante el ciclo de marcha.
+      </div>
     </div>
 
-    <!-- Calibración -->
-    <div class="sec">
-      <div class="sec-lbl">Calibración — pose corporal</div>
+    <!-- 2. Calibración pose -->
+    <div class="sec" id="calib-pose-sec">
+      <div class="sec-lbl">Calibración — talla del paciente</div>
       <div class="calib-row">
-        <input class="calib-input" type="number" id="height-input" placeholder="Talla del paciente" min="50" max="250" step="1">
+        <input class="calib-input" type="number" id="height-input" placeholder="Talla" min="50" max="250" step="1">
         <span class="calib-unit">cm</span>
       </div>
       <div class="calib-st" id="calib-st">Sin calibrar — distancias en píxeles</div>
     </div>
 
-    <div class="sec" id="hand-calib-sec">
-      <div class="sec-lbl">Calibración — mano</div>
+    <!-- 3. Calibración mano (solo modo mano) -->
+    <div class="sec" id="hand-calib-sec" style="display:none">
+      <div class="sec-lbl">Calibración — objeto de referencia</div>
       <div style="font-size:10px;color:var(--text2);margin-bottom:7px;line-height:1.5;">
-        Coloca un objeto de referencia junto a la mano (ej. moneda 100 COP = 2.3 cm). Las distancias 2D dependen de la distancia cámara–mano.
+        Coloca un objeto conocido junto a la mano (ej. moneda 100 COP = 2.3 cm). Las distancias dependen de la distancia cámara–mano.
       </div>
       <div class="calib-row">
-        <input class="calib-input" type="number" id="ref-obj-cm" placeholder="Tamaño objeto ref." min="0.5" max="50" step="0.1">
+        <input class="calib-input" type="number" id="ref-obj-cm" placeholder="Tamaño objeto" min="0.5" max="50" step="0.1">
         <span class="calib-unit">cm</span>
       </div>
       <button class="btn b4" id="btn-ref-start" onclick="startRefCalib()" style="margin-top:6px;">📍 Marcar referencia en imagen</button>
       <div class="calib-st" id="hand-calib-st" style="margin-top:5px;">Sin calibrar — distancias relativas (razón muñeca)</div>
     </div>
 
-    <!-- Condición de evaluación -->
-    <div class="sec">
+    <!-- 4. Condición de evaluación (solo modo mano) -->
+    <div class="sec" id="adit-sec" style="display:none">
       <div class="sec-lbl">Condición de evaluación</div>
       <div style="display:flex;align-items:center;gap:8px;margin-bottom:7px;">
         <div class="tog" id="tadit" onclick="toggleAdit(this)"></div>
-        <span class="ctrl-lbl">Evaluación con aditamento / ayuda técnica</span>
+        <span class="ctrl-lbl">Con aditamento / ayuda técnica</span>
       </div>
       <div id="adit-panel" style="display:none;">
         <input class="calib-input" id="adit-desc" placeholder="Describe el aditamento (ej: férula muñeca)" style="width:100%;font-size:11px;margin-bottom:6px;">
-        <div style="font-size:10px;color:var(--acc3);background:rgba(245,158,11,.06);border:1px solid rgba(245,158,11,.25);border-radius:6px;padding:7px 9px;line-height:1.5;">
-          ⚠ Con aditamentos rígidos la detección de landmarks puede ser imprecisa. Analiza los dedos libres y documenta las articulaciones cubiertas.
+        <div style="font-size:10px;color:var(--acc3);background:rgba(245,158,11,.05);border:1px solid rgba(245,158,11,.22);border-radius:6px;padding:7px 9px;line-height:1.5;">
+          ⚠ Con aditamentos rígidos la detección puede ser imprecisa. Analiza los dedos libres y documenta las articulaciones cubiertas.
         </div>
         <div style="display:flex;align-items:center;gap:8px;margin-top:7px;">
           <div class="tog on" id="tpartial" onclick="togglePartial(this)"></div>
-          <span class="ctrl-lbl" style="font-size:11px;">Análisis parcial (omitir articulaciones con confianza baja)</span>
+          <span class="ctrl-lbl" style="font-size:11px;">Análisis parcial (omitir artic. con confianza baja)</span>
         </div>
       </div>
     </div>
 
-    <!-- Visualización -->
+    <!-- 5. Cargar archivo -->
+    <div class="sec">
+      <div class="sec-lbl" id="upload-lbl">Archivo</div>
+      <div class="upload-area" id="ua" onclick="document.getElementById('fi').click()">
+        <div class="upload-icon">📁</div>
+        <div class="upload-title">Arrastra o haz clic</div>
+        <div class="upload-sub" id="upload-sub">Imagen o video</div>
+        <div class="upload-types"><span class="tb">JPG</span><span class="tb">PNG</span><span class="tb">MP4</span><span class="tb">WEBM</span></div>
+      </div>
+      <input type="file" id="fi" accept="image/*,video/*">
+      <div class="sbar" id="sbar"><div class="sdot" id="sdot"></div><span id="stxt">—</span></div>
+      <div class="alert-box warn" id="alert-conf">⚠ Confianza baja. Revisa iluminación o encuadre.</div>
+    </div>
+
+    <!-- 6. Visualización -->
     <div class="sec">
       <div class="sec-lbl">Visualización</div>
-      <div class="ctrl"><span class="ctrl-lbl">Mostrar esqueleto / mano</span><div class="tog on" id="tsk" onclick="to('sk',this)"></div></div>
+      <div class="ctrl"><span class="ctrl-lbl">Esqueleto / mano</span><div class="tog on" id="tsk" onclick="to('sk',this)"></div></div>
       <div class="ctrl"><span class="ctrl-lbl">Ángulos en imagen</span><div class="tog on" id="tan" onclick="to('an',this)"></div></div>
       <div class="ctrl"><span class="ctrl-lbl">Distancias en imagen</span><div class="tog" id="tdi" onclick="to('di',this)"></div></div>
-      <div class="ctrl"><span class="ctrl-lbl">Colores Izq (verde) / Der (azul)</span><div class="tog on" id="tcol" onclick="to('col',this)"></div></div>
-      <div class="ctrl" style="margin-bottom:0"><span class="ctrl-lbl">Indicador de confianza</span><div class="tog on" id="tconf" onclick="to('conf',this)"></div></div>
+      <div class="ctrl"><span class="ctrl-lbl">Colores Izq/Der</span><div class="tog on" id="tcol" onclick="to('col',this)"></div></div>
+      <div class="ctrl"><span class="ctrl-lbl">Indicador de confianza</span><div class="tog on" id="tconf" onclick="to('conf',this)"></div></div>
     </div>
 
-    <!-- ═══════════════════════════════════════════════════════════════════ -->
-    <!-- ZONA 2 · RESULTADOS                                                -->
-    <!-- ═══════════════════════════════════════════════════════════════════ -->
-    <div class="zone-header">
-      <span class="zone-label">Resultados</span>
-      <span class="zone-num">02</span>
-    </div>
-
-    <!-- Tabs: Pose / Mano / Marcha -->
-    <div class="sec" id="results-sec">
-      <div class="tab-bar" id="tab-bar">
-        <div class="tab active-g" id="tab-pose-btn" onclick="showTab('pose-tab')">Pose</div>
-        <div class="tab" id="tab-hand-btn" onclick="showTab('hand-tab')" style="display:none">Mano</div>
-        <div class="tab" id="tab-gait-btn" onclick="showTab('gait-tab')" style="display:none">Marcha</div>
+    <!-- 7. Exportar -->
+    <div class="sec">
+      <div class="sec-lbl">Exportar</div>
+      <div class="export-grid">
+        <button class="btn full" id="bcsv" disabled onclick="xcsv()">↓ CSV clínico</button>
+        <button class="btn b2" id="bimg" disabled onclick="ximg()">↓ Imagen</button>
+        <button class="btn b3" id="bjson" disabled onclick="xjson()">↓ JSON</button>
       </div>
+    </div>
 
-      <!-- TAB POSE -->
-      <div class="tab-content show" id="pose-tab">
-        <div style="font-size:9px;color:var(--text3);font-family:var(--mono);margin-bottom:7px;letter-spacing:.7px;text-transform:uppercase;">Ángulos articulares</div>
+  </div><!-- /panel-l -->
+
+  <!-- RIGHT PANEL -->
+  <div class="panel-r">
+
+    <!-- Results tabs (above canvas) -->
+    <div id="rtab-bar" style="display:none">
+      <div class="rtab-bar">
+        <div class="rtab ractive-g" id="rt-pose" onclick="showRTab('pose')" style="display:none">Ángulos</div>
+        <div class="rtab" id="rt-sym" onclick="showRTab('sym')" style="display:none">Simetría</div>
+        <div class="rtab" id="rt-gait" onclick="showRTab('gait')" style="display:none">Marcha</div>
+        <div class="rtab" id="rt-hand" onclick="showRTab('hand')" style="display:none">Mano</div>
+      </div>
+    </div>
+
+    <!-- Canvas -->
+    <div class="cvwrap" id="cvw">
+      <div class="ph" id="ph">
+        <div class="ph-grid"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>
+        <div class="ph-title">Sin archivo cargado</div>
+        <div class="ph-sub" id="ph-hint">Selecciona un modo y carga un archivo</div>
+      </div>
+      <div id="ci" style="display:none;position:relative;">
+        <canvas id="cv"></canvas>
+        <div class="conf-overlay" id="conf-overlay"></div>
+      </div>
+    </div>
+
+    <!-- Video controls -->
+    <div class="vbar" id="vbar">
+      <input type="range" id="sk" min="0" max="100" value="0" step="0.1">
+      <div class="vc">
+        <button class="vcb" id="bpl" onclick="tplay()">▶ Play</button>
+        <button class="vcb" onclick="sf(-1)">◀ Frame</button>
+        <button class="vcb" onclick="sf(1)">Frame ▶</button>
+        <span class="td" id="tdisp">0.00s / 0.00s</span>
+      </div>
+    </div>
+
+    <!-- Results panels -->
+    <div style="overflow-y:auto;max-height:38vh;border-top:1px solid var(--brd);" id="results-area">
+
+      <!-- ÁNGULOS + DISTANCIAS -->
+      <div class="rtab-content" id="rp-pose" style="display:none;padding:12px 14px;">
+        <div class="sub-lbl">Ángulos articulares</div>
         <table class="atbl">
           <thead><tr><th>Articulación / Movimiento</th><th style="text-align:center">Izq</th><th style="text-align:center">Der</th><th style="text-align:right">Δ</th></tr></thead>
           <tbody id="atb"><tr><td colspan="4" style="color:var(--text3);font-size:11px;text-align:center;padding:12px 0">Carga un archivo</td></tr></tbody>
         </table>
-        <div style="font-size:9px;color:var(--text3);font-family:var(--mono);margin:10px 0 7px;letter-spacing:.7px;text-transform:uppercase;">Distancias</div>
+        <div class="sub-lbl" style="margin-top:10px;">Distancias</div>
         <div class="mgrid" id="dg"><div class="mc full"><div class="mu" style="padding:5px 0;text-align:center">Sin datos</div></div></div>
-        <div style="font-size:9px;color:var(--text3);font-family:var(--mono);margin:10px 0 7px;letter-spacing:.7px;text-transform:uppercase;">Índice de simetría</div>
+      </div>
+
+      <!-- SIMETRÍA (solo frontal) -->
+      <div class="rtab-content" id="rp-sym" style="display:none;padding:12px 14px;">
+        <div class="sub-lbl">Índice de simetría L/D — vista frontal</div>
         <div id="symc"><div style="color:var(--text3);font-size:11px;text-align:center;padding:6px 0">Sin datos</div></div>
       </div>
 
-      <!-- TAB MANO -->
-      <div class="tab-content" id="hand-tab">
-        <div id="hand-results"><div style="color:var(--text3);font-size:11px;text-align:center;padding:12px 0">Carga un archivo con mano visible</div></div>
-        <div style="font-size:9px;color:var(--text3);font-family:var(--mono);margin:10px 0 7px;letter-spacing:.7px;text-transform:uppercase;">Apertura entre dedos</div>
-        <div class="mgrid" id="spread-grid"><div class="mc full"><div class="mu" style="padding:5px 0;text-align:center">Sin datos</div></div></div>
-        <div style="font-size:9px;color:var(--text3);font-family:var(--mono);margin:10px 0 7px;letter-spacing:.7px;text-transform:uppercase;">Tipo de agarre detectado</div>
-        <div id="grasp-type"><div style="color:var(--text3);font-size:11px;text-align:center;padding:6px 0">Sin datos</div></div>
-        <div style="font-size:9px;color:var(--text3);font-family:var(--mono);margin:10px 0 7px;letter-spacing:.7px;text-transform:uppercase;">Patrones integrales MMSS</div>
-        <div id="patrones-integrales">
-          <div style="background:var(--sur2);border:1px solid var(--brd);border-radius:9px;padding:10px 12px;">
-            <div style="font-size:9px;color:var(--text3);font-family:var(--mono);margin-bottom:8px;letter-spacing:.5px;">Clasificación según Manual Clínico de TO — UNAL</div>
-            <div style="display:grid;grid-template-columns:1fr 1fr;gap:5px;">
-              <div style="background:rgba(74,222,128,.05);border:1px solid rgba(74,222,128,.18);border-radius:7px;padding:7px 9px;">
-                <div style="font-size:9px;color:var(--acc);font-family:var(--mono);letter-spacing:.5px;margin-bottom:3px;">ALCANZAR</div>
-                <div style="font-size:10px;color:var(--text2);line-height:1.45;">Hombro: flexión, abducción, aducción y extensión. 3 niveles.</div>
-              </div>
-              <div style="background:rgba(248,113,113,.05);border:1px solid rgba(248,113,113,.18);border-radius:7px;padding:7px 9px;">
-                <div style="font-size:9px;color:var(--acc4);font-family:var(--mono);letter-spacing:.5px;margin-bottom:3px;">SOLTAR</div>
-                <div style="font-size:10px;color:var(--text2);line-height:1.45;">MCPs e IFs: extensión. Voluntario o rudimentario.</div>
-              </div>
-              <div style="background:rgba(245,158,11,.05);border:1px solid rgba(245,158,11,.18);border-radius:7px;padding:7px 9px;">
-                <div style="font-size:9px;color:var(--acc3);font-family:var(--mono);letter-spacing:.5px;margin-bottom:3px;">LANZAR</div>
-                <div style="font-size:10px;color:var(--text2);line-height:1.45;">Hombro y codo: flexión-extensión o extensión-flexión.</div>
-              </div>
-              <div style="background:rgba(96,165,250,.05);border:1px solid rgba(96,165,250,.18);border-radius:7px;padding:7px 9px;">
-                <div style="font-size:9px;color:var(--acc2);font-family:var(--mono);letter-spacing:.5px;margin-bottom:3px;">AGARRAR</div>
-                <div style="font-size:10px;color:var(--text2);line-height:1.45;">Muñeca, MCPs e IFs. Grupos: Fuerza · Mixtos · Precisión.</div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- TAB MARCHA (solo video, modo sagital) -->
-      <div class="tab-content" id="gait-tab">
-        <div id="gait-view-warn" style="display:none;margin-bottom:8px;padding:9px 11px;background:rgba(245,158,11,.07);border:1px solid rgba(245,158,11,.28);border-radius:8px;font-size:11px;color:var(--acc3);line-height:1.55;">
-          ⚠ Vista <strong>Frontal</strong>: los ángulos sagitales no tienen sentido cinemático. Cambia a <strong>Sagital</strong> y recarga el video.
-        </div>
-
-        <!-- Sesion tabs -->
+      <!-- MARCHA -->
+      <div class="rtab-content" id="rp-gait" style="display:none;padding:12px 14px;">
         <div class="sesion-tab-bar">
           <div class="sesion-btn active" id="ses-btn-base" onclick="setSesion('base')">Sesión base</div>
           <div class="sesion-btn" id="ses-btn-adit" onclick="setSesion('adit')">Con aditamento</div>
           <div class="sesion-btn" id="ses-btn-comp" onclick="setSesion('comp')">Comparar</div>
         </div>
-
-        <!-- Panel sesión base -->
         <div id="ses-base">
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:5px;margin-bottom:8px;" id="gait-metrics-grid">
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:5px;margin-bottom:8px;">
             <div class="gait-metric"><div class="gait-metric-title">Vel. angular rodilla</div><div class="gait-metric-val g" id="gm-velRod">—</div><div class="gait-metric-sub">°/seg</div></div>
             <div class="gait-metric"><div class="gait-metric-title">Vel. angular cadera</div><div class="gait-metric-val b" id="gm-velCad">—</div><div class="gait-metric-sub">°/seg</div></div>
-            <div class="gait-metric"><div class="gait-metric-title">Rango rodilla</div><div class="gait-metric-val p" id="gm-rangoRod">—</div><div class="gait-metric-sub">° (mín → máx)</div></div>
-            <div class="gait-metric"><div class="gait-metric-title">Rango cadera</div><div class="gait-metric-val a" id="gm-rangoCad">—</div><div class="gait-metric-sub">° (mín → máx)</div></div>
+            <div class="gait-metric"><div class="gait-metric-title">Rango rodilla</div><div class="gait-metric-val p" id="gm-rangoRod">—</div><div class="gait-metric-sub">° mín→máx</div></div>
+            <div class="gait-metric"><div class="gait-metric-title">Rango cadera</div><div class="gait-metric-val a" id="gm-rangoCad">—</div><div class="gait-metric-sub">° mín→máx</div></div>
           </div>
-          <div style="font-family:var(--mono);font-size:9px;color:var(--text3);letter-spacing:.6px;margin-bottom:4px;text-transform:uppercase;">Fases de marcha estimadas</div>
+          <div class="sub-lbl">Fases estimadas</div>
           <div class="gait-phase-bar" id="gait-phase-bar">
             <div class="gait-phase-seg" style="background:var(--acc2);width:60%">APOYO</div>
             <div class="gait-phase-seg" style="background:var(--acc5);width:40%">BALANCEO</div>
@@ -584,13 +798,7 @@ footer{border-top:1px solid var(--brd);background:var(--sur);padding:9px 24px;di
             <span id="gait-phase-apoyo-pct">Apoyo: 60%</span>
             <span id="gait-phase-bal-pct">Balanceo: 40%</span>
           </div>
-          <div style="font-family:var(--mono);font-size:9px;color:var(--text3);letter-spacing:.6px;margin-bottom:6px;text-transform:uppercase;">Simetría L/D</div>
-          <div id="gait-sym-block">
-            <div class="gait-sym-row"><span class="gait-sym-lbl">Rodilla</span><div class="gait-sym-track"><div class="gait-sym-fill" id="sym-rod" style="width:0%;background:var(--acc)"></div></div><span class="gait-sym-pct" id="sym-rod-pct">—</span></div>
-            <div class="gait-sym-row"><span class="gait-sym-lbl">Cadera</span><div class="gait-sym-track"><div class="gait-sym-fill" id="sym-cad" style="width:0%;background:var(--acc2)"></div></div><span class="gait-sym-pct" id="sym-cad-pct">—</span></div>
-            <div class="gait-sym-row"><span class="gait-sym-lbl">Tobillo</span><div class="gait-sym-track"><div class="gait-sym-fill" id="sym-tob" style="width:0%;background:var(--acc5)"></div></div><span class="gait-sym-pct" id="sym-tob-pct">—</span></div>
-          </div>
-          <div style="font-family:var(--mono);font-size:9px;color:var(--text3);letter-spacing:.6px;margin-top:8px;margin-bottom:4px;text-transform:uppercase;">Goniograma — ángulos en el tiempo</div>
+          <div class="sub-lbl">Goniograma</div>
           <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:6px;">
             <label style="font-size:10px;color:var(--text2);display:flex;align-items:center;gap:3px;cursor:pointer;"><input type="checkbox" id="gon-rod" checked onchange="drawGoniograma()"> <span style="color:#4ade80">Rodilla</span></label>
             <label style="font-size:10px;color:var(--text2);display:flex;align-items:center;gap:3px;cursor:pointer;"><input type="checkbox" id="gon-cad" checked onchange="drawGoniograma()"> <span style="color:#60a5fa">Cadera</span></label>
@@ -601,90 +809,76 @@ footer{border-top:1px solid var(--brd);background:var(--sur);padding:9px 24px;di
             <canvas id="gonioCanvas" height="160"></canvas>
             <div class="gonio-legend" id="gonio-legend"></div>
           </div>
-          <div style="font-family:var(--mono);font-size:9px;color:var(--text3);letter-spacing:.6px;margin-top:10px;margin-bottom:5px;text-transform:uppercase;">Rangos por fase</div>
+          <div class="sub-lbl" style="margin-top:10px;">Rangos por fase</div>
           <table class="atbl" id="gait-phase-table">
             <thead><tr><th>Articulación</th><th style="text-align:center">Apoyo</th><th style="text-align:center">Balanceo</th><th style="text-align:right">Ref.</th></tr></thead>
-            <tbody id="gait-phase-tbody"><tr><td colspan="4" style="color:var(--text3);text-align:center;padding:8px 0;font-size:11px">Sin datos de video</td></tr></tbody>
+            <tbody id="gait-phase-tbody"><tr><td colspan="4" style="color:var(--text3);text-align:center;padding:8px 0;font-size:11px">Sin datos</td></tr></tbody>
           </table>
-          <button class="btn b4" style="margin-top:8px;" onclick="saveGaitSesion('base')">💾 Guardar como sesión base</button>
+          <button class="btn b4" style="margin-top:8px;" onclick="saveGaitSesion('base')">💾 Guardar sesión base</button>
         </div>
-
-        <!-- Panel con aditamento -->
         <div id="ses-adit" style="display:none">
-          <div style="font-size:11px;color:var(--acc3);background:rgba(245,158,11,.07);border:1px solid rgba(245,158,11,.25);border-radius:7px;padding:8px 10px;line-height:1.55;">
-            Carga el video con aditamento en modo "Pose corporal" y presiona <strong>Guardar como sesión con aditamento</strong>.
-          </div>
-          <button class="btn b4" style="margin-top:8px;" onclick="saveGaitSesion('adit')">💾 Guardar como sesión con aditamento</button>
+          <div class="gait-info-banner">Carga el video con aditamento en modo Marcha y presiona <strong>Guardar</strong>.</div>
+          <button class="btn b4" style="margin-top:8px;" onclick="saveGaitSesion('adit')">💾 Guardar sesión con aditamento</button>
           <div id="ses-adit-saved" style="display:none;margin-top:8px;">
-            <div style="font-size:10px;color:var(--acc);font-family:var(--mono);margin-bottom:5px;">✓ Sesión con aditamento guardada</div>
+            <div style="font-size:10px;color:var(--acc);font-family:var(--mono);margin-bottom:5px;">✓ Guardada</div>
             <table class="atbl" id="gait-adit-table">
               <thead><tr><th>Articulación</th><th style="text-align:center">Apoyo</th><th style="text-align:center">Balanceo</th></tr></thead>
               <tbody id="gait-adit-tbody"></tbody>
             </table>
           </div>
         </div>
-
-        <!-- Panel comparación -->
         <div id="ses-comp" style="display:none">
-          <div style="font-size:11px;color:var(--text3);margin-bottom:8px;">Comparación Base vs Con aditamento. Guarda ambas sesiones primero.</div>
+          <div style="font-size:11px;color:var(--text3);margin-bottom:8px;">Guarda ambas sesiones para comparar.</div>
           <table class="atbl" id="gait-comp-table">
             <thead><tr><th>Articulación / Fase</th><th style="text-align:center">Base</th><th style="text-align:center">Aditamento</th><th style="text-align:right">Δ</th></tr></thead>
-            <tbody id="gait-comp-tbody"><tr><td colspan="4" style="color:var(--text3);text-align:center;padding:8px 0;font-size:11px">Guarda ambas sesiones para comparar</td></tr></tbody>
+            <tbody id="gait-comp-tbody"><tr><td colspan="4" style="color:var(--text3);text-align:center;padding:8px 0;font-size:11px">—</td></tr></tbody>
           </table>
         </div>
       </div>
 
-    </div><!-- /results-sec -->
-
-    <!-- ═══════════════════════════════════════════════════════════════════ -->
-    <!-- ZONA 3 · EXPORTAR                                                  -->
-    <!-- ═══════════════════════════════════════════════════════════════════ -->
-    <div class="zone-header">
-      <span class="zone-label">Exportar</span>
-      <span class="zone-num">03</span>
-    </div>
-
-    <div class="sec">
-      <div class="export-grid">
-        <button class="btn full" id="bcsv" disabled onclick="xcsv()">↓ CSV clínico completo</button>
-        <button class="btn b2" id="bimg" disabled onclick="ximg()">↓ Imagen anotada</button>
-        <button class="btn b3" id="bjson" disabled onclick="xjson()">↓ JSON landmarks</button>
+      <!-- MANO -->
+      <div class="rtab-content" id="rp-hand" style="display:none;padding:12px 14px;">
+        <div id="hand-results"><div style="color:var(--text3);font-size:11px;text-align:center;padding:12px 0">Carga un archivo con mano visible</div></div>
+        <div class="sub-lbl" style="margin-top:10px;">Apertura entre dedos</div>
+        <div class="mgrid" id="spread-grid"><div class="mc full"><div class="mu" style="padding:5px 0;text-align:center">Sin datos</div></div></div>
+        <div class="sub-lbl" style="margin-top:10px;">Tipo de agarre detectado</div>
+        <div id="grasp-type"><div style="color:var(--text3);font-size:11px;text-align:center;padding:6px 0">Sin datos</div></div>
+        <div class="sub-lbl" style="margin-top:10px;">Patrones integrales MMSS</div>
+        <div id="patrones-integrales">
+          <div style="background:var(--sur2);border:1px solid var(--brd);border-radius:8px;padding:9px 11px;">
+            <div style="font-size:9px;color:var(--text3);font-family:var(--mono);margin-bottom:7px;">Clasificación según Manual Clínico de TO — UNAL</div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:4px;">
+              <div style="background:rgba(74,222,128,.04);border:1px solid rgba(74,222,128,.15);border-radius:6px;padding:6px 8px;">
+                <div style="font-size:8px;color:var(--acc);font-family:var(--mono);margin-bottom:2px;">ALCANZAR</div>
+                <div style="font-size:9px;color:var(--text2);line-height:1.4;">Hombro: flex, abd, add, ext. 3 niveles.</div>
+              </div>
+              <div style="background:rgba(248,113,113,.04);border:1px solid rgba(248,113,113,.15);border-radius:6px;padding:6px 8px;">
+                <div style="font-size:8px;color:var(--acc4);font-family:var(--mono);margin-bottom:2px;">SOLTAR</div>
+                <div style="font-size:9px;color:var(--text2);line-height:1.4;">MCPs e IFs: extensión. Voluntario o rudimentario.</div>
+              </div>
+              <div style="background:rgba(245,158,11,.04);border:1px solid rgba(245,158,11,.15);border-radius:6px;padding:6px 8px;">
+                <div style="font-size:8px;color:var(--acc3);font-family:var(--mono);margin-bottom:2px;">LANZAR</div>
+                <div style="font-size:9px;color:var(--text2);line-height:1.4;">Hombro y codo: flexión-extensión simultáneos.</div>
+              </div>
+              <div style="background:rgba(96,165,250,.04);border:1px solid rgba(96,165,250,.15);border-radius:6px;padding:6px 8px;">
+                <div style="font-size:8px;color:var(--acc2);font-family:var(--mono);margin-bottom:2px;">AGARRAR</div>
+                <div style="font-size:9px;color:var(--text2);line-height:1.4;">Muñeca, MCPs, IFs. Fuerza · Mixtos · Precisión.</div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
-    </div>
 
-
-  </div><!-- /panel-l -->
-
-  <div class="panel-r">
-    <div class="cvwrap" id="cvw">
-      <div class="ph" id="ph">
-        <div class="phg"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>
-        <div style="font-size:13px;font-weight:500;color:var(--text2)">Sin archivo cargado</div>
-        <div style="font-size:11px">Selecciona el modo, ingresa la altura y sube un archivo</div>
-      </div>
-      <div id="ci" style="display:none;position:relative;">
-        <canvas id="cv"></canvas>
-        <!-- Confidence overlay -->
-        <div class="conf-overlay" id="conf-overlay"></div>
-      </div>
-    </div>
-    <div class="vbar" id="vbar">
-      <input type="range" id="sk" min="0" max="100" value="0" step="0.1">
-      <div class="vc">
-        <button class="vcb" id="bpl" onclick="tplay()">▶ Play</button>
-        <button class="vcb" onclick="sf(-1)">◀ Frame</button>
-        <button class="vcb" onclick="sf(1)">Frame ▶</button>
-        <span class="td" id="tdisp">0.00s / 0.00s</span>
-      </div>
-    </div>
-  </div>
-</div>
+    </div><!-- /results-area -->
+  </div><!-- /panel-r -->
+</div><!-- /app -->
 
 <footer>
-  <div style="display:flex;align-items:center"><div class="fdot"></div>
-    <span>Desarrollado por <strong style="color:var(--text2)">Karen Vanessa Paredes Castro</strong> · Docente de Terapia Ocupacional · Universidad Nacional de Colombia · 2026</span>
+  <div style="display:flex;align-items:center">
+    <div class="fdot"></div>
+    <span>Karen Vanessa Paredes Castro &nbsp;·&nbsp; Docente de Terapia Ocupacional &nbsp;·&nbsp; Universidad Nacional de Colombia · 2026</span>
   </div>
-  <span style="font-family:var(--mono);font-size:10px">MediaPipe Pose + Hands · v6.0 · Taxonomía: Manual Clínico TO, UNAL</span>
+  <span style="font-family:var(--mono);font-size:9px;color:var(--text3)">MediaPipe · v6.0 · Manual Clínico TO, UNAL</span>
 </footer>
 
 <!-- MediaPipe -->
@@ -969,49 +1163,81 @@ function curJoints(){return view==='frontal'?JOINTS_FRONTAL:JOINTS_SAGITAL;}
 function curDists() {return view==='frontal'?DISTS_FRONTAL:DISTS_SAGITAL;}
 
 // ══════════════════════════════════════════════════════════════════════════════
-// TABS
+// MODO — selector de tarjetas (pose, sagital, gait, hand)
 // ══════════════════════════════════════════════════════════════════════════════
-function showTab(id){
-  document.querySelectorAll('.tab-content').forEach(t=>t.classList.remove('show'));
-  document.getElementById(id).classList.add('show');
-  document.getElementById('tab-pose-btn').className='tab'+(id==='pose-tab'?' active-g':'');
-  document.getElementById('tab-hand-btn').className='tab'+(id==='hand-tab'?' active-p':'');
-  document.getElementById('tab-gait-btn').className='tab'+(id==='gait-tab'?' active-b':'');
-}
+let appMode='pose'; // 'pose' | 'sagital' | 'gait' | 'hand'
 
-// ══════════════════════════════════════════════════════════════════════════════
-// MODO / VISTA / MANO
-// ══════════════════════════════════════════════════════════════════════════════
-const modeDescs={
-  pose:'Valgo/varo · Simetría · Asimetría L/D · Alcance funcional',
-  hand:'MCP · PIP · DIP · Apertura · Agarre avanzado',
-  combo:'Postura corporal + análisis de mano simultáneo'
-};
-function setMode(m){
-  mode=m;
-  ['pose','hand','combo'].forEach(x=>{
-    const b=document.getElementById('btn-'+x);
-    b.className='mode-btn'+(m===x?' '+(x==='pose'?'am':x==='hand'?'bm':'cm'):'');
+function selectMode(m){
+  appMode=m;
+  // Map to internal mode/view for MediaPipe
+  if(m==='pose')   { mode='pose'; view='frontal'; }
+  if(m==='sagital'){ mode='pose'; view='sagital'; }
+  if(m==='gait')   { mode='pose'; view='sagital'; }
+  if(m==='hand')   { mode='hand'; view='frontal'; }
+
+  // Card highlight
+  ['pose','sagital','gait','hand'].forEach(x=>{
+    document.getElementById('mcard-'+x).className='mcard'+(m===x?' active-'+x:'');
   });
-  document.getElementById('view-sub').style.display=(m==='hand')?'none':'flex';
-  document.getElementById('hand-sub').style.display=(m==='pose')?'none':'flex';
-  document.getElementById('mirror-wrap').style.display=(m==='pose')?'none':'flex';
-  document.getElementById('mode-desc').textContent=modeDescs[m];
-  document.getElementById('tab-hand-btn').style.display=(m==='pose')?'none':'';
-  // El tab de marcha solo aparece si ya hay frames cargados
-  if(m==='hand') document.getElementById('tab-gait-btn').style.display='none';
-  if(m==='hand') showTab('hand-tab'); else showTab('pose-tab');
+
+  // Context panels
+  const isHand=m==='hand', isGait=m==='gait';
+  document.getElementById('calib-pose-sec').style.display=isHand?'none':'block';
+  document.getElementById('hand-calib-sec').style.display=isHand?'block':'none';
+  document.getElementById('adit-sec').style.display=isHand?'block':'none';
+  document.getElementById('hand-selector-wrap').style.display=isHand?'block':'none';
+  document.getElementById('gait-mode-note').style.display=isGait?'block':'none';
+  document.getElementById('upload-sub').textContent=
+    isGait?'Video sagital (perfil, cuerpo completo)':
+    isHand?'Imagen de la mano':'Imagen o video';
+
+  // Hide results
+  document.getElementById('rtab-bar').style.display='none';
+  ['rt-pose','rt-sym','rt-gait','rt-hand'].forEach(id=>{
+    document.getElementById(id).style.display='none';
+    document.getElementById(id).className='rtab';
+  });
+  ['rp-pose','rp-sym','rp-gait','rp-hand'].forEach(id=>document.getElementById(id).style.display='none');
+
   if(lLms||lHandResults) reprocess();
 }
-function setView(v){
-  view=v;
-  document.getElementById('btn-frontal').className='view-btn'+(v==='frontal'?' vf':'');
-  document.getElementById('btn-sagital').className='view-btn'+(v==='sagital'?' vs':'');
-  if(lLms){lAng=cAng(lLms);lDist=cDist(lLms);rdImg();updPose(lAng,lDist);}
+
+function showRTab(t){
+  ['pose','sym','gait','hand'].forEach(x=>{
+    document.getElementById('rt-'+x).className='rtab';
+    document.getElementById('rp-'+x).style.display='none';
+  });
+  const colMap={pose:'ractive-g',sym:'ractive-b',gait:'ractive-o',hand:'ractive-p'};
+  document.getElementById('rt-'+t).className='rtab '+colMap[t];
+  document.getElementById('rp-'+t).style.display='block';
 }
+
+function _showResultsFor(m){
+  const bar=document.getElementById('rtab-bar');
+  bar.style.display='block';
+  if(m==='pose'){
+    document.getElementById('rt-pose').style.display='';
+    document.getElementById('rt-sym').style.display='';
+    showRTab('pose');
+  } else if(m==='sagital'){
+    document.getElementById('rt-pose').style.display='';
+    showRTab('pose');
+  } else if(m==='gait'){
+    document.getElementById('rt-gait').style.display='';
+    showRTab('gait');
+  } else if(m==='hand'){
+    document.getElementById('rt-hand').style.display='';
+    showRTab('hand');
+  }
+}
+
+// Legacy stubs — keep for internal calls
+function setMode(m){ /* handled by selectMode */ }
+function setView(v){ view=v; if(lLms){lAng=cAng(lLms);lDist=cDist(lLms);rdImg();updPose(lAng,lDist);} }
+function showTab(id){ /* no-op */ }
 function setHand(h){
   handSide=h;
-  ['ambas','izq','der'].forEach(x=>{document.getElementById('btn-'+x).className='hand-btn'+(h===x?' hb':'');});
+  ['ambas','izq','der'].forEach(x=>document.getElementById('hsel-'+x).className='hsel-btn'+(h===x?' active':''));
   if(lHandResults) drawHandResults(lHandResults);
 }
 function reprocess(){
@@ -1239,24 +1465,14 @@ async function exFrames(){
     if(i%3===0) setSt('loading',`Analizando frames… ${i}/${tot}`);
   }
   setSt('done',`Listo — ${frames.length} frames ✓`);
-  // Mostrar pestaña de marcha en resultados
-  document.getElementById('tab-gait-btn').style.display='';
   if(frames.length){
     recalib(frames[0].landmarks||[]);
     df(0);
-    // Calcular y mostrar métricas de marcha — solo en modo sagital (landmarks 23-27 tienen sentido)
-    if(mode==='pose'||mode==='combo'){
-      if(view==='sagital'){
-        const gm=computeGaitMetrics();
-        if(gm){ gaitDataBase=gm; updGaitPanel(gm); }
-        const warn=document.getElementById('gait-view-warn');
-        if(warn) warn.style.display='none';
-      } else {
-        const warn=document.getElementById('gait-view-warn');
-        if(warn) warn.style.display='block';
-      }
+    if(appMode==='gait'){
+      const gm=computeGaitMetrics();
+      if(gm){ gaitDataBase=gm; updGaitPanel(gm); }
     }
-    showTab('gait-tab');
+    _showResultsFor(appMode);
   }
   enExp();
 }
@@ -1276,7 +1492,10 @@ function onPoseRes(r){
     if(mode!=='combo') rdImg();
     updPose(lAng,lDist);
     updateConfidenceOverlay(lms,null);
-    if(mode==='pose') setSt('done',`Pose detectada ✓ — ${lms.length} puntos`);
+    if(mode==='pose'||mode==='combo'){
+      setSt('done',`Pose detectada ✓ — ${lms.length} puntos`);
+      _showResultsFor(appMode);
+    }
   } else {
     if(!lms)return;
     if(!frames.length||frames[frames.length-1].time!==videoEl.currentTime){
@@ -1315,6 +1534,7 @@ function onHandRes(r){
     updHand(r);
     updateConfidenceOverlay(lLms,r);
     setSt('done',`Mano detectada ✓ — ${r.multiHandLandmarks.length} mano(s)`);
+    _showResultsFor(appMode);
     enExp();
   }
 }
@@ -2088,12 +2308,12 @@ function asymBadge(diff){
   return `<span class="asym-badge asym-bad">Δ${diff}° !</span>`;
 }
 function updPose(ang,dist){
+  // Ángulos + distancias — siempre visibles en todos los modos de pose
   document.getElementById('atb').innerHTML=ang.map(a=>{
     const diff=(a.L!=null&&a.R!=null)?Math.abs(a.L-a.R):null;
     const tooltip=a.desc?`title="${a.desc.replace(/"/g,"'")}"`:'' ;
-    const posNote=a.posRef?`<span class="ref-range" style="display:block;color:var(--text3);font-size:9px;margin-top:1px;">Pos: ${a.posRef}</span>`:'';
     return`<tr>
-      <td ${tooltip} style="cursor:help;">
+      <td ${tooltip}>
         <span class="adot" style="background:var(--acc)"></span>
         <span style="font-size:11px;font-weight:500;color:var(--text)">${a.n}</span>
         <span class="mov-label">${a.mov||''}</span>
@@ -2105,17 +2325,24 @@ function updPose(ang,dist){
   }).join('');
   const unit=pxPerCm?'cm':'px';
   document.getElementById('dg').innerHTML=dist.map(d=>`<div class="mc"><div class="mn">${d.n.toUpperCase()}</div><div class="mv b">${d.label}</div><div class="mu">${unit}</div></div>`).join('');
-  document.getElementById('symc').innerHTML=ang.map(a=>{
-    if(a.L==null||a.R==null)return'';
-    const diff=Math.abs(a.L-a.R);
-    const pct=a.L&&a.R?Math.min(a.L,a.R)/Math.max(a.L,a.R)*100:0;
-    const col=pct>90?'var(--acc)':pct>75?'var(--acc3)':'var(--acc4)';
-    const clinNote=diff>10?' ⚠ Asimetría clínica relevante':'';
-    return`<div class="sb">
-      <div class="sl"><span>${a.n}</span><span style="color:${col}">${diff?`Δ${diff}° · ${Math.round(pct)}%${clinNote}`:'Simétrico'}</span></div>
-      <div class="st"><div class="sf" style="width:${pct}%;background:${col}"></div><div class="sc"></div></div>
-    </div>`;
-  }).join('');
+
+  // Simetría — SOLO en vista frontal (sagital no tiene sentido bilateral)
+  const symEl=document.getElementById('symc');
+  if(appMode==='pose'){
+    symEl.innerHTML=ang.map(a=>{
+      if(a.L==null||a.R==null)return'';
+      const diff=Math.abs(a.L-a.R);
+      const pct=a.L&&a.R?Math.min(a.L,a.R)/Math.max(a.L,a.R)*100:0;
+      const col=pct>90?'var(--acc)':pct>75?'var(--acc3)':'var(--acc4)';
+      const clinNote=diff>10?' ⚠ Asim. clínica':'';
+      return`<div class="sb">
+        <div class="sl"><span>${a.n}</span><span style="color:${col}">${diff?`Δ${diff}° · ${Math.round(pct)}%${clinNote}`:'Simétrico'}</span></div>
+        <div class="st"><div class="sf" style="width:${pct}%;background:${col}"></div><div class="sc"></div></div>
+      </div>`;
+    }).join('');
+  } else {
+    symEl.innerHTML='<div style="color:var(--text3);font-size:11px;text-align:center;padding:8px 0">La simetría L/D solo aplica a la vista frontal.</div>';
+  }
 }
 
 // ══════════════════════════════════════════════════════════════════════════════
@@ -2418,7 +2645,7 @@ function xjson(){
 // ══════════════════════════════════════════════════════════════════════════════
 function setSt(type,msg){const b=document.getElementById('sbar');b.style.display='flex';document.getElementById('sdot').className='sdot '+type;document.getElementById('stxt').textContent=msg;}
 function showCv(){document.getElementById('ph').style.display='none';document.getElementById('ci').style.display='inline-block';}
-function hideVid(){document.getElementById('vbar').classList.remove('vis');}
+function hideVid(){document.getElementById('vbar').classList.remove('vis');document.getElementById('rtab-bar').style.display='none';['rp-pose','rp-sym','rp-gait','rp-hand'].forEach(id=>document.getElementById(id).style.display='none');}
 function enExp(){document.getElementById('bcsv').disabled=false;document.getElementById('bimg').disabled=false;document.getElementById('bjson').disabled=false;}
 </script>
 </body>
