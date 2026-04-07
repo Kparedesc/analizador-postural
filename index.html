@@ -846,7 +846,7 @@ footer{
         <div class="sub-lbl" style="margin-top:10px;">Patrones integrales MMSS</div>
         <div id="patrones-integrales">
           <div style="background:var(--sur2);border:1px solid var(--brd);border-radius:8px;padding:9px 11px;">
-            <div style="font-size:9px;color:var(--text3);font-family:var(--mono);margin-bottom:7px;">Clasificación según Manual Clínico de TO — UNAL</div>
+            <div style="font-size:9px;color:var(--text3);font-family:var(--mono);margin-bottom:7px;">Fuente: Manual Clínico de Terapia Ocupacional — UNAL</div>
             <div style="display:grid;grid-template-columns:1fr 1fr;gap:4px;">
               <div style="background:rgba(74,222,128,.04);border:1px solid rgba(74,222,128,.15);border-radius:6px;padding:6px 8px;">
                 <div style="font-size:8px;color:var(--acc);font-family:var(--mono);margin-bottom:2px;">ALCANZAR</div>
@@ -878,7 +878,7 @@ footer{
     <div class="fdot"></div>
     <span>Karen Vanessa Paredes Castro &nbsp;·&nbsp; Docente de Terapia Ocupacional &nbsp;·&nbsp; Universidad Nacional de Colombia · 2026</span>
   </div>
-  <span style="font-family:var(--mono);font-size:9px;color:var(--text3)">MediaPipe · v6.0 · Manual Clínico TO, UNAL</span>
+  <span style="font-family:var(--mono);font-size:9px;color:var(--text3)">MediaPipe · v6.0 · Ref: Duarte Torres SC, Manual clínico TO, UNAL 2024</span>
 </footer>
 
 <!-- MediaPipe -->
@@ -1903,8 +1903,9 @@ function cVel(){
 }
 
 // ══════════════════════════════════════════════════════════════════════════════
-// TAXONOMÍA CLÍNICA DE AGARRES — Manual Clínico de TO (Paredes Castro, UNAL)
-// Fuente: "Patrones integrales" — clasificación de patrones de miembro superior
+// TAXONOMÍA CLÍNICA DE AGARRES
+// Fuente: Duarte Torres SC. Manual clínico de Terapia Ocupacional en alteraciones osteomusculares
+// de miembro superior. Facultad de Medicina, Universidad Nacional de Colombia. Junio 2024.
 // Grupos: Fuerza (contacto palmar) · Mixtos (palma+movilización) · Precisión (dedos+oposición)
 // ══════════════════════════════════════════════════════════════════════════════
 const GRASP_TAXONOMY = {
@@ -1916,7 +1917,7 @@ const GRASP_TAXONOMY = {
     color:'var(--acc2)',
     anatomia:'Oposición del pulgar, uso de la palma, cuatro dígitos en ADUCCIÓN',
     desc:'El objeto es inmovilizado por contacto palmar. Pulgar en oposición, palma activa, 4 dígitos en aducción.',
-    fuente:'Fig. 8 — Manual clínico TO, UNAL'
+    fuente:'Fig. 8 — Duarte Torres SC. Manual clínico de TO en alteraciones osteomusculares de miembro superior. UNAL, 2024.'
   },
   manoLlena: {
     grasp:'Agarre a mano llena',
@@ -1925,7 +1926,7 @@ const GRASP_TAXONOMY = {
     color:'var(--acc4)',
     anatomia:'Oposición del pulgar, uso de la palma, cuatro dígitos en ABDUCCIÓN',
     desc:'El objeto es inmovilizado por contacto palmar. Pulgar en oposición, palma activa, 4 dígitos en abducción.',
-    fuente:'Fig. 9 — Manual clínico TO, UNAL'
+    fuente:'Fig. 9 — Duarte Torres SC. Manual clínico de TO en alteraciones osteomusculares de miembro superior. UNAL, 2024.'
   },
   esferico: {
     grasp:'Agarre esférico',
@@ -1934,7 +1935,7 @@ const GRASP_TAXONOMY = {
     color:'var(--acc3)',
     anatomia:'Oposición del pulgar, sin contacto palmar, puede o no incluir los cuatro dígitos',
     desc:'Contacto palmar ausente o mínimo. Pulgar en oposición. Dedos arqueados rodeando el objeto.',
-    fuente:'Fig. 10 — Manual clínico TO, UNAL'
+    fuente:'Fig. 10 — Duarte Torres SC. Manual clínico de TO en alteraciones osteomusculares de miembro superior. UNAL, 2024.'
   },
   // ─── AGARRES MIXTOS: sostienen en palma y movilizan el objeto ─────────────
   digitoPalmar: {
@@ -1944,7 +1945,7 @@ const GRASP_TAXONOMY = {
     color:'#a78bfa',
     anatomia:'Flexión/extensión MCP, extensión de interfalángicas, pulgar como apoyo',
     desc:'Sostiene el objeto en la palma y lo moviliza. Metacarpofalángicas activas, interfalángicas extendidas, pulgar en apoyo lateral.',
-    fuente:'Fig. 12 — Manual clínico TO, UNAL'
+    fuente:'Fig. 12 — Duarte Torres SC. Manual clínico de TO en alteraciones osteomusculares de miembro superior. UNAL, 2024.'
   },
   enganche: {
     grasp:'Enganche',
@@ -1953,7 +1954,7 @@ const GRASP_TAXONOMY = {
     color:'#f87171',
     anatomia:'Flexión de interfalángicas, extensión de metacarpofalángicas, pulgar libre',
     desc:'Sostiene y moviliza el objeto. Interfalángicas flexionadas, MCPs extendidas. Pulgar no participa.',
-    fuente:'Fig. 13 — Manual clínico TO, UNAL'
+    fuente:'Fig. 13 — Duarte Torres SC. Manual clínico de TO en alteraciones osteomusculares de miembro superior. UNAL, 2024.'
   },
   digitoDigital: {
     grasp:'Agarre dígito-digital',
@@ -1962,7 +1963,7 @@ const GRASP_TAXONOMY = {
     color:'#34d399',
     anatomia:'Falanges distales de los cinco dígitos implicadas',
     desc:'Sostiene el objeto con las falanges distales de los 5 dedos. Contacto palmar mínimo con movilización activa.',
-    fuente:'Fig. 14 — Manual clínico TO, UNAL'
+    fuente:'Fig. 14 — Duarte Torres SC. Manual clínico de TO en alteraciones osteomusculares de miembro superior. UNAL, 2024.'
   },
   // ─── AGARRES DE PRECISIÓN: objeto en dedos, oposición independiente ────────
   pinzaLateral: {
@@ -1972,7 +1973,7 @@ const GRASP_TAXONOMY = {
     color:'var(--acc3)',
     anatomia:'Pulgar en contacto con la falange media del 2° dedo (cara lateral)',
     desc:'Objeto sostenido por los dedos con oposición pulgar. Pulgar presiona cara lateral de la falange media del índice.',
-    fuente:'Fig. 16 — Manual clínico TO, UNAL'
+    fuente:'Fig. 16 — Duarte Torres SC. Manual clínico de TO en alteraciones osteomusculares de miembro superior. UNAL, 2024.'
   },
   pinzaTripode: {
     grasp:'Pinza trípode',
@@ -1981,7 +1982,7 @@ const GRASP_TAXONOMY = {
     color:'#60a5fa',
     anatomia:'Falanges distales del 1°, 2° y 3° dedo',
     desc:'Oposición pulgar con yemas del índice y medio. Tres dígitos sostienen el objeto con movimientos independientes.',
-    fuente:'Fig. 17 — Manual clínico TO, UNAL'
+    fuente:'Fig. 17 — Duarte Torres SC. Manual clínico de TO en alteraciones osteomusculares de miembro superior. UNAL, 2024.'
   },
   pinzaFina: {
     grasp:'Pinza fina (oposición terminal)',
@@ -1990,7 +1991,7 @@ const GRASP_TAXONOMY = {
     color:'var(--acc5)',
     anatomia:'Oposición del pulgar con el 2° dedo; falanges distales de ambos en contacto',
     desc:'Oposición terminal pulgar-índice: falanges distales de ambos dedos en contacto. Movimientos independientes y coordinados.',
-    fuente:'Fig. 18 — Manual clínico TO, UNAL'
+    fuente:'Fig. 18 — Duarte Torres SC. Manual clínico de TO en alteraciones osteomusculares de miembro superior. UNAL, 2024.'
   },
   pinzaTripodeDin: {
     grasp:'Pinza trípode dinámica',
@@ -1999,7 +2000,7 @@ const GRASP_TAXONOMY = {
     color:'#f472b6',
     anatomia:'3 primeros dígitos; objeto apoyado en cara lateral del 3er dedo',
     desc:'Variante dinámica del trípode: el objeto se apoya en la cara lateral del dedo medio, permitiendo manipulación fina.',
-    fuente:'Fig. 19 — Manual clínico TO, UNAL'
+    fuente:'Fig. 19 — Duarte Torres SC. Manual clínico de TO en alteraciones osteomusculares de miembro superior. UNAL, 2024.'
   },
   pinzaLateroLateral: {
     grasp:'Pinza latero-lateral',
@@ -2008,13 +2009,13 @@ const GRASP_TAXONOMY = {
     color:'#fb923c',
     anatomia:'Objeto sujeto entre el 2°-3° dedo o entre el 3°-4° dedo',
     desc:'El objeto es sostenido entre la cara lateral de dos dedos adyacentes, sin participación del pulgar.',
-    fuente:'Fig. 20 — Manual clínico TO, UNAL'
+    fuente:'Fig. 20 — Duarte Torres SC. Manual clínico de TO en alteraciones osteomusculares de miembro superior. UNAL, 2024.'
   }
 };
 
 // ══════════════════════════════════════════════════════════════════════════════
 // CLASIFICACIÓN DE AGARRE — árbol de decisión con landmarks MediaPipe
-// Referencia biomecánica: Manual Clínico de TO, UNAL (Paredes Castro)
+// Referencia: Manual Clínico de Terapia Ocupacional — Universidad Nacional de Colombia
 // ══════════════════════════════════════════════════════════════════════════════
 function classifyGrasp(lms){
   if(!lms||lms.length<21) return null;
@@ -2131,7 +2132,7 @@ function classifyGrasp(lms){
       color:'var(--acc)', key:'extendida',
       anatomia:'Extensión de metacarpofalángicas e interfalángicas',
       desc:'Patrón de soltar: extensión de MCPs e IFs. Voluntario o rudimentario.',
-      fuente:'Patrones integrales — Soltar (Manual TO, UNAL)',
+      fuente:'Duarte Torres SC. Manual clínico de TO en alteraciones osteomusculares de miembro superior. UNAL, 2024.',
       detail:`Flexión dedos: ${Math.round(avgFlex4*100)}% | Pulgar: ${Math.round(thumb.flex*100)}%`
     };
   }
@@ -2410,7 +2411,7 @@ function updHand(r){
   });
   document.getElementById('spread-grid').innerHTML=spreadHtml||'<div class="mc full"><div class="mu" style="padding:5px 0;text-align:center">Sin datos</div></div>';
 
-  // Clasificación avanzada de agarre — taxonomía clínica TO (Paredes Castro, UNAL)
+  // Clasificación avanzada de agarre — taxonomía del Manual Clínico de TO, UNAL
   if(r.multiHandLandmarks[0]){
     const g=classifyGrasp(r.multiHandLandmarks[0]);
     if(g){
@@ -2625,7 +2626,7 @@ function ximg(){
 }
 function xjson(){
   const data={
-    meta:{version:'6.0',fecha:new Date().toISOString(),modo:mode,vista:view,autora:'Karen Vanessa Paredes Castro',institucion:'Universidad Nacional de Colombia',referencia:'Patrones integrales — Manual Clínico de TO, UNAL'},
+    meta:{version:'6.0',fecha:new Date().toISOString(),modo:mode,vista:view,autora:'Karen Vanessa Paredes Castro',institucion:'Universidad Nacional de Colombia',referencia:'Duarte Torres SC. Manual clínico de TO en alteraciones osteomusculares de miembro superior. UNAL, 2024.'},
     poseLandmarks:lLms||null,
     handLandmarks:lHandResults?.multiHandLandmarks||null,
     handedness:lHandResults?.multiHandedness||null,
