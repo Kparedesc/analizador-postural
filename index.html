@@ -555,12 +555,12 @@ footer{
     <div class="logo-mark">🦴</div>
     <div>
       <div class="logo-text">Analizador Postural · TO</div>
-      <div class="logo-sub">MediaPipe · UNAL · v6.0</div>
+      <div class="logo-sub">MediaPipe · UNAL · v7.0</div>
     </div>
   </div>
   <div class="hdr-r">
     <div class="author-chip"><div class="av">KP</div><span class="author-name">Karen Paredes · UNAL</span></div>
-    <div class="badge-h">v6.0</div>
+    <div class="badge-h">v7.0</div>
   </div>
 </header>
 
@@ -569,12 +569,9 @@ footer{
     <div class="hero-title">Análisis postural y de mano <span>asistido por IA</span></div>
     <div class="hero-desc">Herramienta para valoración de ayudas técnicas en Terapia Ocupacional. Analiza postura corporal, marcha y mano desde imágenes o videos.</div>
     <div class="hero-tags">
-      <span class="tag g">Pose frontal</span>
-      <span class="tag b">Pose sagital</span>
-      <span class="tag o">Análisis de marcha</span>
-      <span class="tag p">Análisis de mano</span>
-      <span class="tag">Calibración cm</span>
-      <span class="tag o">11 tipos de agarre · Manual TO</span>
+      <span class="tag g">Pose frontal</span><span class="tag b">Pose sagital</span>
+      <span class="tag o">Análisis de marcha</span><span class="tag p">Análisis de mano</span>
+      <span class="tag">Calibración cm</span><span class="tag o">11 tipos de agarre · Manual TO</span>
     </div>
   </div>
   <div class="author-card">
@@ -597,28 +594,22 @@ footer{
       <div class="mode-selector-lbl">¿Qué vas a evaluar?</div>
       <div class="mode-cards">
         <div class="mcard active-pose" id="mcard-pose" onclick="selectMode('pose')">
-          <div class="mcard-icon">🧍</div>
-          <div class="mcard-name">Pose frontal</div>
+          <div class="mcard-icon">🧍</div><div class="mcard-name">Pose frontal</div>
           <div class="mcard-desc">Imagen/video · Simetría L/D</div>
         </div>
         <div class="mcard" id="mcard-sagital" onclick="selectMode('sagital')">
-          <div class="mcard-icon">🚶</div>
-          <div class="mcard-name">Pose sagital</div>
+          <div class="mcard-icon">🚶</div><div class="mcard-name">Pose sagital</div>
           <div class="mcard-desc">Imagen/video · Ángulos laterales</div>
         </div>
         <div class="mcard" id="mcard-gait" onclick="selectMode('gait')">
-          <div class="mcard-icon">🎞</div>
-          <div class="mcard-name">Marcha</div>
+          <div class="mcard-icon">🎞</div><div class="mcard-name">Marcha</div>
           <div class="mcard-desc">Video sagital · Fases y rangos</div>
         </div>
         <div class="mcard" id="mcard-hand" onclick="selectMode('hand')">
-          <div class="mcard-icon">✋</div>
-          <div class="mcard-name">Mano</div>
+          <div class="mcard-icon">✋</div><div class="mcard-name">Mano</div>
           <div class="mcard-desc">Imagen · MCP, PIP, DIP, agarre</div>
         </div>
       </div>
-
-      <!-- Selector de mano -->
       <div id="hand-selector-wrap" style="display:none">
         <div style="font-family:var(--mono);font-size:9px;color:var(--text3);letter-spacing:.8px;text-transform:uppercase;margin-top:8px;margin-bottom:4px;">Seleccionar mano</div>
         <div class="hand-selector">
@@ -632,8 +623,6 @@ footer{
           <div class="tog on" id="tmirror" onclick="toggleMirror(this)"></div>
         </div>
       </div>
-
-      <!-- Nota marcha -->
       <div id="gait-mode-note" style="display:none;margin-top:7px;" class="gait-info-banner">
         📹 <strong>Solo videos sagitales.</strong> Graba al paciente de perfil capturando todo el cuerpo durante el ciclo de marcha.
       </div>
@@ -649,21 +638,21 @@ footer{
       <div class="calib-st" id="calib-st">Sin calibrar — distancias en píxeles</div>
     </div>
 
-    <!-- 3. Calibración mano (solo modo mano) -->
+    <!-- 3. Calibración mano -->
     <div class="sec" id="hand-calib-sec" style="display:none">
       <div class="sec-lbl">Calibración — objeto de referencia</div>
       <div style="font-size:10px;color:var(--text2);margin-bottom:7px;line-height:1.5;">
-        Coloca un objeto conocido junto a la mano (ej. moneda 100 COP = 2.3 cm). Las distancias dependen de la distancia cámara–mano.
+        Coloca un objeto conocido junto a la mano (ej. moneda 100 COP = 2.3 cm). <strong style="color:var(--teal)">Si usas la cámara a distancia estándar, los WorldLandmarks de MediaPipe dan medidas en cm reales automáticamente.</strong>
       </div>
       <div class="calib-row">
         <input class="calib-input" type="number" id="ref-obj-cm" placeholder="Tamaño objeto" min="0.5" max="50" step="0.1">
         <span class="calib-unit">cm</span>
       </div>
       <button class="btn b4" id="btn-ref-start" onclick="startRefCalib()" style="margin-top:6px;">📍 Marcar referencia en imagen</button>
-      <div class="calib-st" id="hand-calib-st" style="margin-top:5px;">Sin calibrar — distancias relativas (razón muñeca)</div>
+      <div class="calib-st" id="hand-calib-st" style="margin-top:5px;">WorldLandmarks activos — medidas en cm reales</div>
     </div>
 
-    <!-- 4. Condición de evaluación (solo modo mano) -->
+    <!-- 4. Condición de evaluación -->
     <div class="sec" id="adit-sec" style="display:none">
       <div class="sec-lbl">Condición de evaluación</div>
       <div style="display:flex;align-items:center;gap:8px;margin-bottom:7px;">
@@ -673,7 +662,7 @@ footer{
       <div id="adit-panel" style="display:none;">
         <input class="calib-input" id="adit-desc" placeholder="Describe el aditamento (ej: férula muñeca)" style="width:100%;font-size:11px;margin-bottom:6px;">
         <div style="font-size:10px;color:var(--acc3);background:rgba(245,158,11,.05);border:1px solid rgba(245,158,11,.22);border-radius:6px;padding:7px 9px;line-height:1.5;">
-          ⚠ Con aditamentos rígidos la detección puede ser imprecisa. Analiza los dedos libres y documenta las articulaciones cubiertas.
+          ⚠ Con aditamentos rígidos la detección puede ser imprecisa.
         </div>
         <div style="display:flex;align-items:center;gap:8px;margin-top:7px;">
           <div class="tog on" id="tpartial" onclick="togglePartial(this)"></div>
@@ -711,8 +700,9 @@ footer{
       <div class="sec-lbl">Exportar</div>
       <div class="export-grid">
         <button class="btn full" id="bcsv" disabled onclick="xcsv()">↓ CSV clínico</button>
-        <button class="btn b2" id="bimg" disabled onclick="ximg()">↓ Imagen</button>
-        <button class="btn b3" id="bjson" disabled onclick="xjson()">↓ JSON</button>
+        <button class="btn b2" id="bimg" disabled onclick="ximg()">↓ Imagen PNG</button>
+        <button class="btn b3" id="bjson" disabled onclick="xjson()">↓ JSON completo</button>
+        <button class="btn b4 full" id="bgaitcsv" disabled onclick="xGaitCsv()" style="display:none">↓ CSV series de tiempo marcha</button>
       </div>
     </div>
 
@@ -720,8 +710,6 @@ footer{
 
   <!-- RIGHT PANEL -->
   <div class="panel-r">
-
-    <!-- Results tabs (above canvas) -->
     <div id="rtab-bar" style="display:none">
       <div class="rtab-bar">
         <div class="rtab ractive-g" id="rt-pose" onclick="showRTab('pose')" style="display:none">Ángulos</div>
@@ -731,7 +719,6 @@ footer{
       </div>
     </div>
 
-    <!-- Canvas -->
     <div class="cvwrap" id="cvw">
       <div class="ph" id="ph">
         <div class="ph-grid"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>
@@ -746,11 +733,13 @@ footer{
 
     <!-- Video controls -->
     <div class="vbar" id="vbar">
-      <input type="range" id="sk" min="0" max="100" value="0" step="0.1">
+      <input type="range" id="sk" min="0" max="100" value="0" step="0.01">
       <div class="vc">
         <button class="vcb" id="bpl" onclick="tplay()">▶ Play</button>
-        <button class="vcb" onclick="sf(-1)">◀ Frame</button>
-        <button class="vcb" onclick="sf(1)">Frame ▶</button>
+        <button class="vcb" onclick="stepFrame(-1)">◀ Frame</button>
+        <button class="vcb" onclick="stepFrame(1)">Frame ▶</button>
+        <button class="vcb" onclick="stepFrame(-10)">◀◀ -1s</button>
+        <button class="vcb" onclick="stepFrame(10)">+1s ▶▶</button>
         <span class="td" id="tdisp">0.00s / 0.00s</span>
       </div>
     </div>
@@ -769,7 +758,7 @@ footer{
         <div class="mgrid" id="dg"><div class="mc full"><div class="mu" style="padding:5px 0;text-align:center">Sin datos</div></div></div>
       </div>
 
-      <!-- SIMETRÍA (solo frontal) -->
+      <!-- SIMETRÍA -->
       <div class="rtab-content" id="rp-sym" style="display:none;padding:12px 14px;">
         <div class="sub-lbl">Índice de simetría L/D — vista frontal</div>
         <div id="symc"><div style="color:var(--text3);font-size:11px;text-align:center;padding:6px 0">Sin datos</div></div>
@@ -791,14 +780,33 @@ footer{
           </div>
           <div class="sub-lbl">Fases estimadas</div>
           <div class="gait-phase-bar" id="gait-phase-bar">
-            <div class="gait-phase-seg" style="background:var(--acc2);width:60%">APOYO</div>
-            <div class="gait-phase-seg" style="background:var(--acc5);width:40%">BALANCEO</div>
+            <div class="gait-phase-seg" style="background:var(--blue2);width:60%">APOYO</div>
+            <div class="gait-phase-seg" style="background:var(--info);width:40%">BALANCEO</div>
           </div>
           <div style="display:flex;justify-content:space-between;font-size:9px;color:var(--text3);font-family:var(--mono);margin-bottom:8px;">
             <span id="gait-phase-apoyo-pct">Apoyo: 60%</span>
             <span id="gait-phase-bal-pct">Balanceo: 40%</span>
           </div>
-          <div class="sub-lbl">Goniograma</div>
+
+          <!-- SIMETRÍA GAIT — elementos que updGaitPanel necesita -->
+          <div class="sub-lbl">Simetría L/D (% similitud de rango)</div>
+          <div class="gait-sym-row">
+            <div class="gait-sym-lbl">Rodilla</div>
+            <div class="gait-sym-track"><div class="gait-sym-fill" id="sym-rod" style="width:0%"></div></div>
+            <div class="gait-sym-pct" id="sym-rod-pct">—</div>
+          </div>
+          <div class="gait-sym-row">
+            <div class="gait-sym-lbl">Cadera</div>
+            <div class="gait-sym-track"><div class="gait-sym-fill" id="sym-cad" style="width:0%"></div></div>
+            <div class="gait-sym-pct" id="sym-cad-pct">—</div>
+          </div>
+          <div class="gait-sym-row" style="margin-bottom:8px;">
+            <div class="gait-sym-lbl">Tobillo</div>
+            <div class="gait-sym-track"><div class="gait-sym-fill" id="sym-tob" style="width:0%"></div></div>
+            <div class="gait-sym-pct" id="sym-tob-pct">—</div>
+          </div>
+
+          <div class="sub-lbl">Goniograma — series de tiempo</div>
           <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:6px;">
             <label style="font-size:10px;color:var(--text2);display:flex;align-items:center;gap:3px;cursor:pointer;"><input type="checkbox" id="gon-rod" checked onchange="drawGoniograma()"> <span style="color:#4ade80">Rodilla</span></label>
             <label style="font-size:10px;color:var(--text2);display:flex;align-items:center;gap:3px;cursor:pointer;"><input type="checkbox" id="gon-cad" checked onchange="drawGoniograma()"> <span style="color:#60a5fa">Cadera</span></label>
@@ -814,13 +822,16 @@ footer{
             <thead><tr><th>Articulación</th><th style="text-align:center">Apoyo</th><th style="text-align:center">Balanceo</th><th style="text-align:right">Ref.</th></tr></thead>
             <tbody id="gait-phase-tbody"><tr><td colspan="4" style="color:var(--text3);text-align:center;padding:8px 0;font-size:11px">Sin datos</td></tr></tbody>
           </table>
-          <button class="btn b4" style="margin-top:8px;" onclick="saveGaitSesion('base')">💾 Guardar sesión base</button>
+          <div style="display:flex;gap:5px;margin-top:8px;">
+            <button class="btn b4" style="flex:1" onclick="saveGaitSesion('base')">💾 Guardar sesión base</button>
+            <button class="btn b2" style="flex:1" id="bgaitcsv-inline" onclick="xGaitCsv()">↓ CSV marcha</button>
+          </div>
         </div>
         <div id="ses-adit" style="display:none">
           <div class="gait-info-banner">Carga el video con aditamento en modo Marcha y presiona <strong>Guardar</strong>.</div>
           <button class="btn b4" style="margin-top:8px;" onclick="saveGaitSesion('adit')">💾 Guardar sesión con aditamento</button>
           <div id="ses-adit-saved" style="display:none;margin-top:8px;">
-            <div style="font-size:10px;color:var(--acc);font-family:var(--mono);margin-bottom:5px;">✓ Guardada</div>
+            <div style="font-size:10px;color:var(--ok);font-family:var(--mono);margin-bottom:5px;">✓ Guardada</div>
             <table class="atbl" id="gait-adit-table">
               <thead><tr><th>Articulación</th><th style="text-align:center">Apoyo</th><th style="text-align:center">Balanceo</th></tr></thead>
               <tbody id="gait-adit-tbody"></tbody>
@@ -829,7 +840,7 @@ footer{
         </div>
         <div id="ses-comp" style="display:none">
           <div style="font-size:11px;color:var(--text3);margin-bottom:8px;">Guarda ambas sesiones para comparar.</div>
-          <table class="atbl" id="gait-comp-table">
+          <table class="atbl">
             <thead><tr><th>Articulación / Fase</th><th style="text-align:center">Base</th><th style="text-align:center">Aditamento</th><th style="text-align:right">Δ</th></tr></thead>
             <tbody id="gait-comp-tbody"><tr><td colspan="4" style="color:var(--text3);text-align:center;padding:8px 0;font-size:11px">—</td></tr></tbody>
           </table>
@@ -838,6 +849,12 @@ footer{
 
       <!-- MANO -->
       <div class="rtab-content" id="rp-hand" style="display:none;padding:12px 14px;">
+        <!-- Dimensiones de la mano (NEW) -->
+        <div class="sub-lbl">Dimensiones de la mano</div>
+        <div id="hand-dims">
+          <div style="color:var(--text3);font-size:11px;text-align:center;padding:6px 0">Carga un archivo con mano visible</div>
+        </div>
+        <div class="sub-lbl" style="margin-top:10px;">Ángulos articulares por dedo</div>
         <div id="hand-results"><div style="color:var(--text3);font-size:11px;text-align:center;padding:12px 0">Carga un archivo con mano visible</div></div>
         <div class="sub-lbl" style="margin-top:10px;">Apertura entre dedos</div>
         <div class="mgrid" id="spread-grid"><div class="mc full"><div class="mu" style="padding:5px 0;text-align:center">Sin datos</div></div></div>
@@ -848,22 +865,10 @@ footer{
           <div style="background:var(--sur2);border:1px solid var(--brd);border-radius:8px;padding:9px 11px;">
             <div style="font-size:9px;color:var(--text3);font-family:var(--mono);margin-bottom:7px;">Fuente: Manual Clínico de Terapia Ocupacional — UNAL</div>
             <div style="display:grid;grid-template-columns:1fr 1fr;gap:4px;">
-              <div style="background:rgba(74,222,128,.04);border:1px solid rgba(74,222,128,.15);border-radius:6px;padding:6px 8px;">
-                <div style="font-size:8px;color:var(--acc);font-family:var(--mono);margin-bottom:2px;">ALCANZAR</div>
-                <div style="font-size:9px;color:var(--text2);line-height:1.4;">Hombro: flex, abd, add, ext. 3 niveles.</div>
-              </div>
-              <div style="background:rgba(248,113,113,.04);border:1px solid rgba(248,113,113,.15);border-radius:6px;padding:6px 8px;">
-                <div style="font-size:8px;color:var(--acc4);font-family:var(--mono);margin-bottom:2px;">SOLTAR</div>
-                <div style="font-size:9px;color:var(--text2);line-height:1.4;">MCPs e IFs: extensión. Voluntario o rudimentario.</div>
-              </div>
-              <div style="background:rgba(245,158,11,.04);border:1px solid rgba(245,158,11,.15);border-radius:6px;padding:6px 8px;">
-                <div style="font-size:8px;color:var(--acc3);font-family:var(--mono);margin-bottom:2px;">LANZAR</div>
-                <div style="font-size:9px;color:var(--text2);line-height:1.4;">Hombro y codo: flexión-extensión simultáneos.</div>
-              </div>
-              <div style="background:rgba(96,165,250,.04);border:1px solid rgba(96,165,250,.15);border-radius:6px;padding:6px 8px;">
-                <div style="font-size:8px;color:var(--acc2);font-family:var(--mono);margin-bottom:2px;">AGARRAR</div>
-                <div style="font-size:9px;color:var(--text2);line-height:1.4;">Muñeca, MCPs, IFs. Fuerza · Mixtos · Precisión.</div>
-              </div>
+              <div style="background:rgba(74,222,128,.04);border:1px solid rgba(74,222,128,.15);border-radius:6px;padding:6px 8px;"><div style="font-size:8px;color:var(--ok);font-family:var(--mono);margin-bottom:2px;">ALCANZAR</div><div style="font-size:9px;color:var(--text2);line-height:1.4;">Hombro: flex, abd, add, ext. 3 niveles.</div></div>
+              <div style="background:rgba(248,113,113,.04);border:1px solid rgba(248,113,113,.15);border-radius:6px;padding:6px 8px;"><div style="font-size:8px;color:var(--alert);font-family:var(--mono);margin-bottom:2px;">SOLTAR</div><div style="font-size:9px;color:var(--text2);line-height:1.4;">MCPs e IFs: extensión. Voluntario o rudimentario.</div></div>
+              <div style="background:rgba(245,158,11,.04);border:1px solid rgba(245,158,11,.15);border-radius:6px;padding:6px 8px;"><div style="font-size:8px;color:var(--gold);font-family:var(--mono);margin-bottom:2px;">LANZAR</div><div style="font-size:9px;color:var(--text2);line-height:1.4;">Hombro y codo: flexión-extensión simultáneos.</div></div>
+              <div style="background:rgba(96,165,250,.04);border:1px solid rgba(96,165,250,.15);border-radius:6px;padding:6px 8px;"><div style="font-size:8px;color:var(--blue);font-family:var(--mono);margin-bottom:2px;">AGARRAR</div><div style="font-size:9px;color:var(--text2);line-height:1.4;">Muñeca, MCPs, IFs. Fuerza · Mixtos · Precisión.</div></div>
             </div>
           </div>
         </div>
@@ -878,122 +883,56 @@ footer{
     <div class="fdot"></div>
     <span>Karen Vanessa Paredes Castro &nbsp;·&nbsp; Docente de Terapia Ocupacional &nbsp;·&nbsp; Universidad Nacional de Colombia · 2026</span>
   </div>
-  <span style="font-family:var(--mono);font-size:9px;color:var(--text3)">MediaPipe · v6.0 · Ref: Duarte Torres SC, Manual clínico TO, UNAL 2024</span>
+  <span style="font-family:var(--mono);font-size:9px;color:var(--text3)">MediaPipe · v7.0 · Ref: Duarte Torres SC, Manual clínico TO, UNAL 2024</span>
 </footer>
 
-<!-- MediaPipe -->
 <script src="https://unpkg.com/@mediapipe/pose@0.5.1675469404/pose.js" crossorigin="anonymous"></script>
 <script src="https://unpkg.com/@mediapipe/hands@0.4.1646424915/hands.js" crossorigin="anonymous"></script>
-
 <script>
 // ══════════════════════════════════════════════════════════════════════════════
-// DEFINICIONES ANATÓMICAS
+// CONSTANTES ANATÓMICAS
 // ══════════════════════════════════════════════════════════════════════════════
 const CONN=[[11,12],[11,13],[13,15],[12,14],[14,16],[11,23],[12,24],[23,24],[23,25],[24,26],[25,27],[26,28],[27,29],[28,30],[27,31],[28,32],[0,1],[1,2],[2,3],[3,7],[0,4],[4,5],[5,6],[6,8],[9,10],[15,17],[15,19],[15,21],[16,18],[16,20],[16,22]];
 const LI=new Set([1,3,7,11,13,15,17,19,21,23,25,27,29,31]);
+const HAND_CONN=[[0,1],[1,2],[2,3],[3,4],[0,5],[5,6],[6,7],[7,8],[5,9],[9,10],[10,11],[11,12],[9,13],[13,14],[14,15],[15,16],[13,17],[17,18],[18,19],[19,20],[0,17]];
 
-// ── Articulaciones posturales (frontal y sagital) ─────────────────────────────
-// Cada entrada incluye:
-//   n      = nombre en pantalla
-//   mov    = movimiento biomecánico que mide el ángulo
-//   plano  = plano anatómico de medición
-//   desc   = descripción corta para tooltip
-//   ref    = rango como texto
-//   refLo / refHi = límites numéricos para semáforo de color
-//   posRef = qué posición corresponde al rango de referencia
+// ── Articulaciones posturales ─────────────────────────────────────────────────
 const JOINTS_FRONTAL=[
-  {
-    n:'Inclinación lat. tronco sup.',
-    mov:'Inclinación lateral del tronco superior',
-    plano:'Frontal',
-    desc:'Ángulo entre la línea hombro→cadera y la horizontal. 180°=tronco recto sin inclinación lateral.',
-    L:[12,11,23], R:[11,12,24],
-    ref:'170-180', refLo:170, refHi:180,
-    posRef:'Bipedestación erguida'
-  },
-  {
-    n:'Alineación tronco–cadera–rodilla',
-    mov:'Alineación axial segmento tronco-pelvis-muslo',
-    plano:'Frontal',
-    desc:'Ángulo entre hombro→cadera→rodilla. 180°=alineación vertical perfecta sin desviación lateral.',
-    L:[11,23,25], R:[12,24,26],
-    ref:'170-180', refLo:170, refHi:180,
-    posRef:'Bipedestación erguida'
-  },
-  {
-    n:'Ángulo femorotibial (valgo/varo)',
-    mov:'Alineación femorotibial — valgo / varo de rodilla',
-    plano:'Frontal',
-    desc:'Ángulo cadera→rodilla→tobillo. 180°=rodilla recta. <170°=posible genu valgo o varo. Comparar L vs R.',
-    L:[23,25,27], R:[24,26,28],
-    ref:'170-180', refLo:170, refHi:180,
-    posRef:'Bipedestación, pies paralelos'
-  },
-  {
-    n:'Simetría cintura escapular',
-    mov:'Ángulo tronco–línea interhumeral',
-    plano:'Frontal',
-    desc:'Ángulo entre el eje vertical del tronco (cadera→hombro) y la línea entre hombros. 90°=hombros nivelados y simétricos.',
-    L:[23,11,12], R:[24,12,11],
-    ref:'85-95', refLo:85, refHi:95,
-    posRef:'Bipedestación, hombros nivelados'
-  },
+  {n:'Inclinación lat. tronco sup.',mov:'Inclinación lateral tronco superior',plano:'Frontal',
+   desc:'Ángulo entre línea hombro→cadera y horizontal. 180°=tronco recto.',
+   L:[12,11,23],R:[11,12,24],ref:'170-180',refLo:170,refHi:180,posRef:'Bipedestación erguida'},
+  {n:'Alineación tronco–cadera–rodilla',mov:'Alineación axial tronco-pelvis-muslo',plano:'Frontal',
+   desc:'Ángulo hombro→cadera→rodilla. 180°=alineación vertical perfecta.',
+   L:[11,23,25],R:[12,24,26],ref:'170-180',refLo:170,refHi:180,posRef:'Bipedestación erguida'},
+  {n:'Ángulo femorotibial (valgo/varo)',mov:'Alineación femorotibial — valgo/varo de rodilla',plano:'Frontal',
+   desc:'Ángulo cadera→rodilla→tobillo. 180°=rodilla recta. <170°=posible genu valgo o varo.',
+   L:[23,25,27],R:[24,26,28],ref:'170-180',refLo:170,refHi:180,posRef:'Bipedestación, pies paralelos'},
+  {n:'Simetría cintura escapular',mov:'Ángulo tronco–línea interhumeral',plano:'Frontal',
+   desc:'Ángulo eje vertical tronco y línea entre hombros. 90°=hombros nivelados.',
+   L:[23,11,12],R:[24,12,11],ref:'85-95',refLo:85,refHi:95,posRef:'Bipedestación, hombros nivelados'},
 ];
 const JOINTS_SAGITAL=[
-  {
-    n:'Flexo-extensión de codo',
-    mov:'Flexión / extensión del codo',
-    plano:'Sagital',
-    desc:'Ángulo hombro→codo→muñeca. 180°=extensión total. 30-130°=rango funcional para AVD. Ref. amplitud total: 0-145°.',
-    L:[11,13,15], R:[12,14,16],
-    ref:'0-145', refLo:0, refHi:145,
-    posRef:'Amplitud total (0°=extensión, 145°=flexión máx.)'
-  },
-  {
-    n:'Flexo-extensión de hombro',
-    mov:'Flexión / extensión glenohumeral',
-    plano:'Sagital',
-    desc:'Ángulo codo→hombro→cadera. Equivale a la medición goniométrica clásica: brazo fijo=tronco, brazo móvil=húmero. 0°=brazo junto al cuerpo, 180°=elevación completa.',
-    L:[13,11,23], R:[14,12,24],
-    ref:'0-180', refLo:0, refHi:180,
-    posRef:'Amplitud total (0°=neutro, 180°=flexión máx.)'
-  },
-  {
-    n:'Flexo-extensión de cadera',
-    mov:'Flexión / extensión de cadera',
-    plano:'Sagital',
-    desc:'Ángulo hombro→cadera→rodilla. 170-180°=cadera extendida en bipedestación. 85-95°=cadera en 90° de flexión (sedestación). Valor depende de la posición evaluada.',
-    L:[11,23,25], R:[12,24,26],
-    ref:'170-180', refLo:170, refHi:180,
-    posRef:'Bipedestación (cadera extendida)'
-  },
-  {
-    n:'Flexo-extensión de rodilla',
-    mov:'Flexión / extensión de rodilla',
-    plano:'Sagital',
-    desc:'Ángulo cadera→rodilla→tobillo. 180°=rodilla en extensión completa (bipedestación). 0-135°=amplitud total de flexión.',
-    L:[23,25,27], R:[24,26,28],
-    ref:'170-180', refLo:170, refHi:180,
-    posRef:'Bipedestación (rodilla extendida)'
-  },
-  {
-    n:'Dorsiflexión / flexión plantar',
-    mov:'Dorsiflexión y flexión plantar de tobillo',
-    plano:'Sagital',
-    desc:'Ángulo rodilla→tobillo→pie. 90°=posición neutra (pie perpendicular a pierna). >90°=dorsiflexión. <90°=flexión plantar.',
-    L:[25,27,31], R:[26,28,32],
-    ref:'85-110', refLo:85, refHi:110,
-    posRef:'Posición neutra: 90° ± margen funcional'
-  },
-  {
-    n:'Posición anterior de cabeza',
-    mov:'Forward head posture (protrusión cefálica)',
-    plano:'Sagital',
-    desc:'Ángulo hombro→nariz→oreja. 160-175°=cabeza bien alineada sobre hombros. Valores <160°=protrusión anterior de cabeza (forward head posture).',
-    L:[11,0,7], R:[12,0,8],
-    ref:'160-175', refLo:160, refHi:175,
-    posRef:'Bipedestación, cabeza neutra'
-  },
+  {n:'Flexo-extensión de codo',mov:'Flexión/extensión del codo',plano:'Sagital',
+   desc:'Ángulo hombro→codo→muñeca. 180°=extensión total. 0-145°=amplitud total.',
+   L:[11,13,15],R:[12,14,16],ref:'0-145',refLo:0,refHi:145,posRef:'Amplitud total (0°=ext, 145°=flex máx.)'},
+  {n:'Flexo-extensión de hombro',mov:'Flexión/extensión glenohumeral',plano:'Sagital',
+   desc:'Ángulo codo→hombro→cadera. 0°=brazo junto al cuerpo, 180°=elevación completa.',
+   L:[13,11,23],R:[14,12,24],ref:'0-180',refLo:0,refHi:180,posRef:'Amplitud total (0°=neutro, 180°=flex máx.)'},
+  {n:'Flexo-extensión de cadera',mov:'Flexión/extensión de cadera',plano:'Sagital',
+   desc:'Ángulo hombro→cadera→rodilla. 170-180°=cadera extendida en bipedestación.',
+   L:[11,23,25],R:[12,24,26],ref:'170-180',refLo:170,refHi:180,posRef:'Bipedestación (cadera extendida)'},
+  {n:'Flexo-extensión de rodilla',mov:'Flexión/extensión de rodilla',plano:'Sagital',
+   desc:'Ángulo cadera→rodilla→tobillo. 180°=rodilla en extensión. 0-135°=amplitud total.',
+   L:[23,25,27],R:[24,26,28],ref:'170-180',refLo:170,refHi:180,posRef:'Bipedestación (rodilla extendida)'},
+  {n:'Dorsiflexión/flexión plantar',mov:'Dorsiflexión y flexión plantar de tobillo',plano:'Sagital',
+   desc:'Ángulo rodilla→tobillo→pie. 90°=neutro. >90°=dorsiflexión. <90°=flexión plantar.',
+   L:[25,27,31],R:[26,28,32],ref:'85-110',refLo:85,refHi:110,posRef:'Posición neutra: 90° ± margen'},
+  {n:'Posición anterior de cabeza',mov:'Forward head posture',plano:'Sagital',
+   desc:'Ángulo hombro→nariz→oreja. 160-175°=cabeza bien alineada. <160°=protrusión anterior.',
+   L:[11,0,7],R:[12,0,8],ref:'160-175',refLo:160,refHi:175,posRef:'Bipedestación, cabeza neutra'},
+  {n:'Proyección sagital hombro-muñeca',mov:'Alineación anteroposterior miembro superior',plano:'Sagital',
+   desc:'Ángulo hombro→codo→muñeca en plano sagital. Complemento al análisis de codo.',
+   L:[11,13,15],R:[12,14,16],ref:'150-180',refLo:150,refHi:180,posRef:'Brazo extendido a lo largo del cuerpo'},
 ];
 const DISTS_FRONTAL=[
   {n:'Ancho hombros',p:[11,12]},{n:'Ancho caderas',p:[23,24]},
@@ -1006,181 +945,246 @@ const DISTS_SAGITAL=[
   {n:'Tibia izq',p:[25,27]},{n:'Tibia der',p:[26,28]},
   {n:'Brazo izq',p:[11,15]},{n:'Antebrazo izq',p:[13,15]}
 ];
-const VJ=[
-  {id:11,n:'Hombro I'},{id:12,n:'Hombro D'},
-  {id:13,n:'Codo I'},{id:14,n:'Codo D'},
-  {id:23,n:'Cadera I'},{id:25,n:'Rodilla I'}
-];
 
-// ── Conexiones de mano ────────────────────────────────────────────────────────
-const HAND_CONN=[[0,1],[1,2],[2,3],[3,4],[0,5],[5,6],[6,7],[7,8],[5,9],[9,10],[10,11],[11,12],[9,13],[13,14],[14,15],[15,16],[13,17],[17,18],[18,19],[19,20],[0,17]];
-
-// ── ÁNGULOS DE DEDOS: MCP + PIP + DIP (articulaciones completas) ──────────────
-// MediaPipe Hand landmarks:
-// Pulgar: 1(CMC), 2(MCP), 3(IP), 4(tip)
-// Índice: 5(MCP), 6(PIP), 7(DIP), 8(tip)
-// Medio:  9(MCP), 10(PIP), 11(DIP), 12(tip)
-// MediaPipe Hand landmarks:
-// Pulgar: 0(muñeca), 1(CMC), 2(MCP), 3(IP), 4(tip)
-// Índice: 5(MCP_base), 6(PIP), 7(DIP), 8(tip)
-// Medio:  9(MCP_base), 10(PIP), 11(DIP), 12(tip)
-// Anular: 13(MCP_base), 14(PIP), 15(DIP), 16(tip)
-// Meñique:17(MCP_base), 18(PIP), 19(DIP), 20(tip)
-//
-// CORRECCIÓN: MCP de dedos largos usa el propio landmark MCP como pivote,
-// con los landmarks adyacentes del mismo dedo (no el landmark 0=muñeca).
-// Estándar: [lm_proximal_mismo_dedo, MCP, PIP] → ángulo entre metacarpiano y falange proximal.
-// Ejemplo índice: pts[5,6,7] = base_metacarp → articulación_MCP → falange_prox.
-//
-// Cada articulación incluye n, mov (movimiento), desc (tooltip), ref, refLo, refHi.
+// ── ÁNGULOS DE DEDOS — CORREGIDOS ──────────────────────────────────────────────
+// BUG FIX: pts corregidos para cada articulación.
+// MCP de dedos largos: [0,lm_mcp,lm_pip] — ángulo en el MCP con referencia muñeca(0).
+// PIP: [lm_mcp,lm_pip,lm_dip] — ángulo en PIP.  DIP: [lm_pip,lm_dip,lm_tip].
+// La función handJointAngle() convierte al convenio clínico: 0°=extendido, +N=flexión.
 const FINGER_ANGLES_BY_FINGER=[
-  {finger:'1° dedo (pulgar)', joints:[
-    {n:'CMC — abducción',
-     mov:'Abducción CMC del pulgar',
-     desc:'Ángulo muñeca→CMC→MCP. Mide abducción radial del pulgar (vista dorsal). 0°=aducción completa, 50-70°=abducción máxima.',
-     pts:[0,1,2], ref:'0-70', refLo:0, refHi:70},
-    {n:'MCP — flexión',
-     mov:'Flexión/extensión MCP del pulgar',
+  {finger:'1° dedo (pulgar)',joints:[
+    {n:'CMC — abducción',mov:'Abducción CMC del pulgar',
+     desc:'Ángulo muñeca→CMC→MCP. 0°=aducción completa, 50-70°=abducción máxima.',
+     pts:[0,1,2],ref:'0-70',refLo:0,refHi:70,isFlexion:false},
+    {n:'MCP — flexión',mov:'Flexión/extensión MCP del pulgar',
      desc:'Ángulo CMC→MCP→IP. 0°=extensión, 50°=flexión máxima.',
-     pts:[1,2,3], ref:'0-50', refLo:0, refHi:50},
-    {n:'IP — flexión',
-     mov:'Flexión/extensión IP del pulgar',
+     pts:[1,2,3],ref:'0-50',refLo:0,refHi:50,isFlexion:true},
+    {n:'IP — flexión',mov:'Flexión/extensión IP del pulgar',
      desc:'Ángulo MCP→IP→tip. 0°=extensión, 80°=flexión máxima.',
-     pts:[2,3,4], ref:'0-80', refLo:0, refHi:80},
+     pts:[2,3,4],ref:'0-80',refLo:0,refHi:80,isFlexion:true},
   ]},
-  {finger:'2° dedo (índice)', joints:[
-    {n:'MCP — flexión',
-     mov:'Flexión/extensión MCP del índice',
-     desc:'Ángulo base_metacarp→MCP→PIP. 180°=extensión completa. Flexión activa: 0-90°.',
-     pts:[5,6,7], ref:'0-90', refLo:0, refHi:90},
-    {n:'PIP — flexión',
-     mov:'Flexión/extensión PIP del índice',
-     desc:'Ángulo MCP→PIP→DIP. 180°=extensión. Flexión funcional: 0-100°.',
-     pts:[5,6,7], ref:'0-100', refLo:0, refHi:100},
-    {n:'DIP — flexión',
-     mov:'Flexión/extensión DIP del índice',
-     desc:'Ángulo PIP→DIP→tip. 180°=extensión. Flexión: 0-80°.',
-     pts:[6,7,8], ref:'0-80', refLo:0, refHi:80},
+  {finger:'2° dedo (índice)',joints:[
+    {n:'MCP — flexión',mov:'Flexión/extensión MCP del índice',
+     desc:'Ángulo muñeca→MCP→PIP. 0°=extensión, 90°=flexión máxima.',
+     pts:[0,5,6],ref:'0-90',refLo:0,refHi:90,isFlexion:true},   // CORREGIDO: era [5,6,7]
+    {n:'PIP — flexión',mov:'Flexión/extensión PIP del índice',
+     desc:'Ángulo MCP→PIP→DIP. 0°=extensión, 110°=flexión máxima.',
+     pts:[5,6,7],ref:'0-110',refLo:0,refHi:110,isFlexion:true},
+    {n:'DIP — flexión',mov:'Flexión/extensión DIP del índice',
+     desc:'Ángulo PIP→DIP→tip. 0°=extensión, 80°=flexión máxima.',
+     pts:[6,7,8],ref:'0-80',refLo:0,refHi:80,isFlexion:true},
   ]},
-  {finger:'3° dedo (medio)', joints:[
-    {n:'MCP — flexión',
-     mov:'Flexión/extensión MCP del medio',
-     desc:'Ángulo base_metacarp→MCP→PIP. Flexión activa: 0-90°.',
-     pts:[9,10,11], ref:'0-90', refLo:0, refHi:90},
-    {n:'PIP — flexión',
-     mov:'Flexión/extensión PIP del medio',
-     desc:'Ángulo MCP→PIP→DIP. Flexión: 0-100°.',
-     pts:[9,10,11], ref:'0-100', refLo:0, refHi:100},
-    {n:'DIP — flexión',
-     mov:'Flexión/extensión DIP del medio',
-     desc:'Ángulo PIP→DIP→tip. Flexión: 0-80°.',
-     pts:[10,11,12], ref:'0-80', refLo:0, refHi:80},
+  {finger:'3° dedo (medio)',joints:[
+    {n:'MCP — flexión',mov:'Flexión/extensión MCP del medio',
+     desc:'Ángulo muñeca→MCP→PIP. 0°=extensión, 90°=flexión máxima.',
+     pts:[0,9,10],ref:'0-90',refLo:0,refHi:90,isFlexion:true},  // CORREGIDO: era [9,10,11]
+    {n:'PIP — flexión',mov:'Flexión/extensión PIP del medio',
+     desc:'Ángulo MCP→PIP→DIP. 0°=extensión, 110°=flexión máxima.',
+     pts:[9,10,11],ref:'0-110',refLo:0,refHi:110,isFlexion:true},
+    {n:'DIP — flexión',mov:'Flexión/extensión DIP del medio',
+     desc:'Ángulo PIP→DIP→tip. 0°=extensión, 80°=flexión máxima.',
+     pts:[10,11,12],ref:'0-80',refLo:0,refHi:80,isFlexion:true},
   ]},
-  {finger:'4° dedo (anular)', joints:[
-    {n:'MCP — flexión',
-     mov:'Flexión/extensión MCP del anular',
-     desc:'Ángulo base_metacarp→MCP→PIP. Flexión: 0-90°.',
-     pts:[13,14,15], ref:'0-90', refLo:0, refHi:90},
-    {n:'PIP — flexión',
-     mov:'Flexión/extensión PIP del anular',
-     desc:'Ángulo MCP→PIP→DIP. Flexión: 0-100°.',
-     pts:[13,14,15], ref:'0-100', refLo:0, refHi:100},
-    {n:'DIP — flexión',
-     mov:'Flexión/extensión DIP del anular',
-     desc:'Ángulo PIP→DIP→tip. Flexión: 0-80°.',
-     pts:[14,15,16], ref:'0-80', refLo:0, refHi:80},
+  {finger:'4° dedo (anular)',joints:[
+    {n:'MCP — flexión',mov:'Flexión/extensión MCP del anular',
+     desc:'Ángulo muñeca→MCP→PIP. 0°=extensión, 90°=flexión máxima.',
+     pts:[0,13,14],ref:'0-90',refLo:0,refHi:90,isFlexion:true}, // CORREGIDO: era [13,14,15]
+    {n:'PIP — flexión',mov:'Flexión/extensión PIP del anular',
+     desc:'Ángulo MCP→PIP→DIP. 0°=extensión, 110°=flexión máxima.',
+     pts:[13,14,15],ref:'0-110',refLo:0,refHi:110,isFlexion:true},
+    {n:'DIP — flexión',mov:'Flexión/extensión DIP del anular',
+     desc:'Ángulo PIP→DIP→tip. 0°=extensión, 80°=flexión máxima.',
+     pts:[14,15,16],ref:'0-80',refLo:0,refHi:80,isFlexion:true},
   ]},
-  {finger:'5° dedo (meñique)', joints:[
-    {n:'MCP — flexión',
-     mov:'Flexión/extensión MCP del meñique',
-     desc:'Ángulo base_metacarp→MCP→PIP. Flexión: 0-90°.',
-     pts:[17,18,19], ref:'0-90', refLo:0, refHi:90},
-    {n:'PIP — flexión',
-     mov:'Flexión/extensión PIP del meñique',
-     desc:'Ángulo MCP→PIP→DIP. Flexión: 0-100°.',
-     pts:[17,18,19], ref:'0-100', refLo:0, refHi:100},
-    {n:'DIP — flexión',
-     mov:'Flexión/extensión DIP del meñique',
-     desc:'Ángulo PIP→DIP→tip. Flexión: 0-80°.',
-     pts:[18,19,20], ref:'0-80', refLo:0, refHi:80},
+  {finger:'5° dedo (meñique)',joints:[
+    {n:'MCP — flexión',mov:'Flexión/extensión MCP del meñique',
+     desc:'Ángulo muñeca→MCP→PIP. 0°=extensión, 90°=flexión máxima.',
+     pts:[0,17,18],ref:'0-90',refLo:0,refHi:90,isFlexion:true}, // CORREGIDO: era [17,18,19]
+    {n:'PIP — flexión',mov:'Flexión/extensión PIP del meñique',
+     desc:'Ángulo MCP→PIP→DIP. 0°=extensión, 110°=flexión máxima.',
+     pts:[17,18,19],ref:'0-110',refLo:0,refHi:110,isFlexion:true},
+    {n:'DIP — flexión',mov:'Flexión/extensión DIP del meñique',
+     desc:'Ángulo PIP→DIP→tip. 0°=extensión, 80°=flexión máxima.',
+     pts:[18,19,20],ref:'0-80',refLo:0,refHi:80,isFlexion:true},
   ]},
 ];
-
-// Lista plana para exportación CSV
-const FINGER_ANGLES_FLAT=FINGER_ANGLES_BY_FINGER.flatMap(f=>f.joints.map(j=>({n:`${f.finger} ${j.n}`,pts:j.pts,finger:f.finger,joint:j.n,mov:j.mov,ref:j.ref})));
-
+const FINGER_ANGLES_FLAT=FINGER_ANGLES_BY_FINGER.flatMap(f=>f.joints.map(j=>({...j,finger:f.finger})));
 const SPREAD_PAIRS=[
-  {n:'1°–2° dedo', pts:[4,8]},
-  {n:'2°–3° dedo',  pts:[8,12]},
-  {n:'3°–4° dedo',  pts:[12,16]},
-  {n:'4°–5° dedo',pts:[16,20]},
+  {n:'1°–2° dedo',pts:[4,8]},{n:'2°–3° dedo',pts:[8,12]},
+  {n:'3°–4° dedo',pts:[12,16]},{n:'4°–5° dedo',pts:[16,20]},
 ];
 
 // ══════════════════════════════════════════════════════════════════════════════
 // ESTADO GLOBAL
 // ══════════════════════════════════════════════════════════════════════════════
+let appMode='pose';
 let mode='pose', view='frontal', handSide='ambas';
 let pxPerCm=null, heightCm=null;
 let opts={sk:true,an:true,di:false,col:true,conf:true};
 let pose=null, hands=null, poseReady=false, handsReady=false;
 let mediaMode=null, imgEl=null, videoEl=null;
-let frames=[], velH=[], playing=false, raf=null;
+let frames=[], playing=false, raf=null;
 let lLms=null, lAng=null, lDist=null;
-let lHandResults=null;
+let lHandResults=null, lHandWorldLandmarks=null;
 let lastPoseConf=null, lastHandConf=null;
-// Corrección de espejo: en foto frontal del paciente la lateralidad MediaPipe está invertida.
-// mirrorCorrection=true (default) invierte Left↔Right para dar la lateralidad real del paciente.
 let mirrorCorrection=true;
 let aditMode=false, partialMode=true;
+let gaitDataBase=null, gaitDataAdit=null, currentSesion='base';
+// Cache referencias DOM frecuentemente usadas
+let _canvas, _ctx, _sk, _tdisp, _bpl;
+
+// ── Toggles de estado ─────────────────────────────────────────────────────────
 function toggleAdit(el){
-  aditMode=!aditMode;
-  el.classList.toggle('on',aditMode);
+  aditMode=!aditMode; el.classList.toggle('on',aditMode);
   document.getElementById('adit-panel').style.display=aditMode?'block':'none';
 }
-function togglePartial(el){
-  partialMode=!partialMode;
-  el.classList.toggle('on',partialMode);
-}
-
+function togglePartial(el){ partialMode=!partialMode; el.classList.toggle('on',partialMode); }
 function toggleMirror(el){
-  mirrorCorrection=!mirrorCorrection;
-  el.classList.toggle('on', mirrorCorrection);
-  document.getElementById('mirror-lbl').textContent=mirrorCorrection?'Foto frontal':'Foto trasera/selfie';
-  if(lHandResults) { drawHandResults(lHandResults); updHand(lHandResults); updateConfidenceOverlay(lLms,lHandResults); }
+  mirrorCorrection=!mirrorCorrection; el.classList.toggle('on',mirrorCorrection);
+  document.getElementById('mirror-lbl').textContent=mirrorCorrection?'Activo (foto frontal)':'Foto trasera/selfie';
+  if(lHandResults){ drawHandResults(lHandResults); updHand(lHandResults); }
 }
-// Devuelve la lateralidad REAL del paciente según corrección de espejo
-function realSide(mpLabel){
-  // MediaPipe: 'Left'=izquierda imagen, 'Right'=derecha imagen
-  // Con corrección: izquierda imagen = mano DERECHA del paciente (foto frontal)
-  if(mirrorCorrection){ return mpLabel==='Left'?'Right':'Left'; }
-  return mpLabel;
+function realSide(mpLabel){ return mirrorCorrection?(mpLabel==='Left'?'Right':'Left'):mpLabel; }
+
+// ══════════════════════════════════════════════════════════════════════════════
+// GEOMETRÍA — funciones corregidas con atan2 y convenio clínico
+// ══════════════════════════════════════════════════════════════════════════════
+/**
+ * a3: Ángulo en el punto B formado por los vectores BA y BC.
+ * Devuelve 0-180°. Para dedos: 180°=extendido, menos=flexionado.
+ */
+function a3(a,b,c){
+  if(!a||!b||!c)return null;
+  const v1=[a.x-b.x,a.y-b.y,(a.z||0)-(b.z||0)];
+  const v2=[c.x-b.x,c.y-b.y,(c.z||0)-(b.z||0)];
+  const dot=v1[0]*v2[0]+v1[1]*v2[1]+v1[2]*v2[2];
+  const m=Math.hypot(...v1)*Math.hypot(...v2);
+  if(m<1e-9)return null;
+  return Math.round(Math.acos(Math.min(1,Math.max(-1,dot/m)))*180/Math.PI);
 }
 
-const canvas=document.getElementById('cv');
-const ctx=canvas.getContext('2d');
+/**
+ * handJointAngle: Ángulo clínico de articulación de mano.
+ * isFlexion=true  → devuelve 0°=extendido, N°=flexionado (180 - a3).
+ * isFlexion=false → devuelve directamente a3 (ej. abducción CMC).
+ * Rango fisiológico garantizado por clampeo:
+ *   MCP 0-90°, PIP 0-110°, DIP 0-80°, IP pulgar 0-80°.
+ */
+function handJointAngle(lms,jt){
+  const raw=a3(lms[jt.pts[0]],lms[jt.pts[1]],lms[jt.pts[2]]);
+  if(raw===null)return null;
+  if(jt.isFlexion){
+    const flex=Math.round(180-raw);
+    return Math.max(0,Math.min(jt.refHi+5,flex)); // clamp fisiológico con margen mínimo
+  }
+  return raw;
+}
+
+function distPx(a,b){
+  return Math.hypot((a.x-b.x)*_canvas.width,(a.y-b.y)*_canvas.height);
+}
+
+function distLabel(px){
+  return pxPerCm&&pxPerCm>0?(px/pxPerCm).toFixed(1)+' cm':Math.round(px)+' px';
+}
+
+function handDistLabel(px,lms){
+  if(handPxPerCm&&handPxPerCm>0)return (px/handPxPerCm).toFixed(1)+' cm';
+  if(lms){
+    const wW=Math.hypot((lms[0].x-lms[17].x)*_canvas.width,(lms[0].y-lms[17].y)*_canvas.height);
+    if(wW>5)return (px/wW).toFixed(2)+' × muñeca';
+  }
+  return Math.round(px)+' px';
+}
 
 function curJoints(){return view==='frontal'?JOINTS_FRONTAL:JOINTS_SAGITAL;}
 function curDists() {return view==='frontal'?DISTS_FRONTAL:DISTS_SAGITAL;}
 
-// ══════════════════════════════════════════════════════════════════════════════
-// MODO — selector de tarjetas (pose, sagital, gait, hand)
-// ══════════════════════════════════════════════════════════════════════════════
-let appMode='pose'; // 'pose' | 'sagital' | 'gait' | 'hand'
+function cAng(lms){
+  return curJoints().map(j=>({
+    n:j.n,mov:j.mov||'',desc:j.desc||'',posRef:j.posRef||'',
+    ref:j.ref,refLo:j.refLo,refHi:j.refHi,
+    L:a3(lms[j.L[0]],lms[j.L[1]],lms[j.L[2]]),
+    R:a3(lms[j.R[0]],lms[j.R[1]],lms[j.R[2]])
+  }));
+}
+function cDist(lms){
+  return curDists().map(d=>({n:d.n,px:distPx(lms[d.p[0]],lms[d.p[1]]),label:distLabel(distPx(lms[d.p[0]],lms[d.p[1]]))}));
+}
 
+// ── Dimensiones de mano usando WorldLandmarks (metros → cm/mm) ───────────────
+/**
+ * computeHandMeasurements: usa multiHandWorldLandmarks de MediaPipe (escala real en metros).
+ * Calcula longitud total de mano, longitud de palma, ancho de palma y longitud de cada dedo.
+ */
+function computeHandMeasurements(worldLms){
+  if(!worldLms||worldLms.length<21)return null;
+  const d3=(a,b)=>Math.hypot(b.x-a.x,b.y-a.y,b.z-a.z);
+  // Suma segmentos consecutivos
+  const seg=(...ids)=>{let s=0;for(let i=0;i<ids.length-1;i++)s+=d3(worldLms[ids[i]],worldLms[ids[i+1]]);return s;};
+  const palmLen=d3(worldLms[0],worldLms[9]);       // muñeca → MCP medio
+  const palmW  =d3(worldLms[5],worldLms[17]);      // MCP índice → MCP meñique
+  const fingers={
+    pulgar: seg(2,3,4),
+    indice: seg(5,6,7,8),
+    medio:  seg(9,10,11,12),
+    anular: seg(13,14,15,16),
+    menique:seg(17,18,19,20),
+  };
+  const totalLen=palmLen+fingers.medio;             // muñeca → punta dedo medio
+  return {totalLen,palmLen,palmW,fingers};
+}
+
+function fmtCmMm(meters){
+  const cm=(meters*100).toFixed(1);
+  const mm=Math.round(meters*1000);
+  return `${cm} cm (${mm} mm)`;
+}
+
+// ══════════════════════════════════════════════════════════════════════════════
+// INICIALIZACIÓN
+// ══════════════════════════════════════════════════════════════════════════════
+window.addEventListener('load',()=>{
+  _canvas=document.getElementById('cv');
+  _ctx=_canvas.getContext('2d');
+  _sk=document.getElementById('sk');
+  _tdisp=document.getElementById('tdisp');
+  _bpl=document.getElementById('bpl');
+  initModels();
+});
+
+function initModels(){
+  setSt('loading','Cargando modelos MediaPipe…');
+  pose=new Pose({locateFile:f=>`https://unpkg.com/@mediapipe/pose@0.5.1675469404/${f}`});
+  pose.setOptions({modelComplexity:1,smoothLandmarks:true,enableSegmentation:false,minDetectionConfidence:0.5,minTrackingConfidence:0.5});
+  pose.onResults(onPoseRes);
+
+  hands=new Hands({locateFile:f=>`https://unpkg.com/@mediapipe/hands@0.4.1646424915/${f}`});
+  hands.setOptions({maxNumHands:2,modelComplexity:1,minDetectionConfidence:0.6,minTrackingConfidence:0.5});
+  hands.onResults(onHandRes);
+
+  // Warm-up con canvas pequeño para pre-cargar WASM
+  const wc=document.createElement('canvas');wc.width=64;wc.height=64;
+  Promise.all([
+    pose.send({image:wc}).catch(()=>{}),
+    hands.send({image:wc}).catch(()=>{})
+  ]).then(()=>{poseReady=true;handsReady=true;setSt('done','Modelos listos — sube un archivo');});
+}
+
+// ══════════════════════════════════════════════════════════════════════════════
+// SELECTOR DE MODO
+// ══════════════════════════════════════════════════════════════════════════════
 function selectMode(m){
   appMode=m;
-  // Map to internal mode/view for MediaPipe
-  if(m==='pose')   { mode='pose'; view='frontal'; }
-  if(m==='sagital'){ mode='pose'; view='sagital'; }
-  if(m==='gait')   { mode='pose'; view='sagital'; }
-  if(m==='hand')   { mode='hand'; view='frontal'; }
+  if(m==='pose')    {mode='pose';view='frontal';}
+  if(m==='sagital') {mode='pose';view='sagital';}
+  if(m==='gait')    {mode='pose';view='sagital';}
+  if(m==='hand')    {mode='hand';view='frontal';}
 
-  // Card highlight
   ['pose','sagital','gait','hand'].forEach(x=>{
     document.getElementById('mcard-'+x).className='mcard'+(m===x?' active-'+x:'');
   });
 
-  // Context panels
   const isHand=m==='hand', isGait=m==='gait';
   document.getElementById('calib-pose-sec').style.display=isHand?'none':'block';
   document.getElementById('hand-calib-sec').style.display=isHand?'block':'none';
@@ -1188,18 +1192,20 @@ function selectMode(m){
   document.getElementById('hand-selector-wrap').style.display=isHand?'block':'none';
   document.getElementById('gait-mode-note').style.display=isGait?'block':'none';
   document.getElementById('upload-sub').textContent=
-    isGait?'Video sagital (perfil, cuerpo completo)':
-    isHand?'Imagen de la mano':'Imagen o video';
+    isGait?'Video sagital (perfil, cuerpo completo)':isHand?'Imagen de la mano':'Imagen o video';
 
-  // Hide results
+  // Mostrar/ocultar botón CSV marcha
+  const gcsvInline=document.getElementById('bgaitcsv-inline');
+  if(gcsvInline)gcsvInline.style.display=isGait?'':'none';
+
+  // Resetear tabs
   document.getElementById('rtab-bar').style.display='none';
   ['rt-pose','rt-sym','rt-gait','rt-hand'].forEach(id=>{
-    document.getElementById(id).style.display='none';
-    document.getElementById(id).className='rtab';
+    const el=document.getElementById(id); el.style.display='none'; el.className='rtab';
   });
   ['rp-pose','rp-sym','rp-gait','rp-hand'].forEach(id=>document.getElementById(id).style.display='none');
 
-  if(lLms||lHandResults) reprocess();
+  if(lLms||lHandResults)reprocess();
 }
 
 function showRTab(t){
@@ -1213,8 +1219,7 @@ function showRTab(t){
 }
 
 function _showResultsFor(m){
-  const bar=document.getElementById('rtab-bar');
-  bar.style.display='block';
+  document.getElementById('rtab-bar').style.display='block';
   if(m==='pose'){
     document.getElementById('rt-pose').style.display='';
     document.getElementById('rt-sym').style.display='';
@@ -1231,42 +1236,38 @@ function _showResultsFor(m){
   }
 }
 
-// Legacy stubs — keep for internal calls
-function setMode(m){ /* handled by selectMode */ }
-function setView(v){ view=v; if(lLms){lAng=cAng(lLms);lDist=cDist(lLms);rdImg();updPose(lAng,lDist);} }
-function showTab(id){ /* no-op */ }
 function setHand(h){
   handSide=h;
   ['ambas','izq','der'].forEach(x=>document.getElementById('hsel-'+x).className='hsel-btn'+(h===x?' active':''));
-  if(lHandResults) drawHandResults(lHandResults);
+  if(lHandResults){drawHandResults(lHandResults);updHand(lHandResults);}
 }
+
 function reprocess(){
   if(!imgEl)return;
-  ctx.clearRect(0,0,canvas.width,canvas.height);
-  ctx.drawImage(imgEl,0,0);
-  if(mode==='pose'||mode==='combo') pose.send({image:imgEl});
-  if(mode==='hand'||mode==='combo') hands.send({image:imgEl});
+  _ctx.clearRect(0,0,_canvas.width,_canvas.height);
+  _ctx.drawImage(imgEl,0,0);
+  if(mode==='pose')pose.send({image:imgEl}).catch(()=>{});
+  if(mode==='hand')hands.send({image:imgEl}).catch(()=>{});
+}
+
+function setSesion(s){
+  currentSesion=s;
+  ['base','adit','comp'].forEach(x=>{
+    document.getElementById('ses-btn-'+x).classList.toggle('active',x===s);
+    document.getElementById('ses-'+x).style.display=x===s?'block':'none';
+  });
+  if(s==='comp')updCompare();
 }
 
 // ══════════════════════════════════════════════════════════════════════════════
 // CALIBRACIÓN
 // ══════════════════════════════════════════════════════════════════════════════
-document.getElementById('height-input').addEventListener('input',function(){
-  heightCm=parseFloat(this.value);
-  if(!isNaN(heightCm)&&heightCm>0){
-    document.getElementById('calib-st').textContent=`Altura: ${heightCm} cm — calibración activa`;
-    document.getElementById('calib-st').className='calib-st ok';
-    if(lLms) recalib(lLms);
-  } else {
-    pxPerCm=null;
-    document.getElementById('calib-st').textContent='Sin calibrar — distancias en píxeles';
-    document.getElementById('calib-st').className='calib-st';
-  }
-});
+// El listener de height-input se registra dentro del load handler principal (ver abajo)
+
 function recalib(lms){
   const head=lms[0], fL=lms[31], fR=lms[32];
   const footY=(fL.y+fR.y)/2;
-  const bodyPx=Math.abs(head.y-footY)*canvas.height;
+  const bodyPx=Math.abs(head.y-footY)*_canvas.height;
   if(bodyPx>10&&heightCm>0){
     pxPerCm=bodyPx/heightCm;
     document.getElementById('calib-st').textContent=`Calibrado: 1 cm = ${pxPerCm.toFixed(1)} px`;
@@ -1274,263 +1275,189 @@ function recalib(lms){
     if(lAng&&lDist){lDist=cDist(lLms);rdImg();updPose(lAng,lDist);}
   }
 }
-// ── Calibración de mano por objeto de referencia ─────────────────────────────
-let handPxPerCm=null;   // calibración por objeto físico en imagen
-let refCalibMode=false; // esperando 2 clics del usuario
-let refCalibP1=null;    // primer punto marcado
-let handRefCm=null;     // tamaño del objeto de referencia en cm
+
+let handPxPerCm=null, refCalibMode=false, refCalibP1=null, handRefCm=null;
 
 function startRefCalib(){
   const cm=parseFloat(document.getElementById('ref-obj-cm').value);
   if(!cm||cm<=0){alert('Ingresa el tamaño del objeto de referencia en cm primero.');return;}
-  handRefCm=cm;
-  refCalibMode=true; refCalibP1=null;
+  handRefCm=cm; refCalibMode=true; refCalibP1=null;
   document.getElementById('btn-ref-start').textContent='1° clic: extremo A del objeto';
-  document.getElementById('btn-ref-start').style.borderColor='var(--acc3)';
-  canvas.style.cursor='crosshair';
-  document.getElementById('hand-calib-st').textContent='Haz clic en el primer extremo del objeto de referencia…';
-  document.getElementById('hand-calib-st').className='calib-st';
+  _canvas.style.cursor='crosshair';
+  document.getElementById('hand-calib-st').textContent='Clic en el primer extremo del objeto de referencia…';
 }
 
-canvas.addEventListener('click', function(e){
-  if(!refCalibMode)return;
-  const rect=canvas.getBoundingClientRect();
-  const scaleX=canvas.width/rect.width, scaleY=canvas.height/rect.height;
-  const x=(e.clientX-rect.left)*scaleX, y=(e.clientY-rect.top)*scaleY;
-  if(!refCalibP1){
-    refCalibP1={x,y};
-    document.getElementById('btn-ref-start').textContent='2° clic: extremo B del objeto';
-    document.getElementById('hand-calib-st').textContent='Ahora haz clic en el segundo extremo…';
-    // Dibujar punto A
-    ctx.beginPath();ctx.arc(x,y,5,0,2*Math.PI);
-    ctx.fillStyle='#f59e0b';ctx.fill();
-    ctx.strokeStyle='#000';ctx.lineWidth=1.5;ctx.stroke();
-  } else {
-    const dist=Math.hypot(x-refCalibP1.x, y-refCalibP1.y);
-    handPxPerCm = dist/handRefCm;
-    refCalibMode=false;
-    canvas.style.cursor='default';
-    // Dibujar línea de referencia
-    ctx.beginPath();ctx.moveTo(refCalibP1.x,refCalibP1.y);ctx.lineTo(x,y);
-    ctx.strokeStyle='#f59e0b';ctx.lineWidth=2;ctx.setLineDash([4,3]);ctx.stroke();ctx.setLineDash([]);
-    ctx.beginPath();ctx.arc(x,y,5,0,2*Math.PI);
-    ctx.fillStyle='#f59e0b';ctx.fill();
-    ctx.strokeStyle='#000';ctx.lineWidth=1.5;ctx.stroke();
-    const label=`${handRefCm}cm`;
-    ctx.fillStyle='rgba(0,0,0,.75)';ctx.fillRect(refCalibP1.x+(x-refCalibP1.x)/2-20,(refCalibP1.y+(y-refCalibP1.y)/2)-16,40,14);
-    ctx.fillStyle='#f59e0b';ctx.font='10px DM Mono,monospace';ctx.fillText(label,refCalibP1.x+(x-refCalibP1.x)/2-16,(refCalibP1.y+(y-refCalibP1.y)/2)-4);
-    document.getElementById('hand-calib-st').textContent=`Calibrado: 1 cm = ${handPxPerCm.toFixed(1)} px (ref: ${handRefCm} cm)`;
-    document.getElementById('hand-calib-st').className='calib-st ok';
-    document.getElementById('btn-ref-start').textContent='📍 Marcar referencia en imagen';
-    document.getElementById('btn-ref-start').style.borderColor='';
-    if(lHandResults){updHand(lHandResults);}
-  }
-});
-
-// Distancia de mano: prioridad 1=objeto de referencia, 2=ratio muñeca, 3=píxeles
-function handDistLabel(px, lms){
-  if(handPxPerCm&&handPxPerCm>0) return (px/handPxPerCm).toFixed(1)+' cm';
-  // Fallback: ratio respecto al ancho de muñeca (lm 0–17, estable anatómicamente)
-  if(lms){
-    const wristW=Math.hypot((lms[0].x-lms[17].x)*canvas.width,(lms[0].y-lms[17].y)*canvas.height);
-    if(wristW>5) return (px/wristW).toFixed(2)+' × muñeca';
-  }
-  return Math.round(px)+' px';
-}
-
-function distLabel(px){return pxPerCm&&pxPerCm>0?(px/pxPerCm).toFixed(1)+' cm':Math.round(px)+' px';}
-
-// ══════════════════════════════════════════════════════════════════════════════
-// INDICADOR DE CONFIANZA
-// ══════════════════════════════════════════════════════════════════════════════
-function updateConfidenceOverlay(poseLms, handResults){
-  const overlay=document.getElementById('conf-overlay');
-  const alert=document.getElementById('alert-conf');
-  if(!opts.conf){overlay.classList.remove('vis');alert.classList.remove('vis');return;}
-
-  let lines=[];
-  let hasLowConf=false;
-
-  if(poseLms){
-    // Calcular confianza promedio de landmarks clave
-    const keyIds=[0,11,12,13,14,23,24,25,26,27,28];
-    const confs=keyIds.map(i=>poseLms[i]?.visibility||0);
-    const avgConf=confs.reduce((a,b)=>a+b,0)/confs.length;
-    const low=confs.filter(c=>c<0.6).length;
-    const col=avgConf>0.8?'var(--acc)':avgConf>0.6?'var(--acc3)':'var(--acc4)';
-    lines.push(`<div class="co-row"><div class="co-dot" style="background:${col}"></div><span style="font-size:10px;color:${col}">Pose: ${Math.round(avgConf*100)}%</span></div>`);
-    if(low>0){hasLowConf=true;}
-    lastPoseConf=avgConf;
-  }
-  if(handResults?.multiHandLandmarks?.length){
-    handResults.multiHandLandmarks.forEach((lms,hi)=>{
-      const label=handResults.multiHandedness[hi]?.label||'?';
-      const realLabel=realSide(label);
-      const score=handResults.multiHandedness[hi]?.score||0;
-      const col=score>0.8?'var(--acc)':score>0.6?'var(--acc3)':'var(--acc4)';
-      lines.push(`<div class="co-row"><div class="co-dot" style="background:${col}"></div><span style="font-size:10px;color:${col}">Mano ${realLabel==='Left'?'Izq (pcte)':'Der (pcte)'}: ${Math.round(score*100)}%</span></div>`);
-      if(score<0.6) hasLowConf=true;
-    });
-    lastHandConf=handResults.multiHandedness[0]?.score||null;
-  }
-
-  if(lines.length){
-    overlay.innerHTML=lines.join('');
-    overlay.classList.add('vis');
-  } else {
-    overlay.classList.remove('vis');
-  }
-
-  if(hasLowConf){
-    alert.classList.add('vis');
-  } else {
-    alert.classList.remove('vis');
-  }
-}
-
-// ══════════════════════════════════════════════════════════════════════════════
-// INIT MEDIAPIPE
-// ══════════════════════════════════════════════════════════════════════════════
-function initModels(){
-  setSt('loading','Cargando modelos MediaPipe…');
-  pose=new Pose({locateFile:f=>`https://unpkg.com/@mediapipe/pose@0.5.1675469404/${f}`});
-  pose.setOptions({modelComplexity:1,smoothLandmarks:true,enableSegmentation:false,minDetectionConfidence:0.5,minTrackingConfidence:0.5});
-  pose.onResults(onPoseRes);
-
-  hands=new Hands({locateFile:f=>`https://unpkg.com/@mediapipe/hands@0.4.1646424915/${f}`});
-  hands.setOptions({maxNumHands:2,modelComplexity:1,minDetectionConfidence:0.6,minTrackingConfidence:0.5});
-  hands.onResults(onHandRes);
-
-  const wc=document.createElement('canvas');wc.width=64;wc.height=64;
-  Promise.all([
-    pose.send({image:wc}).catch(()=>{}),
-    hands.send({image:wc}).catch(()=>{})
-  ]).then(()=>{poseReady=true;handsReady=true;setSt('done','Modelos listos — sube un archivo');});
-}
-window.addEventListener('load',initModels);
+// Canvas click: se registra en window.addEventListener('load') abajo
 
 // ══════════════════════════════════════════════════════════════════════════════
 // ARCHIVOS
 // ══════════════════════════════════════════════════════════════════════════════
-const ua=document.getElementById('ua'),fi=document.getElementById('fi');
-ua.addEventListener('dragover',e=>{e.preventDefault();ua.classList.add('drag');});
-ua.addEventListener('dragleave',()=>ua.classList.remove('drag'));
-ua.addEventListener('drop',e=>{e.preventDefault();ua.classList.remove('drag');hf(e.dataTransfer.files[0]);});
-fi.addEventListener('change',e=>hf(e.target.files[0]));
+window.addEventListener('load',()=>{
+  // Calibración talla
+  document.getElementById('height-input').addEventListener('input',function(){
+    heightCm=parseFloat(this.value);
+    if(!isNaN(heightCm)&&heightCm>0){
+      document.getElementById('calib-st').textContent=`Altura: ${heightCm} cm — calibración activa`;
+      document.getElementById('calib-st').className='calib-st ok';
+      if(lLms)recalib(lLms);
+    } else {
+      pxPerCm=null;
+      document.getElementById('calib-st').textContent='Sin calibrar — distancias en píxeles';
+      document.getElementById('calib-st').className='calib-st';
+    }
+  });
+
+  const ua=document.getElementById('ua'), fi=document.getElementById('fi');
+  ua.addEventListener('dragover',e=>{e.preventDefault();ua.classList.add('drag');});
+  ua.addEventListener('dragleave',()=>ua.classList.remove('drag'));
+  ua.addEventListener('drop',e=>{e.preventDefault();ua.classList.remove('drag');hf(e.dataTransfer.files[0]);});
+  fi.addEventListener('change',e=>hf(e.target.files[0]));
+
+  // Canvas click — solo después de cargar
+  document.getElementById('cv').addEventListener('click',function(e){
+    if(!refCalibMode)return;
+    const rect=this.getBoundingClientRect();
+    const scaleX=this.width/rect.width, scaleY=this.height/rect.height;
+    const x=(e.clientX-rect.left)*scaleX, y=(e.clientY-rect.top)*scaleY;
+    if(!refCalibP1){
+      refCalibP1={x,y};
+      document.getElementById('btn-ref-start').textContent='2° clic: extremo B del objeto';
+      _ctx.beginPath();_ctx.arc(x,y,5,0,2*Math.PI);
+      _ctx.fillStyle='#f59e0b';_ctx.fill();_ctx.strokeStyle='#000';_ctx.lineWidth=1.5;_ctx.stroke();
+    } else {
+      const dist=Math.hypot(x-refCalibP1.x,y-refCalibP1.y);
+      handPxPerCm=dist/handRefCm;
+      refCalibMode=false; this.style.cursor='default';
+      _ctx.beginPath();_ctx.moveTo(refCalibP1.x,refCalibP1.y);_ctx.lineTo(x,y);
+      _ctx.strokeStyle='#f59e0b';_ctx.lineWidth=2;_ctx.setLineDash([4,3]);_ctx.stroke();_ctx.setLineDash([]);
+      document.getElementById('hand-calib-st').textContent=`Calibrado: 1 cm = ${handPxPerCm.toFixed(1)} px`;
+      document.getElementById('hand-calib-st').className='calib-st ok';
+      document.getElementById('btn-ref-start').textContent='📍 Marcar referencia en imagen';
+      if(lHandResults)updHand(lHandResults);
+    }
+  });
+
+  // Registrar slider de video
+  document.getElementById('sk').addEventListener('input',function(){
+    if(!frames.length)return;
+    const t=parseFloat(this.value);
+    const idx=findClosestFrameIdx(t);
+    if(videoEl&&!playing){
+      videoEl.currentTime=frames[idx].time;
+    }
+    document.getElementById('tdisp').textContent=`${t.toFixed(2)}s / ${(videoEl?.duration||0).toFixed(2)}s`;
+  });
+});
 
 function hf(f){
   if(!f)return;
   if(!poseReady&&!handsReady){setSt('loading','Modelos aún cargando…');return;}
-  frames=[];velH=[];pxPerCm=null;lHandResults=null;
+  frames=[];pxPerCm=null;lHandResults=null;lHandWorldLandmarks=null;
   document.getElementById('alert-conf').classList.remove('vis');
   document.getElementById('conf-overlay').classList.remove('vis');
   const url=URL.createObjectURL(f);
-  if(f.type.startsWith('image/')) liImg(url);
-  else if(f.type.startsWith('video/')) liVid(url);
+  if(f.type.startsWith('image/'))liImg(url);
+  else if(f.type.startsWith('video/'))liVid(url,f.name);
   else setSt('error','Formato no soportado.');
 }
+
 function liImg(url){
-  mediaMode='image';hideVid();setSt('loading','Analizando…');
+  mediaMode='image'; hideVid(); setSt('loading','Analizando…');
   imgEl=new Image();
   imgEl.onload=async()=>{
-    canvas.width=imgEl.naturalWidth;canvas.height=imgEl.naturalHeight;
-    ctx.drawImage(imgEl,0,0);showCv();
-    if(mode==='pose'||mode==='combo') await pose.send({image:imgEl}).catch(e=>setSt('error',e.message));
-    if(mode==='hand'||mode==='combo') await hands.send({image:imgEl}).catch(e=>setSt('error',e.message));
+    _canvas.width=imgEl.naturalWidth; _canvas.height=imgEl.naturalHeight;
+    _ctx.drawImage(imgEl,0,0); showCv();
+    if(mode==='pose')await pose.send({image:imgEl}).catch(e=>setSt('error',e.message));
+    if(mode==='hand')await hands.send({image:imgEl}).catch(e=>setSt('error',e.message));
   };
   imgEl.src=url;
 }
-function liVid(url){
+
+function liVid(url, fname){
   mediaMode='video';
   if(videoEl){videoEl.pause();videoEl.src='';}
   videoEl=document.createElement('video');
-  videoEl.src=url;videoEl.muted=true;videoEl.playsInline=true;
+  videoEl.src=url; videoEl.muted=true; videoEl.playsInline=true;
   setSt('loading','Cargando video…');
   videoEl.onloadedmetadata=()=>{
-    canvas.width=videoEl.videoWidth||640;canvas.height=videoEl.videoHeight||480;
-    document.getElementById('sk').max=videoEl.duration;
+    _canvas.width=videoEl.videoWidth||640; _canvas.height=videoEl.videoHeight||480;
+    _sk.max=videoEl.duration; _sk.value=0;
     document.getElementById('vbar').classList.add('vis');
-    showCv();exFrames();
+    showCv(); setupVideoEvents(); exFrames();
   };
   videoEl.onerror=()=>setSt('error','No se pudo cargar el video.');
 }
+
+// ══════════════════════════════════════════════════════════════════════════════
+// EXTRACCIÓN DE FRAMES (análisis offline del video)
+// ══════════════════════════════════════════════════════════════════════════════
 async function exFrames(){
-  const fps=10,step=1/fps,dur=videoEl.duration,tot=Math.ceil(dur*fps);
+  const fps=10, step=1/fps, dur=videoEl.duration, tot=Math.ceil(dur*fps);
+  setSt('loading',`Analizando video: 0/${tot} frames…`);
   for(let i=0;i<tot;i++){
-    await new Promise(r=>{videoEl.currentTime=i*step;videoEl.onseeked=r;});
-    const oc=new OffscreenCanvas(canvas.width,canvas.height);
+    await new Promise(r=>{
+      videoEl.onseeked=r; videoEl.currentTime=i*step;
+    });
+    const oc=new OffscreenCanvas(_canvas.width,_canvas.height);
     oc.getContext('2d').drawImage(videoEl,0,0);
-    if(mode==='pose'||mode==='combo') try{await pose.send({image:oc});}catch(_){}
-    if(mode==='hand'||mode==='combo') try{await hands.send({image:oc});}catch(_){}
-    if(i%3===0) setSt('loading',`Analizando frames… ${i}/${tot}`);
+    if(mode==='pose')try{await pose.send({image:oc});}catch(_){}
+    if(mode==='hand')try{await hands.send({image:oc});}catch(_){}
+    if(i%5===0)setSt('loading',`Analizando frames… ${i}/${tot} (${Math.round(i/tot*100)}%)`);
   }
-  setSt('done',`Listo — ${frames.length} frames ✓`);
+  setSt('done',`Listo — ${frames.length} frames analizados ✓`);
   if(frames.length){
     recalib(frames[0].landmarks||[]);
-    df(0);
+    displayFrame(0);
     if(appMode==='gait'){
       const gm=computeGaitMetrics();
-      if(gm){ gaitDataBase=gm; updGaitPanel(gm); }
+      if(gm){gaitDataBase=gm; updGaitPanel(gm);}
     }
     _showResultsFor(appMode);
+    document.getElementById('bgaitcsv').disabled=false;
   }
   enExp();
 }
 
 // ══════════════════════════════════════════════════════════════════════════════
-// RESULTADOS POSE
+// RESULTADOS MEDIAPIPE
 // ══════════════════════════════════════════════════════════════════════════════
 function onPoseRes(r){
   const lms=r.poseLandmarks;
   if(mediaMode==='image'){
     if(!lms){
-      if(mode==='pose') setSt('error','No se detectó cuerpo. Verifica: cuerpo completo visible, fondo sin otras personas, ropa ajustada.');
+      if(mode==='pose')setSt('error','No se detectó cuerpo. Verifica: cuerpo completo visible, fondo sin otras personas, ropa ajustada.');
       return;
     }
-    lLms=lms;lAng=cAng(lms);lDist=cDist(lms);
-    if(heightCm) recalib(lms);
-    if(mode!=='combo') rdImg();
-    updPose(lAng,lDist);
+    lLms=lms; lAng=cAng(lms); lDist=cDist(lms);
+    if(heightCm)recalib(lms);
+    rdImg(); updPose(lAng,lDist);
     updateConfidenceOverlay(lms,null);
-    if(mode==='pose'||mode==='combo'){
-      setSt('done',`Pose detectada ✓ — ${lms.length} puntos`);
-      _showResultsFor(appMode);
-    }
+    setSt('done',`Pose detectada ✓ — ${lms.length} puntos`);
+    _showResultsFor(appMode);
   } else {
-    if(!lms)return;
-    if(!frames.length||frames[frames.length-1].time!==videoEl.currentTime){
-      frames.push({time:videoEl?videoEl.currentTime:0,landmarks:lms,angles:cAng(lms),dists:cDist(lms)});
+    // Modo video: almacenar frame
+    if(!lms||!lms.length)return;
+    const t=videoEl?videoEl.currentTime:0;
+    if(!frames.length||Math.abs(frames[frames.length-1].time-t)>0.01){
+      frames.push({time:t,landmarks:lms,angles:cAng(lms)});
     }
-    cVel();
   }
 }
 
-// ══════════════════════════════════════════════════════════════════════════════
-// RESULTADOS MANO
-// ══════════════════════════════════════════════════════════════════════════════
 function onHandRes(r){
   lHandResults=r;
+  lHandWorldLandmarks=r.multiHandWorldLandmarks||null;
   if(mediaMode==='image'){
     if(!r.multiHandLandmarks||r.multiHandLandmarks.length===0){
       if(mode==='hand'){
-        if(aditMode){
-          setSt('error','No se detectó mano. Con aditamento rígido esto es frecuente. Intenta: fotografiar solo los dedos libres, retirar el aditamento si es posible, o documentar ángulos manualmente.');
-        } else {
-          setSt('error','No se detectó mano. Verifica: mano en primer plano, fondo contrastante, sin objetos ocluidos.');
-        }
+        if(aditMode)setSt('error','No se detectó mano con aditamento. Intenta fotografiar solo los dedos libres.');
+        else setSt('error','No se detectó mano. Verifica: mano en primer plano, fondo contrastante.');
       }
       return;
     }
-    if(mode==='combo'){
-      ctx.clearRect(0,0,canvas.width,canvas.height);
-      ctx.drawImage(imgEl,0,0);
-      if(lLms) drawPoseSkeleton(ctx,lLms,lAng,lDist);
-      drawHandResults(r);
-    } else {
-      ctx.clearRect(0,0,canvas.width,canvas.height);
-      ctx.drawImage(imgEl,0,0);
-      drawHandResults(r);
-    }
+    _ctx.clearRect(0,0,_canvas.width,_canvas.height);
+    _ctx.drawImage(imgEl,0,0);
+    drawHandResults(r);
     updHand(r);
     updateConfidenceOverlay(lLms,r);
     setSt('done',`Mano detectada ✓ — ${r.multiHandLandmarks.length} mano(s)`);
@@ -1540,311 +1467,351 @@ function onHandRes(r){
 }
 
 // ══════════════════════════════════════════════════════════════════════════════
-// GEOMETRÍA
+// INDICADOR DE CONFIANZA
 // ══════════════════════════════════════════════════════════════════════════════
-function a3(a,b,c){
-  if(!a||!b||!c)return null;
-  const v1=[a.x-b.x,a.y-b.y,(a.z||0)-(b.z||0)];
-  const v2=[c.x-b.x,c.y-b.y,(c.z||0)-(b.z||0)];
-  const dot=v1[0]*v2[0]+v1[1]*v2[1]+v1[2]*v2[2];
-  const m=Math.hypot(...v1)*Math.hypot(...v2);
-  if(!m)return null;
-  return Math.round(Math.acos(Math.min(1,Math.max(-1,dot/m)))*180/Math.PI);
+function updateConfidenceOverlay(poseLms,handResults){
+  const overlay=document.getElementById('conf-overlay');
+  const alertEl=document.getElementById('alert-conf');
+  if(!opts.conf){overlay.classList.remove('vis');alertEl.classList.remove('vis');return;}
+  let lines=[]; let hasLowConf=false;
+  if(poseLms){
+    const keyIds=[0,11,12,13,14,23,24,25,26,27,28];
+    const confs=keyIds.map(i=>poseLms[i]?.visibility||0);
+    const avgConf=confs.reduce((a,b)=>a+b,0)/confs.length;
+    const col=avgConf>0.8?'var(--ok)':avgConf>0.6?'var(--gold)':'var(--alert)';
+    lines.push(`<div class="co-row"><div class="co-dot" style="background:${col}"></div><span style="font-size:10px;color:${col}">Pose: ${Math.round(avgConf*100)}%</span></div>`);
+    if(confs.filter(c=>c<0.6).length>0)hasLowConf=true;
+    lastPoseConf=avgConf;
+  }
+  if(handResults?.multiHandLandmarks?.length){
+    handResults.multiHandLandmarks.forEach((lms,hi)=>{
+      const label=handResults.multiHandedness[hi]?.label||'?';
+      const score=handResults.multiHandedness[hi]?.score||0;
+      const col=score>0.8?'var(--ok)':score>0.6?'var(--gold)':'var(--alert)';
+      const rLabel=realSide(label)==='Left'?'Izq (pcte)':'Der (pcte)';
+      lines.push(`<div class="co-row"><div class="co-dot" style="background:${col}"></div><span style="font-size:10px;color:${col}">Mano ${rLabel}: ${Math.round(score*100)}%</span></div>`);
+      if(score<0.6)hasLowConf=true;
+    });
+    lastHandConf=handResults.multiHandedness[0]?.score||null;
+  }
+  if(lines.length){overlay.innerHTML=lines.join('');overlay.classList.add('vis');}
+  else overlay.classList.remove('vis');
+  alertEl.classList.toggle('vis',hasLowConf);
 }
-function distPx(a,b){return Math.hypot((a.x-b.x)*canvas.width,(a.y-b.y)*canvas.height);}
-function cAng(lms){return curJoints().map(j=>({n:j.n,mov:j.mov||'',desc:j.desc||'',posRef:j.posRef||'',ref:j.ref,refLo:j.refLo,refHi:j.refHi,L:a3(lms[j.L[0]],lms[j.L[1]],lms[j.L[2]]),R:a3(lms[j.R[0]],lms[j.R[1]],lms[j.R[2]])}));}
-function cDist(lms){return curDists().map(d=>({n:d.n,px:distPx(lms[d.p[0]],lms[d.p[1]]),label:distLabel(distPx(lms[d.p[0]],lms[d.p[1]]))}));}
+
+// ══════════════════════════════════════════════════════════════════════════════
+// VIDEO — REPRODUCCIÓN SINCRONIZADA CON requestAnimationFrame
+// BUG FIX: antes usaba sk.value incremental sin seek real.
+// Ahora: videoEl.play() controla el tiempo real; RAF dibuja sobre cada frame.
+// ══════════════════════════════════════════════════════════════════════════════
+function setupVideoEvents(){
+  videoEl.addEventListener('play',()=>{
+    playing=true; _bpl.textContent='⏸ Pause';
+    animatePlayback();
+  });
+  videoEl.addEventListener('pause',()=>{
+    playing=false; _bpl.textContent='▶ Play';
+    cancelAnimationFrame(raf);
+  });
+  videoEl.addEventListener('ended',()=>{
+    playing=false; _bpl.textContent='▶ Play';
+    cancelAnimationFrame(raf);
+  });
+  videoEl.addEventListener('seeked',()=>{
+    if(!playing) drawCurrentVideoFrame();
+  });
+}
+
+function animatePlayback(){
+  if(!playing||!videoEl)return;
+  drawCurrentVideoFrame();
+  raf=requestAnimationFrame(animatePlayback);
+}
+
+function drawCurrentVideoFrame(){
+  const t=videoEl.currentTime;
+  const idx=findClosestFrameIdx(t);
+  _ctx.clearRect(0,0,_canvas.width,_canvas.height);
+  _ctx.drawImage(videoEl,0,0,_canvas.width,_canvas.height);
+  if(frames[idx]){
+    const dists=cDist(frames[idx].landmarks);
+    drawPoseSkeleton(_ctx,frames[idx].landmarks,frames[idx].angles,dists);
+    if(!playing)updPose(frames[idx].angles,dists);
+  }
+  _sk.value=t;
+  _tdisp.textContent=`${t.toFixed(2)}s / ${(videoEl.duration||0).toFixed(2)}s`;
+}
+
+function findClosestFrameIdx(t){
+  if(!frames.length)return 0;
+  let best=0, bestD=Infinity;
+  for(let i=0;i<frames.length;i++){
+    const d=Math.abs(frames[i].time-t);
+    if(d<bestD){bestD=d;best=i;}
+  }
+  return best;
+}
+
+function tplay(){
+  if(!videoEl||!frames.length)return;
+  if(videoEl.paused||videoEl.ended)videoEl.play();
+  else videoEl.pause();
+}
+
+function displayFrame(idx){
+  if(!frames.length||!videoEl)return;
+  const f=frames[Math.min(idx,frames.length-1)];
+  videoEl.currentTime=f.time;  // seeked event will trigger drawCurrentVideoFrame
+}
+
+// Slider registrado en load handler abajo
+
+function stepFrame(d){
+  if(!frames.length)return;
+  const t=parseFloat(_sk.value);
+  const cur=findClosestFrameIdx(t);
+  const ni=Math.max(0,Math.min(frames.length-1,cur+d));
+  _sk.value=frames[ni].time;
+  _sk.dispatchEvent(new Event('input'));
+}
+
 // ══════════════════════════════════════════════════════════════════════════════
 // MOTOR DE ANÁLISIS DE MARCHA
 // ══════════════════════════════════════════════════════════════════════════════
-// Landmarks sagitales usados:
-//   Cadera Izq=23, Rodilla Izq=25, Tobillo Izq=27, Pie Izq=31
-//   Cadera Der=24, Rodilla Der=26, Tobillo Der=28, Pie Der=32
-//   Hombro Izq=11, Hombro Der=12
-//   Cadera centro=(23+24)/2
-
-let gaitDataBase = null;   // sesión base guardada
-let gaitDataAdit = null;   // sesión con aditamento guardada
-let currentSesion = 'base';
-
-// Ángulo de rodilla sagital: cadera→rodilla→tobillo
-function rodillaAng(lms, side){
-  const [h,k,a] = side==='L' ? [lms[23],lms[25],lms[27]] : [lms[24],lms[26],lms[28]];
-  if(!h||!k||!a) return null;
+function rodillaAng(lms,side){
+  const [h,k,a]=side==='L'?[lms[23],lms[25],lms[27]]:[lms[24],lms[26],lms[28]];
   return a3(h,k,a);
 }
-// Ángulo de cadera sagital: hombro→cadera→rodilla
-function caderaAng(lms, side){
-  const [s,h,k] = side==='L' ? [lms[11],lms[23],lms[25]] : [lms[12],lms[24],lms[26]];
-  if(!s||!h||!k) return null;
+function caderaAng(lms,side){
+  const [s,h,k]=side==='L'?[lms[11],lms[23],lms[25]]:[lms[12],lms[24],lms[26]];
   return a3(s,h,k);
 }
-// Ángulo de tobillo sagital: rodilla→tobillo→pie
-function tobilloAng(lms, side){
-  const [k,a,f] = side==='L' ? [lms[25],lms[27],lms[31]] : [lms[26],lms[28],lms[32]];
-  if(!k||!a||!f) return null;
+function tobilloAng(lms,side){
+  const [k,a,f]=side==='L'?[lms[25],lms[27],lms[31]]:[lms[26],lms[28],lms[32]];
   return a3(k,a,f);
 }
-// Inclinación de tronco: hombros→caderas respecto a vertical
 function troncoAng(lms){
-  const sh = {x:(lms[11].x+lms[12].x)/2, y:(lms[11].y+lms[12].y)/2, z:((lms[11].z||0)+(lms[12].z||0))/2};
-  const hi = {x:(lms[23].x+lms[24].x)/2, y:(lms[23].y+lms[24].y)/2, z:((lms[23].z||0)+(lms[24].z||0))/2};
-  // Ángulo entre vector tronco y vertical pura (0,1,0)
-  const dy=hi.y-sh.y, dx=hi.x-sh.x;
-  return Math.round(Math.abs(Math.atan2(dx,dy)*180/Math.PI));
+  const sh={x:(lms[11].x+lms[12].x)/2,y:(lms[11].y+lms[12].y)/2};
+  const hi={x:(lms[23].x+lms[24].x)/2,y:(lms[23].y+lms[24].y)/2};
+  return Math.round(Math.abs(Math.atan2(hi.x-sh.x,hi.y-sh.y)*180/Math.PI));
+}
+function detectFase(lms,side){
+  const rod=rodillaAng(lms,side);
+  if(rod==null)return null;
+  return rod>145?'apoyo':'balanceo';
 }
 
-// Detectar fase de marcha por pie (apoyo si el pie está cerca del suelo)
-// Usamos el Y relativo del pie respecto a la cadera (normalizado)
-function detectFase(lms, side){
-  const pie = side==='L' ? lms[31] : lms[32];
-  const cad = side==='L' ? lms[23] : lms[24];
-  if(!pie||!cad) return null;
-  // En coordenadas MediaPipe Y crece hacia abajo
-  const relY = pie.y - cad.y; // positivo = pie debajo de cadera (normal)
-  // Rodilla extendida → apoyo
-  const rod = rodillaAng(lms, side);
-  if(rod==null) return null;
-  return rod > 145 ? 'apoyo' : 'balanceo';
-}
-
-// Calcular todas las métricas de marcha sobre el array frames[]
 function computeGaitMetrics(){
-  if(frames.length < 3) return null;
-
-  const series = {
-    t:[], rodL:[], rodR:[], cadL:[], cadR:[], tobL:[], tobR:[], trunk:[],
-    faseL:[], faseR:[]
-  };
-
+  if(frames.length<3)return null;
+  const series={t:[],rodL:[],rodR:[],cadL:[],cadR:[],tobL:[],tobR:[],trunk:[],faseL:[],faseR:[]};
   frames.forEach(f=>{
-    const lms = f.landmarks;
-    if(!lms||lms.length<33) return;
+    const lms=f.landmarks;
+    if(!lms||lms.length<33)return;
     series.t.push(f.time);
-    series.rodL.push(rodillaAng(lms,'L'));
-    series.rodR.push(rodillaAng(lms,'R'));
-    series.cadL.push(caderaAng(lms,'L'));
-    series.cadR.push(caderaAng(lms,'R'));
-    series.tobL.push(tobilloAng(lms,'L'));
-    series.tobR.push(tobilloAng(lms,'R'));
+    series.rodL.push(rodillaAng(lms,'L')); series.rodR.push(rodillaAng(lms,'R'));
+    series.cadL.push(caderaAng(lms,'L'));  series.cadR.push(caderaAng(lms,'R'));
+    series.tobL.push(tobilloAng(lms,'L')); series.tobR.push(tobilloAng(lms,'R'));
     series.trunk.push(troncoAng(lms));
-    series.faseL.push(detectFase(lms,'L'));
-    series.faseR.push(detectFase(lms,'R'));
+    series.faseL.push(detectFase(lms,'L')); series.faseR.push(detectFase(lms,'R'));
   });
+  const clean=arr=>arr.filter(v=>v!=null);
+  const minv=arr=>arr.length?Math.min(...arr):null;
+  const maxv=arr=>arr.length?Math.max(...arr):null;
+  const avg=arr=>arr.length?arr.reduce((a,b)=>a+b,0)/arr.length:null;
 
-  // Filtrar nulos para estadísticas
-  const clean = arr => arr.filter(v=>v!=null);
-  const minv  = arr => arr.length ? Math.min(...arr) : null;
-  const maxv  = arr => arr.length ? Math.max(...arr) : null;
-  const avg   = arr => arr.length ? arr.reduce((a,b)=>a+b,0)/arr.length : null;
-
-  // Velocidad angular: diferencia media absoluta entre frames consecutivos / Δt
-  function velAng(arr, times){
-    let sum=0, n=0;
+  function velAng(arr,times){
+    let sum=0,n=0;
     for(let i=1;i<arr.length;i++){
       if(arr[i]!=null&&arr[i-1]!=null){
         const dt=(times[i]-times[i-1])||0.1;
         sum+=Math.abs(arr[i]-arr[i-1])/dt; n++;
       }
     }
-    return n ? Math.round(sum/n) : null;
+    return n?Math.round(sum/n):null;
   }
 
-  // Fases: % de frames en apoyo
-  const apoyoL = series.faseL.filter(f=>f==='apoyo').length;
-  const balL   = series.faseL.filter(f=>f==='balanceo').length;
-  const totalL = apoyoL+balL||1;
-  const pctApoyo = Math.round(apoyoL/totalL*100);
-  const pctBal   = 100-pctApoyo;
-
-  // Simetría: ratio min(L,R)/max(L,R)*100 para rango de cada articulación
-  function simetria(arrL, arrR){
+  function simetria(arrL,arrR){
     const cL=clean(arrL), cR=clean(arrR);
-    if(!cL.length||!cR.length) return null;
-    const rangoL = maxv(cL)-minv(cL);
-    const rangoR = maxv(cR)-minv(cR);
-    if(!rangoL&&!rangoR) return 100;
-    const mn=Math.min(rangoL,rangoR), mx=Math.max(rangoL,rangoR);
-    return mx>0 ? Math.round(mn/mx*100) : 100;
+    if(!cL.length||!cR.length)return null;
+    const rL=maxv(cL)-minv(cL), rR=maxv(cR)-minv(cR);
+    if(!rL&&!rR)return 100;
+    const mn=Math.min(rL,rR), mx=Math.max(rL,rR);
+    return mx>0?Math.round(mn/mx*100):100;
   }
 
-  // Rangos por fase
-  function rangoFase(angArr, faseArr, fase){
-    const vals = angArr.filter((_,i)=>faseArr[i]===fase&&angArr[i]!=null);
-    if(!vals.length) return {min:null,max:null,avg:null};
+  function rangoFase(angArr,faseArr,fase){
+    const vals=angArr.filter((_,i)=>faseArr[i]===fase&&angArr[i]!=null);
+    if(!vals.length)return {min:null,max:null,avg:null};
     return {min:Math.round(minv(vals)),max:Math.round(maxv(vals)),avg:Math.round(avg(vals))};
   }
 
-  const velRod = Math.round((velAng(series.rodL,series.t)+velAng(series.rodR,series.t))/2)||null;
-  const velCad = Math.round((velAng(series.cadL,series.t)+velAng(series.cadR,series.t))/2)||null;
+  const apoyoL=series.faseL.filter(f=>f==='apoyo').length;
+  const totalL=(apoyoL+(series.faseL.filter(f=>f==='balanceo').length))||1;
+  const pctApoyo=Math.round(apoyoL/totalL*100);
 
   const cRodL=clean(series.rodL), cRodR=clean(series.rodR);
-  const cCadL=clean(series.cadL), cCadR=clean(series.cadR);
-  const cTobL=clean(series.tobL), cTobR=clean(series.tobR);
+  const cCadL=clean(series.cadL);
+  const velR1=velAng(series.rodL,series.t), velR2=velAng(series.rodR,series.t);
+  const velC1=velAng(series.cadL,series.t), velC2=velAng(series.cadR,series.t);
 
   return {
     series,
-    velRod, velCad,
-    rangoRod: cRodL.length ? `${Math.round(minv(cRodL))}→${Math.round(maxv(cRodL))}°` : '—',
-    rangoCad: cCadL.length ? `${Math.round(minv(cCadL))}→${Math.round(maxv(cCadL))}°` : '—',
-    pctApoyo, pctBal,
-    simRod: simetria(series.rodL, series.rodR),
-    simCad: simetria(series.cadL, series.cadR),
-    simTob: simetria(series.tobL, series.tobR),
+    velRod: (velR1!=null&&velR2!=null)?Math.round((velR1+velR2)/2):null,
+    velCad: (velC1!=null&&velC2!=null)?Math.round((velC1+velC2)/2):null,
+    rangoRod: cRodL.length?`${Math.round(minv(cRodL))}→${Math.round(maxv(cRodL))}°`:'—',
+    rangoCad: cCadL.length?`${Math.round(minv(cCadL))}→${Math.round(maxv(cCadL))}°`:'—',
+    pctApoyo, pctBal:100-pctApoyo,
+    simRod:simetria(series.rodL,series.rodR),
+    simCad:simetria(series.cadL,series.cadR),
+    simTob:simetria(series.tobL,series.tobR),
     fases:{
-      rodL_apoyo:  rangoFase(series.rodL, series.faseL,'apoyo'),
-      rodL_bal:    rangoFase(series.rodL, series.faseL,'balanceo'),
-      rodR_apoyo:  rangoFase(series.rodR, series.faseR,'apoyo'),
-      rodR_bal:    rangoFase(series.rodR, series.faseR,'balanceo'),
-      cadL_apoyo:  rangoFase(series.cadL, series.faseL,'apoyo'),
-      cadL_bal:    rangoFase(series.cadL, series.faseL,'balanceo'),
-      tobL_apoyo:  rangoFase(series.tobL, series.faseL,'apoyo'),
-      tobL_bal:    rangoFase(series.tobL, series.faseL,'balanceo'),
+      rodL_apoyo: rangoFase(series.rodL,series.faseL,'apoyo'),
+      rodL_bal:   rangoFase(series.rodL,series.faseL,'balanceo'),
+      rodR_apoyo: rangoFase(series.rodR,series.faseR,'apoyo'),
+      rodR_bal:   rangoFase(series.rodR,series.faseR,'balanceo'),
+      cadL_apoyo: rangoFase(series.cadL,series.faseL,'apoyo'),
+      cadL_bal:   rangoFase(series.cadL,series.faseL,'balanceo'),
+      tobL_apoyo: rangoFase(series.tobL,series.faseL,'apoyo'),
+      tobL_bal:   rangoFase(series.tobL,series.faseL,'balanceo'),
+      tobR_apoyo: rangoFase(series.tobR,series.faseR,'apoyo'),
+      tobR_bal:   rangoFase(series.tobR,series.faseR,'balanceo'),
     }
   };
 }
 
-// Actualiza el panel de marcha con las métricas calculadas
 function updGaitPanel(m){
-  if(!m) return;
+  if(!m)return;
+  document.getElementById('gm-velRod').textContent=m.velRod!=null?m.velRod:'—';
+  document.getElementById('gm-velCad').textContent=m.velCad!=null?m.velCad:'—';
+  document.getElementById('gm-rangoRod').textContent=m.rangoRod;
+  document.getElementById('gm-rangoCad').textContent=m.rangoCad;
 
-  // Métricas resumen
-  document.getElementById('gm-velRod').textContent = m.velRod!=null ? m.velRod : '—';
-  document.getElementById('gm-velCad').textContent = m.velCad!=null ? m.velCad : '—';
-  document.getElementById('gm-rangoRod').textContent = m.rangoRod;
-  document.getElementById('gm-rangoCad').textContent = m.rangoCad;
-
-  // Fases
-  const barApoyo = document.querySelector('#gait-phase-bar .gait-phase-seg:first-child');
-  const barBal   = document.querySelector('#gait-phase-bar .gait-phase-seg:last-child');
-  if(barApoyo){ barApoyo.style.width=m.pctApoyo+'%'; barApoyo.textContent=`APOYO ${m.pctApoyo}%`; }
-  if(barBal)  { barBal.style.width=m.pctBal+'%';     barBal.textContent=`BALANCEO ${m.pctBal}%`; }
+  const barApoyo=document.querySelector('#gait-phase-bar .gait-phase-seg:first-child');
+  const barBal=document.querySelector('#gait-phase-bar .gait-phase-seg:last-child');
+  if(barApoyo){barApoyo.style.width=m.pctApoyo+'%';barApoyo.textContent=`APOYO ${m.pctApoyo}%`;}
+  if(barBal){barBal.style.width=m.pctBal+'%';barBal.textContent=`BALANCEO ${m.pctBal}%`;}
   document.getElementById('gait-phase-apoyo-pct').textContent=`Apoyo: ${m.pctApoyo}%`;
   document.getElementById('gait-phase-bal-pct').textContent=`Balanceo: ${m.pctBal}%`;
 
-  // Simetría
-  function setSym(id, idPct, pct, col){
-    const el=document.getElementById(id), elP=document.getElementById(idPct);
-    if(!el||!elP) return;
+  // Simetría — elementos ahora existentes en el HTML
+  function setSym(fillId,pctId,pct){
+    const el=document.getElementById(fillId), elP=document.getElementById(pctId);
+    if(!el||!elP)return;
     const p=pct??0;
     el.style.width=p+'%';
-    el.style.background=p>=90?'var(--acc)':p>=75?'var(--acc3)':'var(--acc4)';
+    el.style.background=p>=90?'var(--ok)':p>=75?'var(--gold)':'var(--alert)';
     elP.textContent=pct!=null?pct+'%':'—';
-    elP.style.color=p>=90?'var(--acc)':p>=75?'var(--acc3)':'var(--acc4)';
+    elP.style.color=p>=90?'var(--ok)':p>=75?'var(--gold)':'var(--alert)';
   }
   setSym('sym-rod','sym-rod-pct',m.simRod);
   setSym('sym-cad','sym-cad-pct',m.simCad);
   setSym('sym-tob','sym-tob-pct',m.simTob);
 
-  // Tabla de rangos por fase
-  const rRef = { rodilla:'0–145°', cadera:'0–120°', tobillo:'85–110°' };
-  const tbody = document.getElementById('gait-phase-tbody');
-  if(tbody) tbody.innerHTML = [
-    {label:'Rodilla izq', apoyo:m.fases.rodL_apoyo, bal:m.fases.rodL_bal, ref:rRef.rodilla},
-    {label:'Rodilla der', apoyo:m.fases.rodR_apoyo, bal:m.fases.rodR_bal, ref:rRef.rodilla},
-    {label:'Cadera izq',  apoyo:m.fases.cadL_apoyo, bal:m.fases.cadL_bal, ref:rRef.cadera},
-    {label:'Tobillo izq', apoyo:m.fases.tobL_apoyo, bal:m.fases.tobL_bal, ref:rRef.tobillo},
+  // Tabla rangos por fase
+  const tbody=document.getElementById('gait-phase-tbody');
+  if(tbody) tbody.innerHTML=[
+    {label:'Rodilla izq', apoyo:m.fases.rodL_apoyo, bal:m.fases.rodL_bal, ref:'0–145°'},
+    {label:'Rodilla der', apoyo:m.fases.rodR_apoyo, bal:m.fases.rodR_bal, ref:'0–145°'},
+    {label:'Cadera izq',  apoyo:m.fases.cadL_apoyo, bal:m.fases.cadL_bal, ref:'0–120°'},
+    {label:'Tobillo izq', apoyo:m.fases.tobL_apoyo, bal:m.fases.tobL_bal, ref:'85–110°'},
+    {label:'Tobillo der', apoyo:m.fases.tobR_apoyo, bal:m.fases.tobR_bal, ref:'85–110°'},
   ].map(r=>{
-    const fmtFase=f=>f&&f.min!=null?`${f.min}–${f.max}°<br><span style="font-size:9px;color:var(--text3);">x̄${f.avg}°</span>`:'—';
+    const fmt=f=>f&&f.min!=null?`${f.min}–${f.max}°<br><span style="font-size:9px;color:var(--text3)">x̄${f.avg}°</span>`:'—';
     return`<tr>
       <td style="font-size:11px">${r.label}</td>
-      <td style="text-align:center;font-family:var(--mono);font-size:11px">${fmtFase(r.apoyo)}</td>
-      <td style="text-align:center;font-family:var(--mono);font-size:11px">${fmtFase(r.bal)}</td>
+      <td style="text-align:center;font-family:var(--mono);font-size:11px">${fmt(r.apoyo)}</td>
+      <td style="text-align:center;font-family:var(--mono);font-size:11px">${fmt(r.bal)}</td>
       <td style="text-align:right;font-size:10px;color:var(--text3);font-family:var(--mono)">${r.ref}</td>
     </tr>`;
   }).join('');
 
-  // Goniograma
   document.getElementById('gonioWrap').style.display='block';
   drawGoniograma();
 }
 
-// Dibuja el goniograma en canvas
 function drawGoniograma(){
   const gc=document.getElementById('gonioCanvas');
-  if(!gc||!frames.length) return;
+  if(!gc||!frames.length)return;
   const gm=computeGaitMetrics();
-  if(!gm) return;
-
-  const W=gc.offsetWidth||gc.parentElement.offsetWidth||320;
+  if(!gm)return;
+  const W=gc.offsetWidth||gc.parentElement?.offsetWidth||320;
   gc.width=W; gc.height=160;
-  const ctx2=gc.getContext('2d');
-  ctx2.clearRect(0,0,W,160);
-
-  // Fondo y grid
-  ctx2.fillStyle='#0e0f11'; ctx2.fillRect(0,0,W,160);
+  const g2=gc.getContext('2d');
+  g2.clearRect(0,0,W,160);
+  g2.fillStyle='#0e0f11'; g2.fillRect(0,0,W,160);
   const PAD={t:12,b:28,l:32,r:10};
   const plotW=W-PAD.l-PAD.r, plotH=160-PAD.t-PAD.b;
-
   const times=gm.series.t;
   const tMin=times[0]||0, tMax=times[times.length-1]||1;
-  const angMin=20, angMax=185;
-
-  function tx(t){ return PAD.l+(t-tMin)/(tMax-tMin)*plotW; }
-  function ty(a){ return PAD.t+plotH-(a-angMin)/(angMax-angMin)*plotH; }
+  const angMin=20, angMax=190;
+  const tx=t=>PAD.l+(t-tMin)/(tMax-tMin)*plotW;
+  const ty=a=>PAD.t+plotH-(a-angMin)/(angMax-angMin)*plotH;
 
   // Grid horizontal
   [60,90,120,150,180].forEach(a=>{
     const y=ty(a);
-    ctx2.beginPath(); ctx2.moveTo(PAD.l,y); ctx2.lineTo(PAD.l+plotW,y);
-    ctx2.strokeStyle='rgba(42,45,53,.9)'; ctx2.lineWidth=1; ctx2.stroke();
-    ctx2.fillStyle='#555869'; ctx2.font='8px DM Mono,monospace';
-    ctx2.fillText(a+'°',2,y+3);
+    g2.beginPath();g2.moveTo(PAD.l,y);g2.lineTo(PAD.l+plotW,y);
+    g2.strokeStyle='rgba(42,45,53,.9)';g2.lineWidth=1;g2.stroke();
+    g2.fillStyle='#555869';g2.font='8px JetBrains Mono,monospace';
+    g2.fillText(a+'°',2,y+3);
   });
 
-  // Eje X (tiempo)
-  ctx2.fillStyle='#555869'; ctx2.font='8px DM Mono,monospace';
-  const steps=Math.min(5,Math.floor(tMax-tMin)+1);
+  // Eje X (tiempo real)
+  g2.fillStyle='#555869'; g2.font='8px JetBrains Mono,monospace';
+  const steps=Math.min(6,Math.floor(tMax-tMin)+1);
   for(let i=0;i<=steps;i++){
     const t=tMin+i*(tMax-tMin)/steps;
-    ctx2.fillText(t.toFixed(1)+'s', tx(t)-8, 160-5);
+    g2.fillText(t.toFixed(1)+'s',tx(t)-8,160-5);
   }
 
-  // Curvas seleccionadas
-  const curves=[
-    {id:'gon-rod', arr:gm.series.rodL, color:'#4ade80', label:'Rodilla Izq'},
-    {id:'gon-rod', arr:gm.series.rodR, color:'#22c55e', label:'Rodilla Der', dash:[3,3]},
-    {id:'gon-cad', arr:gm.series.cadL, color:'#60a5fa', label:'Cadera Izq'},
-    {id:'gon-cad', arr:gm.series.cadR, color:'#3b82f6', label:'Cadera Der', dash:[3,3]},
-    {id:'gon-tob', arr:gm.series.tobL, color:'#c084fc', label:'Tobillo Izq'},
-    {id:'gon-trunk',arr:gm.series.trunk,color:'#f59e0b', label:'Tronco'},
-  ];
+  // Marcador de posición actual
+  const curT=videoEl?videoEl.currentTime:0;
+  if(curT>=tMin&&curT<=tMax){
+    g2.beginPath();g2.moveTo(tx(curT),PAD.t);g2.lineTo(tx(curT),PAD.t+plotH);
+    g2.strokeStyle='rgba(255,255,255,.25)';g2.lineWidth=1;g2.setLineDash([2,3]);
+    g2.stroke();g2.setLineDash([]);
+  }
 
+  const curves=[
+    {id:'gon-rod',arr:gm.series.rodL,color:'#4ade80',label:'Rodilla Izq'},
+    {id:'gon-rod',arr:gm.series.rodR,color:'#22c55e',label:'Rodilla Der',dash:[3,3]},
+    {id:'gon-cad',arr:gm.series.cadL,color:'#60a5fa',label:'Cadera Izq'},
+    {id:'gon-cad',arr:gm.series.cadR,color:'#3b82f6',label:'Cadera Der',dash:[3,3]},
+    {id:'gon-tob',arr:gm.series.tobL,color:'#c084fc',label:'Tobillo Izq'},
+    {id:'gon-tob',arr:gm.series.tobR,color:'#a855f7',label:'Tobillo Der',dash:[3,3]},
+    {id:'gon-trunk',arr:gm.series.trunk,color:'#f59e0b',label:'Tronco'},
+  ];
   const legend=[];
   curves.forEach(cv=>{
     const chk=document.getElementById(cv.id);
-    if(!chk||!chk.checked) return;
+    if(!chk||!chk.checked)return;
     const pts=cv.arr.map((v,i)=>v!=null?{x:tx(times[i]),y:ty(v)}:null).filter(Boolean);
-    if(pts.length<2) return;
-    ctx2.beginPath();
-    pts.forEach((p,i)=>i===0?ctx2.moveTo(p.x,p.y):ctx2.lineTo(p.x,p.y));
-    ctx2.strokeStyle=cv.color; ctx2.lineWidth=1.8;
-    if(cv.dash) ctx2.setLineDash(cv.dash); else ctx2.setLineDash([]);
-    ctx2.stroke(); ctx2.setLineDash([]);
+    if(pts.length<2)return;
+    g2.beginPath();
+    pts.forEach((p,i)=>i===0?g2.moveTo(p.x,p.y):g2.lineTo(p.x,p.y));
+    g2.strokeStyle=cv.color;g2.lineWidth=1.8;
+    if(cv.dash)g2.setLineDash(cv.dash);else g2.setLineDash([]);
+    g2.stroke();g2.setLineDash([]);
     legend.push(cv);
   });
-
-  // Leyenda dinámica
   const legEl=document.getElementById('gonio-legend');
-  if(legEl) legEl.innerHTML=legend.map(cv=>
+  if(legEl)legEl.innerHTML=legend.map(cv=>
     `<div class="gonio-legend-item"><div class="gonio-dot" style="background:${cv.color}"></div>${cv.label}</div>`
   ).join('');
 }
 
-// Guardar sesión (base o aditamento) para comparación
 function saveGaitSesion(tipo){
   const m=computeGaitMetrics();
   if(!m){alert('Procesa un video primero.');return;}
   if(tipo==='adit'){
     gaitDataAdit=m;
     document.getElementById('ses-adit-saved').style.display='block';
-    // Tabla aditamento
     const tbody=document.getElementById('gait-adit-tbody');
-    if(tbody) tbody.innerHTML=[
-      {label:'Rodilla izq — apoyo', v:m.fases.rodL_apoyo},
-      {label:'Rodilla izq — balanceo', v:m.fases.rodL_bal},
-      {label:'Cadera izq — apoyo', v:m.fases.cadL_apoyo},
-      {label:'Cadera izq — balanceo', v:m.fases.cadL_bal},
+    if(tbody)tbody.innerHTML=[
+      {label:'Rodilla izq — apoyo',v:m.fases.rodL_apoyo},
+      {label:'Rodilla izq — balanceo',v:m.fases.rodL_bal},
+      {label:'Cadera izq — apoyo',v:m.fases.cadL_apoyo},
+      {label:'Cadera izq — balanceo',v:m.fases.cadL_bal},
     ].map(r=>`<tr>
       <td style="font-size:11px">${r.label}</td>
       <td style="text-align:center;font-family:var(--mono);font-size:11px">${r.v&&r.v.min!=null?r.v.min+'–'+r.v.max+'°':'—'}</td>
@@ -1856,23 +1823,22 @@ function saveGaitSesion(tipo){
   }
 }
 
-// Tabla de comparación base vs aditamento
 function updCompare(){
-  if(!gaitDataBase||!gaitDataAdit) return;
+  if(!gaitDataBase||!gaitDataAdit)return;
   const b=gaitDataBase, a=gaitDataAdit;
   const rows=[
-    {label:'Vel. angular rodilla (°/seg)', bv:b.velRod, av:a.velRod},
-    {label:'Vel. angular cadera (°/seg)',  bv:b.velCad, av:a.velCad},
-    {label:'Simetría rodilla (%)',          bv:b.simRod, av:a.simRod},
-    {label:'Simetría cadera (%)',           bv:b.simCad, av:a.simCad},
-    {label:'Simetría tobillo (%)',          bv:b.simTob, av:a.simTob},
-    {label:'Fase apoyo (%)',               bv:b.pctApoyo,av:a.pctApoyo},
-    {label:'Fase balanceo (%)',            bv:b.pctBal,  av:a.pctBal},
+    {label:'Vel. angular rodilla (°/seg)',bv:b.velRod,av:a.velRod},
+    {label:'Vel. angular cadera (°/seg)',bv:b.velCad,av:a.velCad},
+    {label:'Simetría rodilla (%)',bv:b.simRod,av:a.simRod},
+    {label:'Simetría cadera (%)',bv:b.simCad,av:a.simCad},
+    {label:'Simetría tobillo (%)',bv:b.simTob,av:a.simTob},
+    {label:'Fase apoyo (%)',bv:b.pctApoyo,av:a.pctApoyo},
+    {label:'Fase balanceo (%)',bv:b.pctBal,av:a.pctBal},
   ];
   const tbody=document.getElementById('gait-comp-tbody');
-  if(tbody) tbody.innerHTML=rows.map(r=>{
+  if(tbody)tbody.innerHTML=rows.map(r=>{
     const delta=(r.bv!=null&&r.av!=null)?r.av-r.bv:null;
-    const col=delta==null?'var(--text3)':Math.abs(delta)<5?'var(--acc)':Math.abs(delta)<15?'var(--acc3)':'var(--acc4)';
+    const col=delta==null?'var(--text3)':Math.abs(delta)<5?'var(--ok)':Math.abs(delta)<15?'var(--gold)':'var(--alert)';
     return`<tr>
       <td style="font-size:11px">${r.label}</td>
       <td style="text-align:center;font-family:var(--mono);font-size:11px">${r.bv??'—'}</td>
@@ -1882,462 +1848,146 @@ function updCompare(){
   }).join('');
 }
 
-function setSesion(s){
-  currentSesion=s;
-  ['base','adit','comp'].forEach(x=>{
-    document.getElementById('ses-btn-'+x).classList.toggle('active',x===s);
-    document.getElementById('ses-'+x).style.display=x===s?'block':'none';
-  });
-  if(s==='comp') updCompare();
-}
-
-// Cálculo de velocidad angular (legacy — se mantiene para compatibilidad)
-function cVel(){
-  if(frames.length<2)return;
-  const a=frames[frames.length-2],b=frames[frames.length-1];
-  const dt=(b.time-a.time)||0.001;
-  velH.push({time:b.time,vels:VJ.map(j=>{
-    const p1=a.landmarks[j.id],p2=b.landmarks[j.id];
-    return{id:j.id,n:j.n,v:Math.round(Math.hypot((p2.x-p1.x)*canvas.width,(p2.y-p1.y)*canvas.height)/dt)};
-  })});
-}
-
-// ══════════════════════════════════════════════════════════════════════════════
-// TAXONOMÍA CLÍNICA DE AGARRES
-// Fuente: Duarte Torres SC. Manual clínico de Terapia Ocupacional en alteraciones osteomusculares
-// de miembro superior. Facultad de Medicina, Universidad Nacional de Colombia. Junio 2024.
-// Grupos: Fuerza (contacto palmar) · Mixtos (palma+movilización) · Precisión (dedos+oposición)
-// ══════════════════════════════════════════════════════════════════════════════
-const GRASP_TAXONOMY = {
-  // ─── AGARRES DE FUERZA: objeto inmovilizado por contacto palmar ───────────
-  cilindrico: {
-    grasp:'Agarre cilíndrico',
-    grupo:'Fuerza',
-    icon:'🥤',
-    color:'var(--acc2)',
-    anatomia:'Oposición del pulgar, uso de la palma, cuatro dígitos en ADUCCIÓN',
-    desc:'El objeto es inmovilizado por contacto palmar. Pulgar en oposición, palma activa, 4 dígitos en aducción.',
-    fuente:'Fig. 8 — Duarte Torres SC. Manual clínico de TO en alteraciones osteomusculares de miembro superior. UNAL, 2024.'
-  },
-  manoLlena: {
-    grasp:'Agarre a mano llena',
-    grupo:'Fuerza',
-    icon:'✊',
-    color:'var(--acc4)',
-    anatomia:'Oposición del pulgar, uso de la palma, cuatro dígitos en ABDUCCIÓN',
-    desc:'El objeto es inmovilizado por contacto palmar. Pulgar en oposición, palma activa, 4 dígitos en abducción.',
-    fuente:'Fig. 9 — Duarte Torres SC. Manual clínico de TO en alteraciones osteomusculares de miembro superior. UNAL, 2024.'
-  },
-  esferico: {
-    grasp:'Agarre esférico',
-    grupo:'Fuerza',
-    icon:'🍊',
-    color:'var(--acc3)',
-    anatomia:'Oposición del pulgar, sin contacto palmar, puede o no incluir los cuatro dígitos',
-    desc:'Contacto palmar ausente o mínimo. Pulgar en oposición. Dedos arqueados rodeando el objeto.',
-    fuente:'Fig. 10 — Duarte Torres SC. Manual clínico de TO en alteraciones osteomusculares de miembro superior. UNAL, 2024.'
-  },
-  // ─── AGARRES MIXTOS: sostienen en palma y movilizan el objeto ─────────────
-  digitoPalmar: {
-    grasp:'Agarre dígito-palmar',
-    grupo:'Mixto',
-    icon:'🤚',
-    color:'#a78bfa',
-    anatomia:'Flexión/extensión MCP, extensión de interfalángicas, pulgar como apoyo',
-    desc:'Sostiene el objeto en la palma y lo moviliza. Metacarpofalángicas activas, interfalángicas extendidas, pulgar en apoyo lateral.',
-    fuente:'Fig. 12 — Duarte Torres SC. Manual clínico de TO en alteraciones osteomusculares de miembro superior. UNAL, 2024.'
-  },
-  enganche: {
-    grasp:'Enganche',
-    grupo:'Mixto',
-    icon:'🪝',
-    color:'#f87171',
-    anatomia:'Flexión de interfalángicas, extensión de metacarpofalángicas, pulgar libre',
-    desc:'Sostiene y moviliza el objeto. Interfalángicas flexionadas, MCPs extendidas. Pulgar no participa.',
-    fuente:'Fig. 13 — Duarte Torres SC. Manual clínico de TO en alteraciones osteomusculares de miembro superior. UNAL, 2024.'
-  },
-  digitoDigital: {
-    grasp:'Agarre dígito-digital',
-    grupo:'Mixto',
-    icon:'🖐️',
-    color:'#34d399',
-    anatomia:'Falanges distales de los cinco dígitos implicadas',
-    desc:'Sostiene el objeto con las falanges distales de los 5 dedos. Contacto palmar mínimo con movilización activa.',
-    fuente:'Fig. 14 — Duarte Torres SC. Manual clínico de TO en alteraciones osteomusculares de miembro superior. UNAL, 2024.'
-  },
-  // ─── AGARRES DE PRECISIÓN: objeto en dedos, oposición independiente ────────
-  pinzaLateral: {
-    grasp:'Pinza lateral',
-    grupo:'Precisión',
-    icon:'🗝️',
-    color:'var(--acc3)',
-    anatomia:'Pulgar en contacto con la falange media del 2° dedo (cara lateral)',
-    desc:'Objeto sostenido por los dedos con oposición pulgar. Pulgar presiona cara lateral de la falange media del índice.',
-    fuente:'Fig. 16 — Duarte Torres SC. Manual clínico de TO en alteraciones osteomusculares de miembro superior. UNAL, 2024.'
-  },
-  pinzaTripode: {
-    grasp:'Pinza trípode',
-    grupo:'Precisión',
-    icon:'👌',
-    color:'#60a5fa',
-    anatomia:'Falanges distales del 1°, 2° y 3° dedo',
-    desc:'Oposición pulgar con yemas del índice y medio. Tres dígitos sostienen el objeto con movimientos independientes.',
-    fuente:'Fig. 17 — Duarte Torres SC. Manual clínico de TO en alteraciones osteomusculares de miembro superior. UNAL, 2024.'
-  },
-  pinzaFina: {
-    grasp:'Pinza fina (oposición terminal)',
-    grupo:'Precisión',
-    icon:'🤌',
-    color:'var(--acc5)',
-    anatomia:'Oposición del pulgar con el 2° dedo; falanges distales de ambos en contacto',
-    desc:'Oposición terminal pulgar-índice: falanges distales de ambos dedos en contacto. Movimientos independientes y coordinados.',
-    fuente:'Fig. 18 — Duarte Torres SC. Manual clínico de TO en alteraciones osteomusculares de miembro superior. UNAL, 2024.'
-  },
-  pinzaTripodeDin: {
-    grasp:'Pinza trípode dinámica',
-    grupo:'Precisión',
-    icon:'✍️',
-    color:'#f472b6',
-    anatomia:'3 primeros dígitos; objeto apoyado en cara lateral del 3er dedo',
-    desc:'Variante dinámica del trípode: el objeto se apoya en la cara lateral del dedo medio, permitiendo manipulación fina.',
-    fuente:'Fig. 19 — Duarte Torres SC. Manual clínico de TO en alteraciones osteomusculares de miembro superior. UNAL, 2024.'
-  },
-  pinzaLateroLateral: {
-    grasp:'Pinza latero-lateral',
-    grupo:'Precisión',
-    icon:'🤞',
-    color:'#fb923c',
-    anatomia:'Objeto sujeto entre el 2°-3° dedo o entre el 3°-4° dedo',
-    desc:'El objeto es sostenido entre la cara lateral de dos dedos adyacentes, sin participación del pulgar.',
-    fuente:'Fig. 20 — Duarte Torres SC. Manual clínico de TO en alteraciones osteomusculares de miembro superior. UNAL, 2024.'
-  }
-};
-
-// ══════════════════════════════════════════════════════════════════════════════
-// CLASIFICACIÓN DE AGARRE — árbol de decisión con landmarks MediaPipe
-// Referencia: Manual Clínico de Terapia Ocupacional — Universidad Nacional de Colombia
-// ══════════════════════════════════════════════════════════════════════════════
-function classifyGrasp(lms){
-  if(!lms||lms.length<21) return null;
-
-  // Índice de flexión por articulación: 0=extensión total (180°), 1=flexión máxima (~30°)
-  function fingerFlexion(mcpPts, pipPts, dipPts){
-    const mcp = a3(lms[mcpPts[0]], lms[mcpPts[1]], lms[mcpPts[2]]);
-    const pip = a3(lms[pipPts[0]], lms[pipPts[1]], lms[pipPts[2]]);
-    const dip = dipPts ? a3(lms[dipPts[0]], lms[dipPts[1]], lms[dipPts[2]]) : null;
-    const toFlex=(ang)=> ang!=null ? Math.max(0, Math.min(1, (180-ang)/150)) : 0;
-    const dipFlex = dip!=null ? toFlex(dip) : toFlex(pip)*0.7;
-    return {mcp, pip, dip, flex:(toFlex(mcp)*0.35 + toFlex(pip)*0.4 + dipFlex*0.25)};
-  }
-
-  const thumb  = fingerFlexion([0,1,2],  [1,2,3],   [2,3,4]);
-  const index  = fingerFlexion([0,5,6],  [5,6,7],   [6,7,8]);
-  const middle = fingerFlexion([0,9,10], [9,10,11], [10,11,12]);
-  const ring   = fingerFlexion([0,13,14],[13,14,15],[14,15,16]);
-  const pinky  = fingerFlexion([0,17,18],[17,18,19],[18,19,20]);
-
-  const avgFlex4   = (index.flex+middle.flex+ring.flex+pinky.flex)/4;
-  const thumbIdxDist = distPx(lms[4],lms[8]);
-  const wristW     = Math.max(distPx(lms[0],lms[5]),1);
-  const relThumbIdx= thumbIdxDist/wristW;
-
-  // Señales clave según el manual:
-  const thumbOppose    = thumb.flex > 0.30;              // pulgar en oposición
-  const palmarContact  = avgFlex4 > 0.40;                // contacto palmar probable
-  const mcpExt         = index.mcp!=null && index.mcp > 145; // MCPs en extensión (mixto)
-  const ifFlex         = index.pip!=null && index.pip < 110;  // IF flexionadas (enganche)
-  const thumbFree      = thumb.flex < 0.18;              // pulgar libre (enganche)
-  const thumbLateral   = !thumbOppose && thumb.mcp!=null && thumb.mcp < 145; // aducción pulgar
-
-  // ── Helper para construir respuesta con taxonomía clínica ─────────────────
-  function result(key, detail){
-    const t = GRASP_TAXONOMY[key];
-    return { ...t, detail, key };
-  }
-
-  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-  // ÁRBOL DE DECISIÓN — orden: precisión → mixto → fuerza
-  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-  // ─── PRECISIÓN ────────────────────────────────────────────────────────────
-  // Pinza latero-lateral: objeto entre 2°-3° o 3°-4° dedo, sin pulgar
-  if(thumbFree && index.flex>0.3 && middle.flex>0.3 && relThumbIdx>0.9 && ring.flex<0.25){
-    return result('pinzaLateroLateral',
-      `Flex índice: ${Math.round(index.flex*100)}% | Flex medio: ${Math.round(middle.flex*100)}% | Pulgar libre`);
-  }
-  // Pinza fina / oposición terminal: yema pulgar-índice, DIP flexionado, dedos medios libres
-  if(relThumbIdx<0.30 && thumbOppose && index.dip!=null && index.dip<115 && index.flex>0.40 && middle.flex<0.32){
-    return result('pinzaFina',
-      `Dist pulgar-índice: ${relThumbIdx.toFixed(2)} rel | DIP índice: ${index.dip}°`);
-  }
-  // Pinza lateral (key pinch): aducción del pulgar contra cara lateral del índice, IF índice extendida
-  if(relThumbIdx<0.38 && thumbLateral && index.pip!=null && index.pip>125 && index.flex<0.45){
-    return result('pinzaLateral',
-      `MCP pulgar: ${thumb.mcp}° | PIP índice: ${index.pip}° | Aducción pulgar`);
-  }
-  // Pinza trípode dinámica: 3 primeros dedos, objeto en cara lateral del 3er dedo
-  if(relThumbIdx<0.50 && thumbOppose && index.flex>0.38 && middle.flex>0.35 && ring.flex<0.30 && pinky.flex<0.25){
-    const lateralMid = index.flex > middle.flex*1.15; // índice más flexionado que medio → apoyo en cara lateral medio
-    if(lateralMid){
-      return result('pinzaTripodeDin',
-        `Flex índice: ${Math.round(index.flex*100)}% | Flex medio: ${Math.round(middle.flex*100)}% | Apoyo cara lateral 3er dedo`);
-    }
-  }
-  // Pinza trípode: falanges distales 1°-2°-3°, anular y meñique libres
-  if(relThumbIdx<0.55 && thumbOppose && index.flex>0.35 && middle.flex>0.30 && ring.flex<0.30){
-    return result('pinzaTripode',
-      `Flex índice: ${Math.round(index.flex*100)}% | Flex medio: ${Math.round(middle.flex*100)}% | Anular libre`);
-  }
-
-  // ─── MIXTOS ───────────────────────────────────────────────────────────────
-  // Enganche: IF flexionadas, MCPs extendidas, pulgar libre
-  if(thumbFree && ifFlex && mcpExt && avgFlex4>0.35){
-    return result('enganche',
-      `IF flex: IP índice ${index.pip}° | MCP índice: ${index.mcp}° | Pulgar libre`);
-  }
-  // Dígito-digital: 5 falanges distales, contacto palmar mínimo
-  if(thumbOppose && index.dip!=null && index.dip<130 && middle.dip!=null && middle.dip<130
-     && ring.dip!=null && ring.dip<130 && pinky.dip!=null && pinky.dip<130 && avgFlex4<0.55){
-    return result('digitoDigital',
-      `DIP índice: ${index.dip}° | DIP medio: ${middle.dip}° | 5 dígitos`);
-  }
-  // Dígito-palmar: MCPs activos, IF extendidas, pulgar de apoyo lateral
-  if(palmarContact && thumbLateral && !ifFlex && !thumbFree && avgFlex4>0.30 && avgFlex4<0.70){
-    return result('digitoPalmar',
-      `MCP índice: ${index.mcp}° | PIP índice: ${index.pip}° | Pulgar apoyo lateral`);
-  }
-
-  // ─── FUERZA ───────────────────────────────────────────────────────────────
-  // Agarre esférico: pulgar en oposición, sin palma, dedos arqueados, amplia apertura
-  if(thumbOppose && relThumbIdx>0.60 && avgFlex4>0.28 && avgFlex4<0.65 && !palmarContact){
-    return result('esferico',
-      `Apertura pulgar-índice: ${relThumbIdx.toFixed(2)} rel | Flex promedio: ${Math.round(avgFlex4*100)}% | Sin contacto palmar`);
-  }
-  // Agarre cilíndrico: oposición pulgar + palma + 4 dígitos en ADUCCIÓN (índices de separación bajos)
-  const idxMidDist = distPx(lms[8],lms[12])/wristW; // separación entre yemas índice-medio
-  if(thumbOppose && palmarContact && avgFlex4>0.42 && avgFlex4<0.80 && idxMidDist<0.65){
-    return result('cilindrico',
-      `Flex promedio: ${Math.round(avgFlex4*100)}% | MCP índice: ${index.mcp}° | Dígitos en aducción (sep. índice-medio: ${idxMidDist.toFixed(2)})`);
-  }
-  // Agarre a mano llena: oposición pulgar + palma + 4 dígitos en ABDUCCIÓN (mayor separación)
-  if(thumbOppose && palmarContact && avgFlex4>0.42 && idxMidDist>=0.65){
-    return result('manoLlena',
-      `Flex promedio: ${Math.round(avgFlex4*100)}% | MCP índice: ${index.mcp}° | Dígitos en abducción (sep. índice-medio: ${idxMidDist.toFixed(2)})`);
-  }
-
-  // ─── MANO EXTENDIDA (patrón soltar) ───────────────────────────────────────
-  if(avgFlex4 < 0.13 && thumb.flex < 0.15){
-    return {
-      grasp:'Mano extendida', grupo:'Patrón — Soltar', icon:'✋',
-      color:'var(--acc)', key:'extendida',
-      anatomia:'Extensión de metacarpofalángicas e interfalángicas',
-      desc:'Patrón de soltar: extensión de MCPs e IFs. Voluntario o rudimentario.',
-      fuente:'Duarte Torres SC. Manual clínico de TO en alteraciones osteomusculares de miembro superior. UNAL, 2024.',
-      detail:`Flexión dedos: ${Math.round(avgFlex4*100)}% | Pulgar: ${Math.round(thumb.flex*100)}%`
-    };
-  }
-
-  // ─── INDETERMINADO ────────────────────────────────────────────────────────
-  return {
-    grasp:'Patrón no clasificado', grupo:'—', icon:'🖐️',
-    color:'var(--text2)', key:'indeterminado',
-    anatomia:'No coincide con patrones del manual clínico',
-    desc:'El patrón detectado no se ajusta a los criterios de ningún agarre del manual clínico de TO.',
-    fuente:'—',
-    detail:`Flex promedio: ${Math.round(avgFlex4*100)}% | Apertura pulgar-índice: ${relThumbIdx.toFixed(2)}`
-  };
-}
-
 // ══════════════════════════════════════════════════════════════════════════════
 // RENDER POSE
 // ══════════════════════════════════════════════════════════════════════════════
 function drawPoseSkeleton(c,lms,ang,dist){
-  const W=canvas.width,H=canvas.height;
+  const W=_canvas.width, H=_canvas.height;
   if(opts.sk){
     CONN.forEach(([a,b])=>{
-      const pa=lms[a],pb=lms[b];
+      const pa=lms[a], pb=lms[b];
       if((pa.visibility||0)<0.35||(pb.visibility||0)<0.35)return;
-      // Color según confianza de visibilidad
-      const conf=Math.min(pa.visibility||0,pb.visibility||0);
       const alpha=opts.col?0.85:0.7;
-      const sideColor=opts.col?(LI.has(a)?`rgba(74,222,128,${alpha})`:`rgba(96,165,250,${alpha})`):`rgba(255,255,255,${alpha*0.8})`;
+      const sc=opts.col?(LI.has(a)?`rgba(74,222,128,${alpha})`:`rgba(96,165,250,${alpha})`):`rgba(255,255,255,${alpha*0.8})`;
       c.beginPath();c.moveTo(pa.x*W,pa.y*H);c.lineTo(pb.x*W,pb.y*H);
-      c.strokeStyle=sideColor;c.lineWidth=Math.max(2,W*0.003);c.stroke();
+      c.strokeStyle=sc;c.lineWidth=Math.max(2,W*0.003);c.stroke();
     });
     lms.forEach((lm,i)=>{
       if((lm.visibility||0)<0.35)return;
       const conf=lm.visibility||0;
-      // Color del punto según confianza
-      let dotColor=opts.col?(LI.has(i)?'#4ade80':'#60a5fa'):'#fff';
-      if(conf<0.6) dotColor='#f59e0b'; // baja confianza: amarillo
+      let dc=opts.col?(LI.has(i)?'#4ade80':'#60a5fa'):'#fff';
+      if(conf<0.6)dc='#f59e0b';
       c.beginPath();c.arc(lm.x*W,lm.y*H,Math.max(3,W*0.006),0,2*Math.PI);
-      c.fillStyle=dotColor;c.fill();
+      c.fillStyle=dc;c.fill();
       c.strokeStyle='rgba(0,0,0,.5)';c.lineWidth=1.5;c.stroke();
     });
   }
   if(opts.an&&ang){
     curJoints().forEach((j,i)=>{
       [['L',j.L[1],'#4ade80'],['R',j.R[1],'#60a5fa']].forEach(([s,pi,col])=>{
-        const v=ang[i][s];if(!v)return;
-        const lm=lms[pi];if((lm.visibility||0)<0.35)return;
-        const x=lm.x*W,y=lm.y*H,t=`${v}°`,tw=t.length*7+8;
-        c.save();c.fillStyle='rgba(0,0,0,.75)';c.beginPath();c.roundRect(x+5,y-15,tw,16,3);c.fill();
-        c.fillStyle=col;c.font=`bold ${Math.max(10,W*0.012)}px DM Mono,monospace`;c.fillText(t,x+8,y-2);c.restore();
+        const v=ang[i][s]; if(!v)return;
+        const lm=lms[pi]; if((lm.visibility||0)<0.35)return;
+        const x=lm.x*W, y=lm.y*H, t=`${v}°`, tw=t.length*7+8;
+        c.save();c.fillStyle='rgba(0,0,0,.78)';c.beginPath();c.roundRect(x+5,y-15,tw,16,3);c.fill();
+        c.fillStyle=col;c.font=`bold ${Math.max(10,W*0.012)}px JetBrains Mono,monospace`;
+        c.fillText(t,x+8,y-2);c.restore();
       });
     });
   }
   if(opts.di&&dist){
     curDists().forEach((d,i)=>{
-      const pa=lms[d.p[0]],pb=lms[d.p[1]];
-      const mx=(pa.x+pb.x)/2*W,my=(pa.y+pb.y)/2*H,t=dist[i].label,tw=t.length*6+8;
+      const pa=lms[d.p[0]], pb=lms[d.p[1]];
+      const mx=(pa.x+pb.x)/2*W, my=(pa.y+pb.y)/2*H, t=dist[i].label, tw=t.length*6+8;
       c.save();c.fillStyle='rgba(0,0,0,.72)';c.beginPath();c.roundRect(mx-tw/2,my-12,tw,14,3);c.fill();
-      c.fillStyle='#f59e0b';c.font='10px DM Mono,monospace';c.fillText(t,mx-tw/2+4,my-1);c.restore();
+      c.fillStyle='#f59e0b';c.font='10px JetBrains Mono,monospace';c.fillText(t,mx-tw/2+4,my-1);c.restore();
     });
   }
 }
+
 function rdImg(){
   if(!imgEl||!lLms)return;
-  ctx.clearRect(0,0,canvas.width,canvas.height);ctx.drawImage(imgEl,0,0);
-  drawPoseSkeleton(ctx,lLms,lAng,lDist);
+  _ctx.clearRect(0,0,_canvas.width,_canvas.height);
+  _ctx.drawImage(imgEl,0,0);
+  drawPoseSkeleton(_ctx,lLms,lAng,lDist);
 }
 
 // ══════════════════════════════════════════════════════════════════════════════
 // RENDER MANO
 // ══════════════════════════════════════════════════════════════════════════════
-const c2=ctx;
 function drawHandResults(r){
   if(!r||!r.multiHandLandmarks)return;
-  const W=canvas.width,H=canvas.height;
+  const W=_canvas.width, H=_canvas.height;
   r.multiHandLandmarks.forEach((lms,hi)=>{
     const label=r.multiHandedness[hi]?.label||'Unknown';
-    const realLabel=realSide(label); // lateralidad real del paciente
-    const isLeft=realLabel==='Left';  // izquierda del PACIENTE
+    const realLabel=realSide(label);
+    const isLeft=realLabel==='Left';
     if(handSide==='izq'&&!isLeft)return;
     if(handSide==='der'&&isLeft)return;
     const col=isLeft?'rgba(74,222,128,.9)':'rgba(192,132,252,.9)';
     const colFill=isLeft?'#4ade80':'#c084fc';
     if(opts.sk){
       HAND_CONN.forEach(([a,b])=>{
-        c2.beginPath();c2.moveTo(lms[a].x*W,lms[a].y*H);c2.lineTo(lms[b].x*W,lms[b].y*H);
-        c2.strokeStyle=col;c2.lineWidth=Math.max(1.5,W*0.002);c2.stroke();
+        _ctx.beginPath();_ctx.moveTo(lms[a].x*W,lms[a].y*H);_ctx.lineTo(lms[b].x*W,lms[b].y*H);
+        _ctx.strokeStyle=col;_ctx.lineWidth=Math.max(1.5,W*0.002);_ctx.stroke();
       });
       lms.forEach((lm,i)=>{
-        c2.beginPath();c2.arc(lm.x*W,lm.y*H,Math.max(2,W*0.004),0,2*Math.PI);
-        c2.fillStyle=i===0?'#fff':colFill;
-        c2.fill();c2.strokeStyle='rgba(0,0,0,.4)';c2.lineWidth=1;c2.stroke();
+        _ctx.beginPath();_ctx.arc(lm.x*W,lm.y*H,Math.max(2,W*0.004),0,2*Math.PI);
+        _ctx.fillStyle=i===0?'#fff':colFill;
+        _ctx.fill();_ctx.strokeStyle='rgba(0,0,0,.4)';_ctx.lineWidth=1;_ctx.stroke();
       });
     }
     if(opts.an){
       FINGER_ANGLES_FLAT.forEach(fa=>{
         const mid=lms[fa.pts[1]];
-        const ang=a3(lms[fa.pts[0]],lms[fa.pts[1]],lms[fa.pts[2]]);
-        if(!ang)return;
-        const x=mid.x*W,y=mid.y*H,t=`${ang}°`;
-        c2.save();c2.fillStyle='rgba(0,0,0,.7)';c2.beginPath();c2.roundRect(x+3,y-13,30,13,2);c2.fill();
-        c2.fillStyle=colFill;c2.font='9px DM Mono,monospace';c2.fillText(t,x+5,y-2);c2.restore();
+        const ang=handJointAngle(lms,fa);  // CORREGIDO: usa convenio clínico
+        if(!ang&&ang!==0)return;
+        const x=mid.x*W, y=mid.y*H, t=`${ang}°`;
+        _ctx.save();_ctx.fillStyle='rgba(0,0,0,.75)';_ctx.beginPath();_ctx.roundRect(x+3,y-13,32,13,2);_ctx.fill();
+        _ctx.fillStyle=colFill;_ctx.font='9px JetBrains Mono,monospace';_ctx.fillText(t,x+5,y-2);_ctx.restore();
       });
     }
   });
 }
 
 // ══════════════════════════════════════════════════════════════════════════════
-// VIDEO
-// ══════════════════════════════════════════════════════════════════════════════
-let _dfBusy=false;
-async function df(idx){
-  if(!frames.length||!videoEl)return;
-  if(_dfBusy)return; // evitar race conditions
-  _dfBusy=true;
-  const f=frames[Math.min(idx,frames.length-1)];
-  // Esperar seeked antes de dibujar — currentTime es asíncrono
-  try {
-    if(Math.abs(videoEl.currentTime - f.time) > 0.05){
-      await new Promise(res=>{
-        const onSeeked=()=>{videoEl.removeEventListener('seeked',onSeeked);res();};
-        videoEl.addEventListener('seeked',onSeeked);
-        videoEl.currentTime=f.time;
-      });
-    }
-    ctx.clearRect(0,0,canvas.width,canvas.height);
-    ctx.drawImage(videoEl,0,0,canvas.width,canvas.height);
-    const dists=cDist(f.landmarks);
-    drawPoseSkeleton(ctx,f.landmarks,f.angles,dists);
-    updPose(f.angles,dists);
-    const vel=velH.find(v=>Math.abs(v.time-f.time)<0.12);
-    if(vel&&document.getElementById('vg'))document.getElementById('vg').innerHTML=vel.vels.map(v=>{const c=v.v<50?'g':v.v<150?'a':'r';return`<div class="mc"><div class="mn">${v.n}</div><div class="mv ${c}">${v.v}</div><div class="mu">px/seg</div></div>`;}).join('');
-  } finally {
-    _dfBusy=false;
-  }
-}
-document.getElementById('sk').addEventListener('input',function(){
-  if(!frames.length)return;
-  const t=parseFloat(this.value),idx=frames.reduce((b,f,i)=>Math.abs(f.time-t)<Math.abs(frames[b].time-t)?i:b,0);
-  df(idx);document.getElementById('tdisp').textContent=`${t.toFixed(2)}s / ${(videoEl?.duration||0).toFixed(2)}s`;
-});
-function tplay(){playing=!playing;document.getElementById('bpl').textContent=playing?'⏸ Pause':'▶ Play';if(playing)pl();else cancelAnimationFrame(raf);}
-function pl(){
-  if(!playing||!frames.length)return;
-  const sk=document.getElementById('sk'),t=parseFloat(sk.value)+0.1;
-  if(t>frames[frames.length-1].time){sk.value=0;playing=false;document.getElementById('bpl').textContent='▶ Play';return;}
-  // En play no hacemos seek — videoEl avanza solo, solo dibujamos el frame más cercano
-  const idx=frames.reduce((b,f,i)=>Math.abs(f.time-t)<Math.abs(frames[b].time-t)?i:b,0);
-  const f=frames[idx];
-  ctx.clearRect(0,0,canvas.width,canvas.height);
-  ctx.drawImage(videoEl,0,0,canvas.width,canvas.height);
-  const dists=cDist(f.landmarks);
-  drawPoseSkeleton(ctx,f.landmarks,f.angles,dists);
-  sk.value=t;
-  document.getElementById('tdisp').textContent=`${t.toFixed(2)}s / ${(videoEl?.duration||0).toFixed(2)}s`;
-  raf=requestAnimationFrame(pl);
-}
-function sf(d){if(!frames.length)return;const t=parseFloat(document.getElementById('sk').value),cur=frames.reduce((b,f,i)=>Math.abs(f.time-t)<Math.abs(frames[b].time-t)?i:b,0);const ni=Math.max(0,Math.min(frames.length-1,cur+d));document.getElementById('sk').value=frames[ni].time;document.getElementById('sk').dispatchEvent(new Event('input'));}
-
-// ══════════════════════════════════════════════════════════════════════════════
-// PANEL POSE
+// PANEL POSE — resultados tabulares
 // ══════════════════════════════════════════════════════════════════════════════
 function angCol(v,refLo,refHi){
-  if(!v)return'var(--text3)';
+  if(v==null)return'var(--text3)';
   const margin=(refHi-refLo)*0.15||5;
-  if(v>=refLo-margin&&v<=refHi+margin)return'var(--acc)';
-  if(v>=refLo-margin*3&&v<=refHi+margin*3)return'var(--acc3)';
-  return'var(--acc4)';
+  if(v>=refLo-margin&&v<=refHi+margin)return'var(--ok)';
+  if(v>=refLo-margin*3&&v<=refHi+margin*3)return'var(--gold)';
+  return'var(--alert)';
 }
+
 function asymBadge(diff){
   if(diff===null)return '';
-  if(diff<=5) return `<span class="asym-badge asym-ok">Δ${diff}°</span>`;
+  if(diff<=5)  return `<span class="asym-badge asym-ok">Δ${diff}°</span>`;
   if(diff<=10) return `<span class="asym-badge asym-warn">Δ${diff}°</span>`;
   return `<span class="asym-badge asym-bad">Δ${diff}° !</span>`;
 }
+
 function updPose(ang,dist){
-  // Ángulos + distancias — siempre visibles en todos los modos de pose
   document.getElementById('atb').innerHTML=ang.map(a=>{
     const diff=(a.L!=null&&a.R!=null)?Math.abs(a.L-a.R):null;
-    const tooltip=a.desc?`title="${a.desc.replace(/"/g,"'")}"`:'' ;
+    const tip=a.desc?`title="${a.desc.replace(/"/g,"'")}"`:'' ;
     return`<tr>
-      <td ${tooltip}>
-        <span class="adot" style="background:var(--acc)"></span>
+      <td ${tip}>
+        <span class="adot" style="background:var(--teal)"></span>
         <span style="font-size:11px;font-weight:500;color:var(--text)">${a.n}</span>
         <span class="mov-label">${a.mov||''}</span>
         <span class="ref-range pos-label">Ref: ${a.ref}° · ${a.posRef||''}</span>
       </td>
       <td style="text-align:center;font-family:var(--mono)"><span style="color:${angCol(a.L,a.refLo,a.refHi)}">${a.L!=null?a.L+'°':'—'}</span></td>
       <td style="text-align:center;font-family:var(--mono)"><span style="color:${angCol(a.R,a.refLo,a.refHi)}">${a.R!=null?a.R+'°':'—'}</span></td>
-      <td style="text-align:right">${asymBadge(diff)}</td></tr>`;
+      <td style="text-align:right">${asymBadge(diff)}</td>
+    </tr>`;
   }).join('');
-  const unit=pxPerCm?'cm':'px';
-  document.getElementById('dg').innerHTML=dist.map(d=>`<div class="mc"><div class="mn">${d.n.toUpperCase()}</div><div class="mv b">${d.label}</div><div class="mu">${unit}</div></div>`).join('');
 
-  // Simetría — SOLO en vista frontal (sagital no tiene sentido bilateral)
+  const unit=pxPerCm?'cm':'px';
+  document.getElementById('dg').innerHTML=dist.map(d=>`
+    <div class="mc"><div class="mn">${d.n.toUpperCase()}</div><div class="mv b">${d.label}</div><div class="mu">${unit}</div></div>
+  `).join('');
+
   const symEl=document.getElementById('symc');
   if(appMode==='pose'){
     symEl.innerHTML=ang.map(a=>{
       if(a.L==null||a.R==null)return'';
       const diff=Math.abs(a.L-a.R);
       const pct=a.L&&a.R?Math.min(a.L,a.R)/Math.max(a.L,a.R)*100:0;
-      const col=pct>90?'var(--acc)':pct>75?'var(--acc3)':'var(--acc4)';
-      const clinNote=diff>10?' ⚠ Asim. clínica':'';
+      const col=pct>90?'var(--ok)':pct>75?'var(--gold)':'var(--alert)';
       return`<div class="sb">
-        <div class="sl"><span>${a.n}</span><span style="color:${col}">${diff?`Δ${diff}° · ${Math.round(pct)}%${clinNote}`:'Simétrico'}</span></div>
+        <div class="sl"><span>${a.n}</span><span style="color:${col}">${diff?`Δ${diff}° · ${Math.round(pct)}%${diff>10?' ⚠ Asim. clínica':''}`:' Simétrico'}</span></div>
         <div class="st"><div class="sf" style="width:${pct}%;background:${col}"></div><div class="sc"></div></div>
       </div>`;
     }).join('');
@@ -2347,14 +1997,64 @@ function updPose(ang,dist){
 }
 
 // ══════════════════════════════════════════════════════════════════════════════
-// PANEL MANO
+// PANEL MANO — con dimensiones reales (WorldLandmarks) y ángulos corregidos
 // ══════════════════════════════════════════════════════════════════════════════
 function updHand(r){
   if(!r||!r.multiHandLandmarks||r.multiHandLandmarks.length===0){
     document.getElementById('hand-results').innerHTML='<div style="color:var(--text3);font-size:11px;text-align:center;padding:10px 0">Sin datos de mano</div>';
+    document.getElementById('hand-dims').innerHTML='<div style="color:var(--text3);font-size:11px;text-align:center;padding:6px 0">Sin datos</div>';
     return;
   }
 
+  // ── DIMENSIONES DE MANO (WorldLandmarks en metros) ─────────────────────────
+  let dimsHtml='';
+  if(lHandWorldLandmarks&&lHandWorldLandmarks.length>0){
+    lHandWorldLandmarks.forEach((wlms,hi)=>{
+      const label=r.multiHandedness[hi]?.label||'?';
+      const realLabel=realSide(label);
+      const isLeft=realLabel==='Left';
+      if(handSide==='izq'&&!isLeft)return;
+      if(handSide==='der'&&isLeft)return;
+      const m=computeHandMeasurements(wlms);
+      if(!m)return;
+      const col=isLeft?'var(--ok)':'var(--info)';
+      const hName=isLeft?'Mano izq':'Mano der';
+      dimsHtml+=`
+      <div style="font-size:9px;color:${col};font-family:var(--mono);margin-bottom:6px;letter-spacing:.5px;">${hName.toUpperCase()} — escala real (WorldLandmarks)</div>
+      <div class="mgrid" style="margin-bottom:8px;">
+        <div class="mc full" style="border-color:${col};border-opacity:.3;">
+          <div class="mn">LONGITUD TOTAL MANO</div>
+          <div class="mv" style="color:${col};font-size:14px;">${(m.totalLen*100).toFixed(1)} cm</div>
+          <div class="mu">${Math.round(m.totalLen*1000)} mm · muñeca→punta dedo medio</div>
+        </div>
+        <div class="mc">
+          <div class="mn">LONGITUD PALMA</div>
+          <div class="mv b">${(m.palmLen*100).toFixed(1)} cm</div>
+          <div class="mu">${Math.round(m.palmLen*1000)} mm</div>
+        </div>
+        <div class="mc">
+          <div class="mn">ANCHO PALMA</div>
+          <div class="mv b">${(m.palmW*100).toFixed(1)} cm</div>
+          <div class="mu">${Math.round(m.palmW*1000)} mm · MCP1→MCP5</div>
+        </div>
+      </div>
+      <div style="font-size:9px;color:var(--text3);font-family:var(--mono);margin-bottom:4px;letter-spacing:.3px;">LONGITUD POR DEDO (MCP→TIP)</div>
+      <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:4px;margin-bottom:8px;">
+        ${Object.entries(m.fingers).map(([nombre,len])=>`
+          <div class="fc">
+            <div class="fn">${nombre.charAt(0).toUpperCase()+nombre.slice(1)}</div>
+            <div class="fv p">${(len*100).toFixed(1)}</div>
+            <div class="fu">cm / ${Math.round(len*1000)} mm</div>
+          </div>`).join('')}
+      </div>`;
+    });
+  } else {
+    // Fallback: calibración manual
+    dimsHtml='<div style="font-size:10px;color:var(--gold);padding:6px 8px;background:rgba(251,191,36,.06);border:1px solid rgba(251,191,36,.2);border-radius:6px;">⚠ WorldLandmarks no disponibles. Usa el objeto de referencia para calibrar distancias.</div>';
+  }
+  document.getElementById('hand-dims').innerHTML=dimsHtml||'<div style="color:var(--text3);font-size:11px;text-align:center;padding:6px 0">Sin datos de mano seleccionada</div>';
+
+  // ── ÁNGULOS POR DEDO ────────────────────────────────────────────────────────
   let html='';
   r.multiHandLandmarks.forEach((lms,hi)=>{
     const label=r.multiHandedness[hi]?.label||'?';
@@ -2362,33 +2062,26 @@ function updHand(r){
     const isLeft=realLabel==='Left';
     if(handSide==='izq'&&!isLeft)return;
     if(handSide==='der'&&isLeft)return;
-    const col=isLeft?'var(--acc)':'var(--acc5)';
+    const col=isLeft?'var(--ok)':'var(--info)';
     const handName=isLeft?'Mano izquierda (paciente)':'Mano derecha (paciente)';
-
     html+=`<div style="font-size:10px;color:${col};font-family:var(--mono);margin-bottom:8px;letter-spacing:.5px;">${handName.toUpperCase()}</div>`;
 
-    // Ángulos por dedo: CMC/MCP + PIP + DIP agrupados con tooltip de movimiento
     FINGER_ANGLES_BY_FINGER.forEach(fingerDef=>{
-      html+=`<div class="finger-section">`;
-      html+=`<div class="finger-section-title">${fingerDef.finger}</div>`;
-      html+=`<div class="finger-grid">`;
+      html+=`<div class="finger-section"><div class="finger-section-title">${fingerDef.finger}</div><div class="finger-grid">`;
       fingerDef.joints.forEach(jt=>{
-        const ang=a3(lms[jt.pts[0]],lms[jt.pts[1]],lms[jt.pts[2]]);
-        // Color según rango refLo/refHi del joint
+        // BUG FIX: usa handJointAngle (convenio clínico: 0°=extendido, N°=flexión)
+        const ang=handJointAngle(lms,jt);
         let angClass='';
-        if(ang!=null && jt.refLo!=null && jt.refHi!=null){
-          const span=jt.refHi-jt.refLo;
+        if(ang!=null){
+          const span=jt.refHi-jt.refLo||10;
           const margin=span*0.15||8;
-          const inRange=(v)=>v>=jt.refLo-margin&&v<=jt.refHi+margin;
-          const nearRange=(v)=>v>=jt.refLo-margin*3&&v<=jt.refHi+margin*3;
-          angClass=inRange(ang)?'g':nearRange(ang)?'a':'r';
+          angClass=ang<=jt.refHi+margin?'g':ang<=jt.refHi+margin*3?'a':'r';
         }
         const tip=jt.desc?jt.desc.replace(/"/g,"'"):'';
-        const movShort=jt.mov||jt.n;
         html+=`<div class="fc" title="${tip}" style="cursor:help;">
-          <div class="fn" style="font-size:8px;line-height:1.3;">${jt.n}</div>
+          <div class="fn">${jt.n}</div>
           <div class="fv ${angClass}">${ang!=null?ang+'°':'—'}</div>
-          <div class="fu" style="font-size:7px;color:var(--acc2);margin-top:1px;">${jt.ref}°</div>
+          <div class="fu" style="color:var(--blue);font-size:7px;">${jt.ref}°</div>
         </div>`;
       });
       html+=`</div></div>`;
@@ -2396,12 +2089,11 @@ function updHand(r){
   });
   document.getElementById('hand-results').innerHTML=html||'<div style="color:var(--text3);font-size:11px;text-align:center;padding:10px 0">Sin mano seleccionada</div>';
 
-  // Apertura entre dedos
+  // ── APERTURA ENTRE DEDOS ────────────────────────────────────────────────────
   let spreadHtml='';
   r.multiHandLandmarks.forEach((lms,hi)=>{
     const label=r.multiHandedness[hi]?.label||'?';
-    const realLabel=realSide(label);
-    const isLeft=realLabel==='Left';
+    const isLeft=realSide(label)==='Left';
     if(handSide==='izq'&&!isLeft)return;
     if(handSide==='der'&&isLeft)return;
     SPREAD_PAIRS.forEach(sp=>{
@@ -2411,243 +2103,369 @@ function updHand(r){
   });
   document.getElementById('spread-grid').innerHTML=spreadHtml||'<div class="mc full"><div class="mu" style="padding:5px 0;text-align:center">Sin datos</div></div>';
 
-  // Clasificación avanzada de agarre — taxonomía del Manual Clínico de TO, UNAL
+  // ── CLASIFICACIÓN DE AGARRE ─────────────────────────────────────────────────
   if(r.multiHandLandmarks[0]){
     const g=classifyGrasp(r.multiHandLandmarks[0]);
-    if(g){
-      const grupoColors={
-        'Fuerza':'rgba(96,165,250,.10)',
-        'Mixto':'rgba(192,132,252,.10)',
-        'Precisión':'rgba(74,222,128,.10)',
-        'Patrón — Soltar':'rgba(74,222,128,.06)',
-        '—':'rgba(139,143,168,.07)'
-      };
-      const grupoBorder={
-        'Fuerza':'rgba(96,165,250,.35)',
-        'Mixto':'rgba(192,132,252,.35)',
-        'Precisión':'rgba(74,222,128,.35)',
-        'Patrón — Soltar':'rgba(74,222,128,.2)',
-        '—':'rgba(139,143,168,.2)'
-      };
-      const grp=g.grupo||'—';
-      document.getElementById('grasp-type').innerHTML=`
-        <div style="background:${grupoColors[grp]||grupoColors['—']};border:1px solid ${grupoBorder[grp]||grupoBorder['—']};border-radius:10px;padding:11px 13px;">
-          <div style="display:flex;align-items:center;gap:9px;margin-bottom:7px;">
-            <span style="font-size:26px;flex-shrink:0;">${g.icon}</span>
-            <div style="flex:1;">
-              <div style="font-size:13px;font-weight:600;color:${g.color};font-family:var(--mono);line-height:1.2;">${g.grasp}</div>
-              <div style="display:flex;align-items:center;gap:5px;margin-top:3px;">
-                <span style="font-size:9px;font-family:var(--mono);padding:2px 7px;border-radius:3px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);color:var(--text2);text-transform:uppercase;letter-spacing:.5px;">Grupo ${grp}</span>
-              </div>
-            </div>
-          </div>
-          <div style="font-size:11px;color:var(--text);margin-bottom:5px;line-height:1.55;">${g.desc}</div>
-          <div style="background:rgba(0,0,0,.2);border-radius:6px;padding:7px 9px;margin-bottom:5px;">
-            <div style="font-size:9px;color:var(--text3);font-family:var(--mono);letter-spacing:.5px;margin-bottom:3px;">ANATOMÍA CLÍNICA</div>
-            <div style="font-size:11px;color:var(--text2);line-height:1.5;">${g.anatomia}</div>
-          </div>
-          <div style="font-size:10px;color:var(--text3);font-family:var(--mono);margin-bottom:3px;">${g.detail}</div>
-          <div style="font-size:9px;color:var(--text3);font-family:var(--mono);opacity:.6;margin-top:3px;">${g.fuente||''}</div>
-        </div>`;
-    }
+    if(g)renderGrasp(g);
   }
 }
 
-// ══════════════════════════════════════════════════════════════════════════════
-// OPCIONES
-// ══════════════════════════════════════════════════════════════════════════════
-function to(k,el){opts[k]=!opts[k];el.classList.toggle('on',opts[k]);if(mediaMode==='image')reprocess();}
+function renderGrasp(g){
+  const grupoColors={'Fuerza':'rgba(96,165,250,.10)','Mixto':'rgba(192,132,252,.10)','Precisión':'rgba(74,222,128,.10)','Patrón — Soltar':'rgba(74,222,128,.06)','—':'rgba(139,143,168,.07)'};
+  const grupoBorder={'Fuerza':'rgba(96,165,250,.35)','Mixto':'rgba(192,132,252,.35)','Precisión':'rgba(74,222,128,.35)','Patrón — Soltar':'rgba(74,222,128,.2)','—':'rgba(139,143,168,.2)'};
+  const grp=g.grupo||'—';
+  document.getElementById('grasp-type').innerHTML=`
+    <div style="background:${grupoColors[grp]||grupoColors['—']};border:1px solid ${grupoBorder[grp]||grupoBorder['—']};border-radius:10px;padding:11px 13px;">
+      <div style="display:flex;align-items:center;gap:9px;margin-bottom:7px;">
+        <span style="font-size:26px;flex-shrink:0;">${g.icon}</span>
+        <div style="flex:1;">
+          <div style="font-size:13px;font-weight:600;color:${g.color};font-family:var(--mono);line-height:1.2;">${g.grasp}</div>
+          <span style="font-size:9px;font-family:var(--mono);padding:2px 7px;border-radius:3px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);color:var(--text2);text-transform:uppercase;letter-spacing:.5px;">Grupo ${grp}</span>
+        </div>
+      </div>
+      <div style="font-size:11px;color:var(--text);margin-bottom:5px;line-height:1.55;">${g.desc}</div>
+      <div style="background:rgba(0,0,0,.2);border-radius:6px;padding:7px 9px;margin-bottom:5px;">
+        <div style="font-size:9px;color:var(--text3);font-family:var(--mono);margin-bottom:3px;">ANATOMÍA CLÍNICA</div>
+        <div style="font-size:11px;color:var(--text2);line-height:1.5;">${g.anatomia}</div>
+      </div>
+      <div style="font-size:10px;color:var(--text3);font-family:var(--mono);margin-bottom:3px;">${g.detail}</div>
+      <div style="font-size:9px;color:var(--text3);font-family:var(--mono);opacity:.6;margin-top:3px;">${g.fuente||''}</div>
+    </div>`;
+}
 
 // ══════════════════════════════════════════════════════════════════════════════
-// EXPORTACIÓN
+// TAXONOMÍA CLÍNICA DE AGARRES (Manual TO — UNAL 2024)
 // ══════════════════════════════════════════════════════════════════════════════
+const GRASP_TAXONOMY={
+  cilindrico:{grasp:'Agarre cilíndrico',grupo:'Fuerza',icon:'🥤',color:'var(--blue)',anatomia:'Oposición del pulgar, uso de la palma, cuatro dígitos en ADUCCIÓN',desc:'El objeto es inmovilizado por contacto palmar. Pulgar en oposición, palma activa, 4 dígitos en aducción.',fuente:'Fig. 8 — Duarte Torres SC. Manual clínico de TO. UNAL, 2024.'},
+  manoLlena:{grasp:'Agarre a mano llena',grupo:'Fuerza',icon:'✊',color:'var(--alert)',anatomia:'Oposición del pulgar, uso de la palma, cuatro dígitos en ABDUCCIÓN',desc:'Pulgar en oposición, palma activa, 4 dígitos en abducción.',fuente:'Fig. 9 — Duarte Torres SC. Manual clínico de TO. UNAL, 2024.'},
+  esferico:{grasp:'Agarre esférico',grupo:'Fuerza',icon:'🍊',color:'var(--gold)',anatomia:'Oposición del pulgar, sin contacto palmar, puede incluir los cuatro dígitos',desc:'Contacto palmar ausente o mínimo. Dedos arqueados rodeando el objeto.',fuente:'Fig. 10 — Duarte Torres SC. Manual clínico de TO. UNAL, 2024.'},
+  digitoPalmar:{grasp:'Agarre dígito-palmar',grupo:'Mixto',icon:'🤚',color:'#a78bfa',anatomia:'Flexión/extensión MCP, extensión de interfalángicas, pulgar como apoyo',desc:'Metacarpofalángicas activas, interfalángicas extendidas, pulgar en apoyo lateral.',fuente:'Fig. 12 — Duarte Torres SC. Manual clínico de TO. UNAL, 2024.'},
+  enganche:{grasp:'Enganche',grupo:'Mixto',icon:'🪝',color:'#f87171',anatomia:'Flexión de interfalángicas, extensión de metacarpofalángicas, pulgar libre',desc:'Interfalángicas flexionadas, MCPs extendidas. Pulgar no participa.',fuente:'Fig. 13 — Duarte Torres SC. Manual clínico de TO. UNAL, 2024.'},
+  digitoDigital:{grasp:'Agarre dígito-digital',grupo:'Mixto',icon:'🖐️',color:'#34d399',anatomia:'Falanges distales de los cinco dígitos implicadas',desc:'Falanges distales de los 5 dedos en contacto. Contacto palmar mínimo.',fuente:'Fig. 14 — Duarte Torres SC. Manual clínico de TO. UNAL, 2024.'},
+  pinzaLateral:{grasp:'Pinza lateral',grupo:'Precisión',icon:'🗝️',color:'var(--gold)',anatomia:'Pulgar en contacto con la falange media del 2° dedo (cara lateral)',desc:'Pulgar presiona cara lateral de la falange media del índice.',fuente:'Fig. 16 — Duarte Torres SC. Manual clínico de TO. UNAL, 2024.'},
+  pinzaTripode:{grasp:'Pinza trípode',grupo:'Precisión',icon:'👌',color:'#60a5fa',anatomia:'Falanges distales del 1°, 2° y 3° dedo',desc:'Oposición pulgar con yemas del índice y medio.',fuente:'Fig. 17 — Duarte Torres SC. Manual clínico de TO. UNAL, 2024.'},
+  pinzaFina:{grasp:'Pinza fina (oposición terminal)',grupo:'Precisión',icon:'🤌',color:'var(--info)',anatomia:'Oposición del pulgar con el 2° dedo; falanges distales de ambos en contacto',desc:'Oposición terminal pulgar-índice: falanges distales en contacto.',fuente:'Fig. 18 — Duarte Torres SC. Manual clínico de TO. UNAL, 2024.'},
+  pinzaTripodeDin:{grasp:'Pinza trípode dinámica',grupo:'Precisión',icon:'✍️',color:'#f472b6',anatomia:'3 primeros dígitos; objeto apoyado en cara lateral del 3er dedo',desc:'Variante dinámica del trípode: objeto apoyado en cara lateral del dedo medio.',fuente:'Fig. 19 — Duarte Torres SC. Manual clínico de TO. UNAL, 2024.'},
+  pinzaLateroLateral:{grasp:'Pinza latero-lateral',grupo:'Precisión',icon:'🤞',color:'#fb923c',anatomia:'Objeto sujeto entre el 2°-3° dedo o entre el 3°-4° dedo',desc:'Objeto sostenido entre la cara lateral de dos dedos adyacentes, sin pulgar.',fuente:'Fig. 20 — Duarte Torres SC. Manual clínico de TO. UNAL, 2024.'},
+};
+
+function classifyGrasp(lms){
+  if(!lms||lms.length<21)return null;
+  function fingerFlexion(mcpPts,pipPts,dipPts){
+    const mcp=a3(lms[mcpPts[0]],lms[mcpPts[1]],lms[mcpPts[2]]);
+    const pip=a3(lms[pipPts[0]],lms[pipPts[1]],lms[pipPts[2]]);
+    const dip=dipPts?a3(lms[dipPts[0]],lms[dipPts[1]],lms[dipPts[2]]):null;
+    const toFlex=ang=>ang!=null?Math.max(0,Math.min(1,(180-ang)/150)):0;
+    const dipFlex=dip!=null?toFlex(dip):toFlex(pip)*0.7;
+    return{mcp,pip,dip,flex:(toFlex(mcp)*0.35+toFlex(pip)*0.4+dipFlex*0.25)};
+  }
+  const thumb=fingerFlexion([0,1,2],[1,2,3],[2,3,4]);
+  const index=fingerFlexion([0,5,6],[5,6,7],[6,7,8]);
+  const middle=fingerFlexion([0,9,10],[9,10,11],[10,11,12]);
+  const ring=fingerFlexion([0,13,14],[13,14,15],[14,15,16]);
+  const pinky=fingerFlexion([0,17,18],[17,18,19],[18,19,20]);
+  const avgFlex4=(index.flex+middle.flex+ring.flex+pinky.flex)/4;
+  const thumbIdxDist=distPx(lms[4],lms[8]);
+  const wristW=Math.max(distPx(lms[0],lms[5]),1);
+  const relThumbIdx=thumbIdxDist/wristW;
+  const thumbOppose=thumb.flex>0.30;
+  const palmarContact=avgFlex4>0.40;
+  const mcpExt=index.mcp!=null&&index.mcp>145;
+  const ifFlex=index.pip!=null&&index.pip<110;
+  const thumbFree=thumb.flex<0.18;
+  const thumbLateral=!thumbOppose&&thumb.mcp!=null&&thumb.mcp<145;
+  const result=(key,detail)=>({...GRASP_TAXONOMY[key],detail,key});
+
+  if(thumbFree&&index.flex>0.3&&middle.flex>0.3&&relThumbIdx>0.9&&ring.flex<0.25)
+    return result('pinzaLateroLateral',`Flex índice: ${Math.round(index.flex*100)}% | Pulgar libre`);
+  if(relThumbIdx<0.30&&thumbOppose&&index.dip!=null&&index.dip<115&&index.flex>0.40&&middle.flex<0.32)
+    return result('pinzaFina',`Dist pulgar-índice: ${relThumbIdx.toFixed(2)} rel | DIP índice: ${index.dip}°`);
+  if(relThumbIdx<0.38&&thumbLateral&&index.pip!=null&&index.pip>125&&index.flex<0.45)
+    return result('pinzaLateral',`MCP pulgar: ${thumb.mcp}° | PIP índice: ${index.pip}° | Aducción pulgar`);
+  if(relThumbIdx<0.50&&thumbOppose&&index.flex>0.38&&middle.flex>0.35&&ring.flex<0.30&&pinky.flex<0.25&&index.flex>middle.flex*1.15)
+    return result('pinzaTripodeDin',`Flex índice: ${Math.round(index.flex*100)}% | Apoyo cara lateral 3er dedo`);
+  if(relThumbIdx<0.55&&thumbOppose&&index.flex>0.35&&middle.flex>0.30&&ring.flex<0.30)
+    return result('pinzaTripode',`Flex índice: ${Math.round(index.flex*100)}% | Anular libre`);
+  if(thumbFree&&ifFlex&&mcpExt&&avgFlex4>0.35)
+    return result('enganche',`IF flex: IP índice ${index.pip}° | MCPs ext: ${index.mcp}°`);
+  if(thumbOppose&&index.dip!=null&&index.dip<130&&middle.dip!=null&&middle.dip<130&&ring.dip!=null&&ring.dip<130&&avgFlex4<0.55)
+    return result('digitoDigital',`DIP índice: ${index.dip}° | DIP medio: ${middle.dip}° | 5 dígitos`);
+  if(palmarContact&&thumbLateral&&!ifFlex&&!thumbFree&&avgFlex4>0.30&&avgFlex4<0.70)
+    return result('digitoPalmar',`MCP índice: ${index.mcp}° | PIP índice: ${index.pip}° | Pulgar lateral`);
+  if(thumbOppose&&relThumbIdx>0.60&&avgFlex4>0.28&&avgFlex4<0.65&&!palmarContact)
+    return result('esferico',`Apertura: ${relThumbIdx.toFixed(2)} rel | Flex: ${Math.round(avgFlex4*100)}% | Sin palma`);
+  const idxMidDist=distPx(lms[8],lms[12])/wristW;
+  if(thumbOppose&&palmarContact&&avgFlex4>0.42&&avgFlex4<0.80&&idxMidDist<0.65)
+    return result('cilindrico',`Flex: ${Math.round(avgFlex4*100)}% | Aducción (sep: ${idxMidDist.toFixed(2)})`);
+  if(thumbOppose&&palmarContact&&avgFlex4>0.42&&idxMidDist>=0.65)
+    return result('manoLlena',`Flex: ${Math.round(avgFlex4*100)}% | Abducción (sep: ${idxMidDist.toFixed(2)})`);
+  if(avgFlex4<0.13&&thumb.flex<0.15)
+    return{grasp:'Mano extendida',grupo:'Patrón — Soltar',icon:'✋',color:'var(--ok)',key:'extendida',anatomia:'Extensión MCPs e IFs',desc:'Patrón de soltar: extensión de MCPs e IFs.',fuente:'Duarte Torres SC. Manual clínico TO. UNAL, 2024.',detail:`Flex dedos: ${Math.round(avgFlex4*100)}%`};
+  return{grasp:'Patrón no clasificado',grupo:'—',icon:'🖐️',color:'var(--text2)',key:'indeterminado',anatomia:'No coincide con patrones del manual clínico',desc:'No se ajusta a criterios del manual clínico de TO.',fuente:'—',detail:`Flex: ${Math.round(avgFlex4*100)}% | Apertura: ${relThumbIdx.toFixed(2)}`};
+}
+
+// ══════════════════════════════════════════════════════════════════════════════
+// OPCIONES DE VISUALIZACIÓN
+// ══════════════════════════════════════════════════════════════════════════════
+function to(k,el){
+  opts[k]=!opts[k]; el.classList.toggle('on',opts[k]);
+  if(mediaMode==='image')reprocess();
+}
+
+// ══════════════════════════════════════════════════════════════════════════════
+// EXPORTACIÓN — BUG FIX: funciona en TODOS los modos con nombre descriptivo
+// Nombre de archivo incluye modo, condición y fecha (AAAA-MM-DD).
+// ══════════════════════════════════════════════════════════════════════════════
+function getDateStr(){ return new Date().toISOString().slice(0,10); }
+function getTimeStr(){ return new Date().toISOString().slice(0,19).replace('T','_').replace(/:/g,''); }
+function getModeName(){
+  const n={pose:'pose-frontal',sagital:'pose-sagital',gait:'marcha',hand:'mano'};
+  return n[appMode]||appMode;
+}
+function getTestLabel(){
+  let lbl=getModeName();
+  if(aditMode){const d=document.getElementById('adit-desc').value;lbl+=d?`_${d.slice(0,20).replace(/\s+/g,'-')}`:'_con-aditamento';}
+  return lbl;
+}
+
 function xcsv(){
-  const ts=new Date().toISOString().slice(0,19).replace('T',' ');
-  // Envuelve en comillas si el valor contiene coma, punto y coma o salto de línea
-  const q=v=>{const s=String(v??'');return s.includes(',')||s.includes(';')||s.includes('\n')?`"${s.replace(/"/g,'""')}"`:s;};
+  const ts=getTimeStr();
+  const q=v=>{const s=String(v??'');return s.includes(',')||s.includes('"')||s.includes('\n')?`"${s.replace(/"/g,'""')}"`:s;};
   const row=(...cols)=>cols.map(q).join(',');
-
   const rows=[
-    '\uFEFF',  // BOM UTF-8 para Excel
-    row('# ANÁLISIS BIOMECÁNICO - Analizador Postural TO v6.0'),
-    row('# Universidad Nacional de Colombia - Terapia Ocupacional'),
+    '\uFEFF',
+    row('# ANÁLISIS BIOMECÁNICO — Analizador Postural TO v7.0'),
+    row('# Universidad Nacional de Colombia — Terapia Ocupacional'),
+    row('# Autora','Karen Vanessa Paredes Castro'),
     row('# Fecha análisis',ts),
-    row('# Modo',`${mode} | Vista: ${view}`),
-    ''
+    row('# Modo',getModeName()),
+    row('# Condición',aditMode?('Con aditamento: '+(document.getElementById('adit-desc').value||'no especificado')):'Sin aditamento (base)'),
+    '',
   ];
 
-  // ── Ángulos articulares posturales ────────────────────────────────────────
-  if(lAng){
+  // ── Ángulos articulares posturales (pose frontal, sagital, marcha) ──────────
+  if(lAng&&lAng.length){
     rows.push(row('## ÁNGULOS ARTICULARES POSTURALES'));
-    rows.push(row('Articulación','Movimiento medido','Lado Izq (°)','Lado Der (°)','Referencia (°)','Posición de referencia','Delta Asim. (°)','Estado'));
+    rows.push(row('Articulación','Movimiento','Plano','Izq (°)','Der (°)','Ref (°)','Posición ref.','Δ asim. (°)','Estado Izq'));
     lAng.forEach(a=>{
       const diff=(a.L!=null&&a.R!=null)?Math.abs(a.L-a.R):'';
       const margin=(a.refHi-a.refLo)*0.15||5;
-      const stateL=a.L!=null?(a.L>=a.refLo-margin&&a.L<=a.refHi+margin?'Normal':a.L>=a.refLo-margin*3&&a.L<=a.refHi+margin*3?'Leve alteración':'Alteración'):'Sin dato';
-      rows.push(row(a.n, a.mov||'', a.L??'', a.R??'', a.ref, a.posRef||'', diff, stateL));
+      const state=v=>v!=null?(v>=a.refLo-margin&&v<=a.refHi+margin?'Normal':v>=a.refLo-margin*3&&v<=a.refHi+margin*3?'Leve alteración':'Alteración'):'Sin dato';
+      rows.push(row(a.n,a.mov||'',a.plano||'',a.L??'',a.R??'',a.ref,a.posRef||'',diff,state(a.L)));
     });
+    rows.push('');
+  }
+
+  // ── Distancias segmentarias ───────────────────────────────────────────────
+  if(lDist&&lDist.length){
+    rows.push(row('## DISTANCIAS SEGMENTARIAS'));
+    rows.push(row('Segmento','Valor'));
+    lDist.forEach(d=>rows.push(row(d.n,d.label)));
+    rows.push('');
   }
 
   // ── Ángulos de dedos ──────────────────────────────────────────────────────
   if(lHandResults?.multiHandLandmarks?.length){
-    rows.push('', row('## ÁNGULOS DE DEDOS (MCP / PIP / DIP)'));
-    rows.push(row('Mano','Dedo','Articulación','Movimiento medido','Ángulo (°)','Rango referencia (°)'));
+    rows.push(row('## ÁNGULOS ARTICULARES DE MANO (convenio clínico: 0°=extendido, N°=flexión)'));
+    rows.push(row('Mano','Dedo','Articulación','Movimiento','Ángulo (°)','Ref (°)','Estado'));
     lHandResults.multiHandLandmarks.forEach((lms,hi)=>{
-      const label=lHandResults.multiHandedness[hi]?.label||'?';
-      const manoName=realSide(label)==='Left'?'Izquierda (paciente)':'Derecha (paciente)';
-      FINGER_ANGLES_BY_FINGER.forEach(fingerDef=>{
-        fingerDef.joints.forEach(jt=>{
-          const ang=a3(lms[jt.pts[0]],lms[jt.pts[1]],lms[jt.pts[2]]);
-          rows.push(row(manoName, fingerDef.finger, jt.n, jt.mov||'', ang??'', jt.ref||''));
+      const mano=realSide(lHandResults.multiHandedness[hi]?.label||'?')==='Left'?'Izq (pcte)':'Der (pcte)';
+      FINGER_ANGLES_BY_FINGER.forEach(fd=>{
+        fd.joints.forEach(jt=>{
+          const ang=handJointAngle(lms,jt);
+          const margin=(jt.refHi-jt.refLo)*0.15||8;
+          const estado=ang!=null?(ang<=jt.refHi+margin?'Normal':ang<=jt.refHi+margin*3?'Leve alteración':'Alteración'):'Sin dato';
+          rows.push(row(mano,fd.finger,jt.n,jt.mov||'',ang??'',jt.ref,estado));
         });
       });
     });
-    rows.push('', row('## APERTURA ENTRE DEDOS'));
-    rows.push(row('Mano','Par de dedos','Distancia'));
+    rows.push('');
+
+    // Dimensiones de mano
+    if(lHandWorldLandmarks?.length){
+      rows.push(row('## DIMENSIONES DE MANO (WorldLandmarks — escala real)'));
+      rows.push(row('Mano','Medida','cm','mm'));
+      lHandWorldLandmarks.forEach((wlms,hi)=>{
+        const mano=realSide(lHandResults.multiHandedness[hi]?.label||'?')==='Left'?'Izq':'Der';
+        const m=computeHandMeasurements(wlms);
+        if(!m)return;
+        rows.push(row(mano,'Longitud total mano',(m.totalLen*100).toFixed(1),Math.round(m.totalLen*1000)));
+        rows.push(row(mano,'Longitud palma',(m.palmLen*100).toFixed(1),Math.round(m.palmLen*1000)));
+        rows.push(row(mano,'Ancho palma',(m.palmW*100).toFixed(1),Math.round(m.palmW*1000)));
+        Object.entries(m.fingers).forEach(([nombre,len])=>{
+          rows.push(row(mano,`Dedo ${nombre} (MCP→tip)`,(len*100).toFixed(1),Math.round(len*1000)));
+        });
+      });
+      rows.push('');
+    }
+
+    // Apertura entre dedos
+    rows.push(row('## APERTURA ENTRE DEDOS'));
+    rows.push(row('Mano','Par','Distancia'));
     lHandResults.multiHandLandmarks.forEach((lms,hi)=>{
-      const label=lHandResults.multiHandedness[hi]?.label||'?';
-      const manoName=realSide(label)==='Left'?'Izquierda (paciente)':'Derecha (paciente)';
+      const mano=realSide(lHandResults.multiHandedness[hi]?.label||'?')==='Left'?'Izq':'Der';
       SPREAD_PAIRS.forEach(sp=>{
-        rows.push(row(manoName, sp.n, handDistLabel(distPx(lms[sp.pts[0]],lms[sp.pts[1]]),lms)));
+        rows.push(row(mano,sp.n,handDistLabel(distPx(lms[sp.pts[0]],lms[sp.pts[1]]),lms)));
       });
     });
+    rows.push('');
+
+    // Clasificación agarre
     if(lHandResults.multiHandLandmarks[0]){
       const g=classifyGrasp(lHandResults.multiHandLandmarks[0]);
       if(g){
-        rows.push('', row('## CLASIFICACIÓN DE AGARRE — Manual Clínico TO (UNAL)'));
+        rows.push(row('## CLASIFICACIÓN DE AGARRE — Manual Clínico TO (UNAL)'));
         rows.push(row('Campo','Valor'));
-        rows.push(row('Agarre detectado', g.grasp));
-        rows.push(row('Grupo clínico', g.grupo||'—'));
-        rows.push(row('Descripción', g.desc));
-        rows.push(row('Anatomía clínica', g.anatomia||'—'));
-        rows.push(row('Detalle biomecánico', g.detail));
-        rows.push(row('Referencia', g.fuente||'—'));
-        rows.push('', row('## PATRONES INTEGRALES DE MIEMBRO SUPERIOR (Manual TO — UNAL)'));
-        rows.push(row('Patrón','Componentes articulares','Descripción'));
-        rows.push(row('Alcanzar','Hombro: flexión / abducción / aducción / extensión','Relación con el medio y los objetos. 3 niveles: superior - medio - inferior'));
-        rows.push(row('Soltar','MCPs e IFs: extensión','Voluntario (controlado) o rudimentario (reflejo)'));
-        rows.push(row('Lanzar','Hombro + codo simultáneos: flexión-extensión / extensión-flexión','Movimiento balístico de miembro superior'));
-        rows.push(row('Agarrar','Muñeca + MCPs + IFs','Grupos: Fuerza (contacto palmar) - Mixtos (palma+movilización) - Precisión (dedos+oposición)'));
+        rows.push(row('Agarre detectado',g.grasp));
+        rows.push(row('Grupo clínico',g.grupo||'—'));
+        rows.push(row('Descripción',g.desc));
+        rows.push(row('Anatomía clínica',g.anatomia||'—'));
+        rows.push(row('Detalle biomecánico',g.detail));
+        rows.push(row('Referencia',g.fuente||'—'));
+        rows.push('');
       }
     }
   }
 
-  // ── Distancias segmentarias ───────────────────────────────────────────────
-  if(lDist){
-    rows.push('', row('## DISTANCIAS SEGMENTARIAS'));
-    rows.push(row('Segmento','Valor'));
-    lDist.forEach(d=>rows.push(row(d.n, d.label)));
-  }
-
-  // ── Análisis de marcha (solo video) ──────────────────────────────────────
-  if(frames.length>2 && (mode==='pose'||mode==='combo')){
+  // ── Análisis de marcha ────────────────────────────────────────────────────
+  if(frames.length>2&&appMode==='gait'){
     const gm=computeGaitMetrics();
     if(gm){
-      rows.push('', row('## ANÁLISIS DE MARCHA'));
+      rows.push(row('## ANÁLISIS DE MARCHA'));
       rows.push(row('Métrica','Valor','Unidad','Referencia'));
-      rows.push(row('Velocidad angular rodilla', gm.velRod??'—', '°/seg', '—'));
-      rows.push(row('Velocidad angular cadera',  gm.velCad??'—', '°/seg', '—'));
-      rows.push(row('Rango angular rodilla', gm.rangoRod, '°', '0–145°'));
-      rows.push(row('Rango angular cadera',  gm.rangoCad, '°', '0–120°'));
-      rows.push(row('Fase de apoyo estimada',    gm.pctApoyo+'%',  '%', '~60%'));
-      rows.push(row('Fase de balanceo estimada', gm.pctBal+'%',    '%', '~40%'));
-      rows.push(row('Simetría rodilla L/D',  gm.simRod!=null?gm.simRod+'%':'—', '%', '≥90% simétrico'));
-      rows.push(row('Simetría cadera L/D',   gm.simCad!=null?gm.simCad+'%':'—', '%', '≥90% simétrico'));
-      rows.push(row('Simetría tobillo L/D',  gm.simTob!=null?gm.simTob+'%':'—', '%', '≥90% simétrico'));
-      rows.push('', row('## RANGOS POR FASE DE MARCHA'));
-      rows.push(row('Articulación','Fase','Mín (°)','Máx (°)','Promedio (°)','Referencia'));
-      const fases=gm.fases;
-      const frow=(lbl,f,ref)=>f&&f.min!=null?rows.push(row(lbl,'',f.min,f.max,f.avg,ref)):rows.push(row(lbl,'','—','—','—',ref));
-      rows.push(row('Rodilla izquierda','Apoyo',fases.rodL_apoyo?.min??'—',fases.rodL_apoyo?.max??'—',fases.rodL_apoyo?.avg??'—','0–145°'));
-      rows.push(row('Rodilla izquierda','Balanceo',fases.rodL_bal?.min??'—',fases.rodL_bal?.max??'—',fases.rodL_bal?.avg??'—','0–145°'));
-      rows.push(row('Rodilla derecha',  'Apoyo',fases.rodR_apoyo?.min??'—',fases.rodR_apoyo?.max??'—',fases.rodR_apoyo?.avg??'—','0–145°'));
-      rows.push(row('Rodilla derecha',  'Balanceo',fases.rodR_bal?.min??'—',fases.rodR_bal?.max??'—',fases.rodR_bal?.avg??'—','0–145°'));
-      rows.push(row('Cadera izquierda', 'Apoyo',fases.cadL_apoyo?.min??'—',fases.cadL_apoyo?.max??'—',fases.cadL_apoyo?.avg??'—','0–120°'));
-      rows.push(row('Cadera izquierda', 'Balanceo',fases.cadL_bal?.min??'—',fases.cadL_bal?.max??'—',fases.cadL_bal?.avg??'—','0–120°'));
-      rows.push(row('Tobillo izquierdo','Apoyo',fases.tobL_apoyo?.min??'—',fases.tobL_apoyo?.max??'—',fases.tobL_apoyo?.avg??'—','85–110°'));
-      rows.push(row('Tobillo izquierdo','Balanceo',fases.tobL_bal?.min??'—',fases.tobL_bal?.max??'—',fases.tobL_bal?.avg??'—','85–110°'));
-
-      // Serie temporal para goniograma en Excel
-      rows.push('', row('## SERIE TEMPORAL (goniograma)'));
-      rows.push(row('Tiempo (s)','Rodilla Izq (°)','Rodilla Der (°)','Cadera Izq (°)','Cadera Der (°)','Tobillo Izq (°)','Tobillo Der (°)','Tronco (°)','Fase Izq','Fase Der'));
-      gm.series.t.forEach((_,i)=>{
-        rows.push(row(
-          gm.series.t[i].toFixed(2),
-          gm.series.rodL[i]??'', gm.series.rodR[i]??'',
-          gm.series.cadL[i]??'', gm.series.cadR[i]??'',
-          gm.series.tobL[i]??'', gm.series.tobR[i]??'',
-          gm.series.trunk[i]??'',
-          gm.series.faseL[i]??'', gm.series.faseR[i]??''
-        ));
-      });
+      rows.push(row('Vel. angular rodilla',gm.velRod??'—','°/seg','—'));
+      rows.push(row('Vel. angular cadera',gm.velCad??'—','°/seg','—'));
+      rows.push(row('Rango angular rodilla',gm.rangoRod,'°','0–145°'));
+      rows.push(row('Rango angular cadera',gm.rangoCad,'°','0–120°'));
+      rows.push(row('Fase apoyo',gm.pctApoyo+'%','%','~60%'));
+      rows.push(row('Fase balanceo',gm.pctBal+'%','%','~40%'));
+      rows.push(row('Simetría rodilla L/D',gm.simRod!=null?gm.simRod+'%':'—','%','≥90%'));
+      rows.push(row('Simetría cadera L/D',gm.simCad!=null?gm.simCad+'%':'—','%','≥90%'));
+      rows.push(row('Simetría tobillo L/D',gm.simTob!=null?gm.simTob+'%':'—','%','≥90%'));
+      rows.push('');
     }
   }
 
   // ── Calibración ──────────────────────────────────────────────────────────
-  if(heightCm){
-    rows.push('', row('## CALIBRACIÓN'));
-    rows.push(row('Campo','Valor'));
-    rows.push(row('Altura paciente (cm)', heightCm));
-    rows.push(row('px/cm pose', pxPerCm?pxPerCm.toFixed(2):'sin calibrar'));
-    rows.push(row('px/cm mano (objeto)', handPxPerCm?handPxPerCm.toFixed(2):'sin calibrar'));
-    rows.push(row('Objeto referencia mano', handRefCm?handRefCm+' cm':'no usado'));
-  }
-
-  // ── Condición de evaluación ───────────────────────────────────────────────
-  rows.push('', row('## CONDICIÓN DE EVALUACIÓN'));
+  rows.push(row('## CALIBRACIÓN Y CONFIANZA'));
   rows.push(row('Campo','Valor'));
-  if(aditMode){
-    const desc=document.getElementById('adit-desc').value||'No especificado';
-    rows.push(row('Tipo','Con aditamento / ayuda técnica'));
-    rows.push(row('Descripción aditamento', desc));
-    rows.push(row('Análisis parcial activo', partialMode?'Sí':'No'));
-  } else {
-    rows.push(row('Tipo','Sin aditamento (evaluación base)'));
-  }
-
-  // ── Confianza ─────────────────────────────────────────────────────────────
-  rows.push('', row('## CONFIANZA DE DETECCIÓN'));
-  rows.push(row('Sensor','Confianza (%)'));
-  if(lastPoseConf!=null) rows.push(row('Pose', Math.round(lastPoseConf*100)));
-  if(lastHandConf!=null) rows.push(row('Mano', Math.round(lastHandConf*100)));
-  rows.push(row('Corrección espejo', mirrorCorrection?'Activa (foto frontal)':'Inactiva'));
+  if(heightCm)rows.push(row('Altura paciente (cm)',heightCm));
+  rows.push(row('px/cm pose',pxPerCm?pxPerCm.toFixed(2):'sin calibrar'));
+  rows.push(row('px/cm mano (objeto)',handPxPerCm?handPxPerCm.toFixed(2):'WorldLandmarks activos'));
+  if(lastPoseConf!=null)rows.push(row('Confianza pose (%)',Math.round(lastPoseConf*100)));
+  if(lastHandConf!=null)rows.push(row('Confianza mano (%)',Math.round(lastHandConf*100)));
+  rows.push(row('Corrección espejo',mirrorCorrection?'Activa (foto frontal)':'Inactiva'));
 
   const blob=new Blob([rows.join('\r\n')],{type:'text/csv;charset=utf-8'});
   const a=document.createElement('a');
   a.href=URL.createObjectURL(blob);
-  a.download=`analisis_biomecánico_${ts.slice(0,10)}_UNAL.csv`;
+  a.download=`analisis_${getTestLabel()}_${getDateStr()}.csv`;
   a.click();
 }
+
+// CSV de series de tiempo de marcha (goniograma completo)
+function xGaitCsv(){
+  if(!frames.length){alert('Procesa un video de marcha primero.');return;}
+  const gm=computeGaitMetrics();
+  if(!gm){alert('No hay datos de marcha disponibles.');return;}
+  const q=v=>String(v??'');
+  const row=(...cols)=>cols.map(q).join(',');
+  const rows=[
+    '\uFEFF',
+    row('## SERIE TEMPORAL DE MARCHA — Analizador Postural TO v7.0'),
+    row('## Universidad Nacional de Colombia — Terapia Ocupacional'),
+    row('## Fecha',getDateStr()),
+    row('## Condición',aditMode?'Con aditamento':'Sin aditamento'),
+    '',
+    row('Tiempo (s)','Rodilla Izq (°)','Rodilla Der (°)','Cadera Izq (°)','Cadera Der (°)','Tobillo Izq (°)','Tobillo Der (°)','Tronco (°)','Fase Izq','Fase Der'),
+  ];
+  gm.series.t.forEach((_,i)=>{
+    rows.push(row(
+      gm.series.t[i].toFixed(3),
+      gm.series.rodL[i]??'',gm.series.rodR[i]??'',
+      gm.series.cadL[i]??'',gm.series.cadR[i]??'',
+      gm.series.tobL[i]??'',gm.series.tobR[i]??'',
+      gm.series.trunk[i]??'',
+      gm.series.faseL[i]??'',gm.series.faseR[i]??''
+    ));
+  });
+  const blob=new Blob([rows.join('\r\n')],{type:'text/csv;charset=utf-8'});
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);
+  a.download=`marcha_series_${getTestLabel()}_${getDateStr()}.csv`;
+  a.click();
+}
+
 function ximg(){
   const a=document.createElement('a');
-  a.href=canvas.toDataURL('image/png');
-  a.download=`postura_anotada_${new Date().toISOString().slice(0,10)}.png`;
+  a.href=_canvas.toDataURL('image/png');
+  a.download=`postura_${getTestLabel()}_${getDateStr()}.png`;
   a.click();
 }
+
 function xjson(){
   const data={
-    meta:{version:'6.0',fecha:new Date().toISOString(),modo:mode,vista:view,autora:'Karen Vanessa Paredes Castro',institucion:'Universidad Nacional de Colombia',referencia:'Duarte Torres SC. Manual clínico de TO en alteraciones osteomusculares de miembro superior. UNAL, 2024.'},
+    meta:{version:'7.0',fecha:new Date().toISOString(),modo:getModeName(),
+          autora:'Karen Vanessa Paredes Castro',
+          institucion:'Universidad Nacional de Colombia',
+          referencia:'Duarte Torres SC. Manual clínico de TO. UNAL, 2024.',
+          condicion:aditMode?'Con aditamento':'Base'},
     poseLandmarks:lLms||null,
     handLandmarks:lHandResults?.multiHandLandmarks||null,
+    handWorldLandmarks:lHandWorldLandmarks||null,
     handedness:lHandResults?.multiHandedness||null,
-    angulos:lAng||null,
+    angulosPosturales:lAng||null,
     distancias:lDist||null,
-    calibracion:{heightCm,pxPerCm},
-    confianza:{pose:lastPoseConf,mano:lastHandConf}
+    angulosDedos:lHandResults?.multiHandLandmarks?.map((lms,hi)=>{
+      const mano=realSide(lHandResults.multiHandedness[hi]?.label||'?')==='Left'?'izq':'der';
+      return{mano,angulos:FINGER_ANGLES_BY_FINGER.map(fd=>({
+        dedo:fd.finger,
+        articulaciones:fd.joints.map(jt=>({articulation:jt.n,angulo:handJointAngle(lms,jt),ref:jt.ref}))
+      }))};
+    })||null,
+    dimensionesMano:lHandWorldLandmarks?.map((wlms,hi)=>{
+      const mano=realSide(lHandResults.multiHandedness[hi]?.label||'?')==='Left'?'izq':'der';
+      const m=computeHandMeasurements(wlms);
+      return m?{mano,...Object.fromEntries(Object.entries(m).map(([k,v])=>[k,typeof v==='object'?
+        Object.fromEntries(Object.entries(v).map(([kk,vv])=>[kk,{m:vv,cm:+(vv*100).toFixed(1),mm:Math.round(vv*1000)}])):
+        {m:v,cm:+(v*100).toFixed(1),mm:Math.round(v*1000)}
+      ]))}:null;
+    })||null,
+    gaitFrames:appMode==='gait'&&frames.length?frames.map(f=>({time:f.time,landmarks:f.landmarks})):null,
+    gaitMetrics:appMode==='gait'&&frames.length?computeGaitMetrics():null,
+    calibracion:{heightCm,pxPerCm,handPxPerCm},
+    confianza:{pose:lastPoseConf,mano:lastHandConf},
+    mirrorCorrection,
   };
   const a=document.createElement('a');
   a.href=URL.createObjectURL(new Blob([JSON.stringify(data,null,2)],{type:'application/json'}));
-  a.download=`landmarks_${new Date().toISOString().slice(0,10)}.json`;
+  a.download=`datos_${getTestLabel()}_${getDateStr()}.json`;
   a.click();
 }
 
 // ══════════════════════════════════════════════════════════════════════════════
 // UTILS
 // ══════════════════════════════════════════════════════════════════════════════
-function setSt(type,msg){const b=document.getElementById('sbar');b.style.display='flex';document.getElementById('sdot').className='sdot '+type;document.getElementById('stxt').textContent=msg;}
-function showCv(){document.getElementById('ph').style.display='none';document.getElementById('ci').style.display='inline-block';}
-function hideVid(){document.getElementById('vbar').classList.remove('vis');document.getElementById('rtab-bar').style.display='none';['rp-pose','rp-sym','rp-gait','rp-hand'].forEach(id=>document.getElementById(id).style.display='none');}
-function enExp(){document.getElementById('bcsv').disabled=false;document.getElementById('bimg').disabled=false;document.getElementById('bjson').disabled=false;}
+function setSt(type,msg){
+  const b=document.getElementById('sbar');
+  if(b){b.style.display='flex';document.getElementById('sdot').className='sdot '+type;document.getElementById('stxt').textContent=msg;}
+}
+function showCv(){
+  document.getElementById('ph').style.display='none';
+  document.getElementById('ci').style.display='inline-block';
+}
+function hideVid(){
+  document.getElementById('vbar').classList.remove('vis');
+  document.getElementById('rtab-bar').style.display='none';
+  ['rp-pose','rp-sym','rp-gait','rp-hand'].forEach(id=>document.getElementById(id).style.display='none');
+}
+function enExp(){
+  ['bcsv','bimg','bjson','bgaitcsv'].forEach(id=>{
+    const el=document.getElementById(id);
+    if(el)el.disabled=false;
+  });
+}
 </script>
 </body>
 </html>
