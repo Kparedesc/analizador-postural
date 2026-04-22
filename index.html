@@ -1534,6 +1534,7 @@ function onPoseRes(r){
     if(mode==='pose'||mode==='combo'){
       setSt('done',`Pose detectada ✓ — ${lms.length} puntos`);
       _showResultsFor(appMode);
+      enExp();
     }
   } else {
     if(!lms)return;
@@ -2626,10 +2627,13 @@ function to(k,el){opts[k]=!opts[k];el.classList.toggle('on',opts[k]);if(mediaMod
 
 // Determina si hay datos analizados para el modo activo
 function _hasExportData(){
-  if(appMode==='pose'||appMode==='sagital') return !!(lLms&&lAng);
-  if(appMode==='gait') return frames.length>2;
-  if(appMode==='hand') return !!(lHandResults?.multiHandLandmarks?.length);
-  return !!(lLms||lHandResults);
+  // Si hay landmarks de pose, siempre hay algo para exportar
+  if(lLms && lAng) return true;
+  // Si hay datos de mano
+  if(lHandResults?.multiHandLandmarks?.length) return true;
+  // Si hay frames de video (marcha)
+  if(frames.length > 2) return true;
+  return false;
 }
 
 // Nombre de modo legible para nombres de archivo
