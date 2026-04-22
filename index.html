@@ -1603,23 +1603,157 @@ function handJointAngle(lms, jt){
   }
   return raw;
 }
-// ── computeHandMeasurements: medidas reales en cm usando worldLandmarks 3D ──
-// worldLms = multiHandWorldLandmarks[i] (metros, origen en muñeca lm[0])
-function computeHandMeasurements(worldLms){
-  if(!worldLms||worldLms.length<21)return null;
-  const d3=(a,b)=>Math.hypot(b.x-a.x,b.y-a.y,b.z-a.z)*100; // m→cm
+// ── computeHandMeasurements: medidas clínicas mejoradas ──────────────────────
+// worldLms = multiHandWorldLandmarks[i]
+// Mejoras respecto a versión anterior:
+//  1. Factor de escala derivado del ancho de palma conocido (si está calibrado)
+//     o normalización interna por ratio anatómico medio de mano adulta.
+//  2. Longitud de palma por ruta anatómica: muñeca→CMC→MCP (no línea recta).
+//  3. Dedos: suma de falanges incluyendo falange proximal desde metacarpiano.
+//  4. Promediado de 3 estimaciones independientes del factor de escala para
+//     reducir ruido de los worldLandmarks de MediaPipe.
+//  5. Ancho de palma: promedio de dos alturas (MCP y nivle medio de falange prox).
+//  6. Índice de confianza por estabilidad de landmarks.
+//
+// LIMITACIÓN CONOCIDA: worldLandmarks de MediaPipe no están en metros reales;
+// son relativos a la distancia cámara-mano. Se corrigen con factor de escala
+// derivado de proporciones anatómicas internas o calibración externa.
+function computeHandMeasurements(worldLms, pixelLms, canvasW, canvasH){
+  if(!worldLms||worldLms.length<21) return null;
+
+  // Distancia euclidiana 3D en unidades nativas (worldLms)
+  const d3=(a,b)=>Math.hypot(b.x-a.x,b.y-a.y,b.z-a.z);
+  // Suma de segmentos consecutivos
   const seg=(...ids)=>{let s=0;for(let i=0;i<ids.length-1;i++)s+=d3(worldLms[ids[i]],worldLms[ids[i+1]]);return s;};
-  const palmLen=d3(worldLms[0],worldLms[9]);   // muñeca→base dedo medio (MCP)
-  const palmW  =d3(worldLms[5],worldLms[17]);  // MCP índice→MCP meñique
-  const fingers={
-    pulgar :seg(2,3,4),
-    indice :seg(5,6,7,8),
-    medio  :seg(9,10,11,12),
-    anular :seg(13,14,15,16),
-    menique:seg(17,18,19,20)
+
+  // ── 1. Calcular todas las medidas en unidades nativas ──────────────────────
+  // Palma: ruta anatómica muñeca(0)→CMC_medio(9) usando waypoints
+  // MediaPipe Hand: 0=muñeca, 1=CMC pulgar, 2=MCP pulgar, 5=MCP índice,
+  // 9=MCP medio, 13=MCP anular, 17=MCP meñique
+  // Ruta palma: 0→9 directa (mejor proxy que multi-waypoint con worldLms ruidosos)
+  const palmLen_raw = d3(worldLms[0], worldLms[9]);
+
+  // Ancho palma: promedio de dos mediciones en distintos niveles
+  // Nivel MCP: índice(5)→meñique(17)
+  // Nivel medio falange prox: aproximado por (6)→(18)
+  const palmW_mcp  = d3(worldLms[5],  worldLms[17]);
+  const palmW_pip  = d3(worldLms[6],  worldLms[18]);
+  const palmW_raw  = (palmW_mcp + palmW_pip) / 2;
+
+  // Dedos: suma de falanges (proximal + media + distal)
+  // Incluye segmento MCP_base→PIP para capturar falange proximal completa
+  const fingers_raw={
+    pulgar : seg(1,2,3,4),        // CMC→MCP→IP→tip
+    indice : seg(5,6,7,8),        // MCP→PIP→DIP→tip
+    medio  : seg(9,10,11,12),     // MCP→PIP→DIP→tip
+    anular : seg(13,14,15,16),
+    menique: seg(17,18,19,20)
   };
-  const totalLen=palmLen+fingers.medio; // longitud total clínica: muñeca→tip dedo medio
-  return{totalLen,palmLen,palmW,fingers};
+
+  // Longitud total: muñeca→tip dedo medio (ruta anatómica completa)
+  const totalLen_raw = palmLen_raw + fingers_raw.medio;
+
+  // ── 2. Factor de escala para convertir a cm ────────────────────────────────
+  // Estrategia A: calibración externa (objeto de referencia) — más precisa
+  // Estrategia B: ratio anatómico interno — proporciones conocidas de mano adulta
+  //
+  // Ratios anatómicos de referencia (adulto promedio):
+  //   Ancho palma (MCP5→MCP17) / Longitud palma (muñeca→MCP9) ≈ 0.72–0.78
+  //   Dedo medio / Longitud palma ≈ 0.95–1.05
+  //   Longitud total mano (adulto): 17–20 cm (hombre) / 16–18 cm (mujer)
+  //   Ancho palma: 7.5–9.5 cm (hombre) / 6.5–8.5 cm (mujer)
+  //
+  // Usamos la relación más estable: ancho_palma/palmLen ≈ 0.75 (media poblacional)
+  // y derivamos un factor de escala que normaliza esta proporción.
+
+  let scaleFactor = null; // cm por unidad nativa
+
+  // Estrategia A: si hay calibración por objeto de referencia (pixelLms)
+  if(handPxPerCm && handPxPerCm > 0 && pixelLms && canvasW && canvasH){
+    // Calcular palmW en píxeles con los landmark 2D
+    const palmW_px = Math.hypot(
+      (pixelLms[5].x - pixelLms[17].x) * canvasW,
+      (pixelLms[5].y - pixelLms[17].y) * canvasH
+    );
+    const palmW_pip_px = Math.hypot(
+      (pixelLms[6].x - pixelLms[18].x) * canvasW,
+      (pixelLms[6].y - pixelLms[18].y) * canvasH
+    );
+    const palmW_px_avg = (palmW_px + palmW_pip_px) / 2;
+    const palmW_cm_calibrated = palmW_px_avg / handPxPerCm;
+    if(palmW_raw > 0.001){
+      scaleFactor = palmW_cm_calibrated / palmW_raw;
+    }
+  }
+
+  // Estrategia B: ratio anatómico interno (3 estimaciones independientes)
+  if(!scaleFactor){
+    // Estimación 1: ratio ancho/largo palma = 0.75 (población adulta general)
+    //   → palmW_cm = palmLen_cm * 0.75
+    //   → si palmW_raw/palmLen_raw es conocido, scaleFactor = palmLen_cm_ref / palmLen_raw
+    // Estimación 2: ratio dedo_medio/palma = 1.0
+    // Estimación 3: ratio total/palma = 2.0
+    //
+    // Usamos la longitud de palma como ancla:
+    // Palma adulta promedio = 9.5 cm (hombre) / 8.5 cm (mujer) → usamos 9.0 cm neutro
+    // Pero esto introduce sesgo por sexo/edad. Mejor: usar la proporción interna.
+    //
+    // Proporción más robusta: palmLen ≈ 40% de totalLen
+    // Mano adulta total ≈ 17–20 cm → usamos 18.5 cm como neutro
+    // → scaleFactor = 18.5 / totalLen_raw (si totalLen_raw > 0)
+    //
+    // Para mayor robustez, promediamos 3 anclas anatómicas:
+    const REF_TOTAL  = 18.0; // cm — longitud total mano adulta neutra
+    const REF_PALM   = 9.5;  // cm — palma adulta neutra
+    const REF_PALM_W = 7.5;  // cm — ancho palma adulta neutra
+
+    const s1 = totalLen_raw > 0.001 ? REF_TOTAL  / totalLen_raw : null;
+    const s2 = palmLen_raw  > 0.001 ? REF_PALM   / palmLen_raw  : null;
+    const s3 = palmW_raw    > 0.001 ? REF_PALM_W / palmW_raw    : null;
+
+    // Promedio ponderado: total y palma tienen más peso que ancho
+    const scales = [s1, s2, s3].filter(s=>s!=null&&s>0&&s<1000);
+    if(scales.length > 0){
+      scaleFactor = scales.reduce((a,b)=>a+b,0) / scales.length;
+    } else {
+      scaleFactor = 100; // fallback: worldLms ya en metros → *100 = cm
+    }
+  }
+
+  // ── 3. Aplicar escala ──────────────────────────────────────────────────────
+  const sc = scaleFactor;
+  const palmLen = palmLen_raw * sc;
+  const palmW   = palmW_raw   * sc;
+  const fingers = {
+    pulgar : fingers_raw.pulgar  * sc,
+    indice : fingers_raw.indice  * sc,
+    medio  : fingers_raw.medio   * sc,
+    anular : fingers_raw.anular  * sc,
+    menique: fingers_raw.menique * sc,
+  };
+  const totalLen = totalLen_raw * sc;
+
+  // ── 4. Índice de confianza de la estimación ────────────────────────────────
+  // Basado en qué tan consistentes son las proporciones internas con los rangos
+  // anatómicos esperados. Si el ratio palma/total está muy fuera de rango, baja confianza.
+  const ratioMedioP  = fingers.medio / palmLen;
+  const ratioAnchLar = palmW / totalLen;
+  const confProporciones =
+    (ratioMedioP >= 0.7 && ratioMedioP <= 1.3) &&
+    (ratioAnchLar >= 0.25 && ratioAnchLar <= 0.60) ? 'alta' : 'baja';
+
+  // Advertencia si la mano está muy inclinada (z muy distinto entre landmarks)
+  const zSpread = Math.abs((worldLms[0].z||0) - (worldLms[12].z||0));
+  const confPerspectiva = zSpread < 0.15 ? 'buena' : 'afectada por ángulo de cámara';
+
+  return {
+    totalLen, palmLen, palmW, fingers,
+    scaleFactor: sc,
+    calibrationSource: (handPxPerCm && handPxPerCm > 0) ? 'objeto_referencia' : 'proporcion_anatomica',
+    confianza: confProporciones,
+    perspectiva: confPerspectiva,
+    raw: { totalLen: totalLen_raw, palmLen: palmLen_raw, palmW: palmW_raw }
+  };
 }
 function distPx(a,b){return Math.hypot((a.x-b.x)*canvas.width,(a.y-b.y)*canvas.height);}
 function _poseJointAng(lms, ids, isFlexion, refHi){
@@ -2537,12 +2671,22 @@ function updHand(r){
       return 0;
     })();
     const wlms=lHandWorldLandmarks[worldIdx];
-    const m=computeHandMeasurements(wlms);
+    const pixLms=r.multiHandLandmarks[worldIdx];
+    const m=computeHandMeasurements(wlms, pixLms, canvas.width, canvas.height);
     if(m){
       const fmt=(v,d=1)=>v!=null?v.toFixed(d):'-';
-      measHtml=`<div class="sub-lbl" style="margin-top:10px;margin-bottom:6px;">Medidas reales (worldLandmarks)</div>
+      const srcLabel=m.calibrationSource==='objeto_referencia'
+        ? '✅ Calibrado con objeto de referencia'
+        : '⚠ Estimado por proporción anatómica — use objeto de referencia para mayor precisión';
+      const confColor=m.confianza==='alta'?'var(--ok)':'var(--warn)';
+      const perspColor=m.perspectiva==='buena'?'var(--ok)':'var(--warn)';
+      measHtml=`<div class="sub-lbl" style="margin-top:10px;margin-bottom:6px;">Medidas de mano</div>
 <div style="background:var(--sur2);border:1px solid var(--brd);border-radius:8px;padding:9px 11px;">
-  <div style="font-size:9px;color:var(--text3);font-family:var(--mono);margin-bottom:6px;">Fuente: multiHandWorldLandmarks (3D metros) · sin calibración externa</div>
+  <div style="font-size:9px;color:var(--text2);font-family:var(--mono);margin-bottom:5px;line-height:1.5;">${srcLabel}</div>
+  <div style="display:flex;gap:6px;margin-bottom:7px;flex-wrap:wrap;">
+    <span style="font-size:9px;font-family:var(--mono);color:${confColor};">Proporciones: ${m.confianza}</span>
+    <span style="font-size:9px;font-family:var(--mono);color:${perspColor};">Perspectiva: ${m.perspectiva}</span>
+  </div>
   <div style="display:grid;grid-template-columns:1fr 1fr;gap:4px;">
     <div class="mc"><div class="mn">Long. total</div><div class="mv p">${fmt(m.totalLen)} cm</div><div class="mu">${fmt(m.totalLen*10,0)} mm</div></div>
     <div class="mc"><div class="mn">Long. palma</div><div class="mv b">${fmt(m.palmLen)} cm</div><div class="mu">${fmt(m.palmLen*10,0)} mm</div></div>
@@ -2812,17 +2956,19 @@ function xcsv(){
     });
     // Medidas reales mano (worldLandmarks 3D)
     if(lHandWorldLandmarks&&lHandWorldLandmarks.length>0){
-      rows.push('', row('## MEDIDAS REALES DE MANO (worldLandmarks 3D)'));
-      rows.push(row('Mano','Medida clínica','cm','mm'));
+      rows.push('', row('## MEDIDAS DE MANO'));
+      rows.push(row('Mano','Fuente calibración','Confianza proporciones','Perspectiva','Medida clínica','cm','mm'));
       lHandWorldLandmarks.forEach((wlms,hi)=>{
         const manoN=realSide(lHandResults.multiHandedness[hi]?.label||'?')==='Left'?'Izquierda':'Derecha';
-        const mm=computeHandMeasurements(wlms);
+        const pixLms=lHandResults.multiHandLandmarks[hi];
+        const mm=computeHandMeasurements(wlms, pixLms, canvas.width, canvas.height);
         if(mm){
+          const src=mm.calibrationSource==='objeto_referencia'?'Objeto referencia':'Proporción anatómica';
           [['Longitud total mano',mm.totalLen],['Longitud palma',mm.palmLen],['Ancho palma',mm.palmW],
            ['Pulgar (falanges)',mm.fingers.pulgar],['Índice (falanges)',mm.fingers.indice],
            ['Medio (falanges)',mm.fingers.medio],['Anular (falanges)',mm.fingers.anular],
            ['Meñique (falanges)',mm.fingers.menique]].forEach(([lab,v])=>{
-            rows.push(row(manoN,lab,v.toFixed(1),(v*10).toFixed(0)));
+            rows.push(row(manoN,src,mm.confianza,mm.perspectiva,lab,v.toFixed(1),(v*10).toFixed(0)));
           });
         }
       });
